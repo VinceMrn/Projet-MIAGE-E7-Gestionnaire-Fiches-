@@ -1,0 +1,34 @@
+package model;
+
+public class Statistique {
+
+    private int idStatistique;
+    private String nomStatistique;
+    private int valeurStatistique;
+
+    public Statistique(int idStatistique, String nomStatistique, int valeurStatistique) {
+        this.idStatistique = idStatistique;
+        this.nomStatistique = nomStatistique;
+        this.valeurStatistique = valeurStatistique;
+    }
+
+    public void modifierNomStatistique(String nomStatistique) {
+        this.nomStatistique = nomStatistique;
+    }
+
+    public void modifierValeurStatistique(int valeurStatistique) {
+        this.valeurStatistique = valeurStatistique;
+    }
+
+    public int getIdStatistique() {
+        return idStatistique;
+    }
+
+    public String getNomStatistique() {
+        return nomStatistique;
+    }
+
+    public int getValeurStatistique() {
+        return valeurStatistique;
+    }
+}
