@@ -15,8 +15,8 @@ import java.util.List;
  * - Un utilisateur ne peut modifier/supprimer que ses propres fiches
  * - Un utilisateur ne peut voir que ses propres fiches
  *
- * Persistance : fichier texte "data/fiches_{idUtilisateur}.txt"
- * Format d'une ligne : idFiche;nomFiche;imagePortrait;texteBiographie;statistiques|competences|equipements
+ * Persistance : serialisation binaire Java dans "data/fiches_{idUtilisateur}.dat"
+ * Utilise ObjectOutputStream/ObjectInputStream pour sauvegarder les objets.
  */
 public class GestionFiche {
 
@@ -302,194 +302,54 @@ public class GestionFiche {
         }
     }
 
-    // ========== PERSISTANCE ==========
+    // ========== PERSISTANCE (SERIALISATION BINAIRE) ==========
 
     /**
-     * Sauvegarde les fiches d'un utilisateur dans un fichier texte.
-     * Chaque utilisateur a son propre fichier : data/fiches_{id}.txt
+     * Sauvegarde les fiches d'un utilisateur avec la serialisation Java.
+     * Chaque utilisateur a son propre fichier : data/fiches_{id}.dat
      *
-     * Format d'une fiche (sur plusieurs lignes) :
-     * FICHE;id;nom
-     * PORTRAIT;posX;posY;larg;haut;image
-     * BIOGRAPHIE;posX;posY;larg;haut;texte
-     * STATISTIQUES;posX;posY;larg;haut
-     * STAT;id;nom;valeur
-     * COMPETENCES;posX;posY;larg;haut
-     * COMP;nom
-     * EQUIPEMENTS;posX;posY;larg;haut
-     * EQUIP;nom
-     * ---
+     * La serialisation permet de sauvegarder tout l'objet (et ses objets imbriques)
+     * en une seule ligne de code, sans avoir a parser manuellement.
      */
     private void sauvegarderFiches(Utilisateur utilisateur) {
-        String cheminFichier = DOSSIER_DATA + "fiches_" + utilisateur.getIdUtilisateur() + ".txt";
+        String cheminFichier = DOSSIER_DATA + "fiches_" + utilisateur.getIdUtilisateur() + ".dat";
         File fichier = new File(cheminFichier);
         fichier.getParentFile().mkdirs();
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fichier))) {
-            for (FichePersonnage fiche : utilisateur.getFiches()) {
-                // En-tete de la fiche
-                writer.write("FICHE;" + fiche.getIdFichePersonnage() + ";" + fiche.getNomFichePersonnage());
-                writer.newLine();
-
-                // Portrait
-                Portrait p = fiche.getPortrait();
-                writer.write("PORTRAIT;" + p.getPositionX() + ";" + p.getPositionY() + ";"
-                        + p.getLargeur() + ";" + p.getHauteur() + ";" + p.getImagePortrait());
-                writer.newLine();
-
-                // Biographie
-                Biographie b = fiche.getBiographie();
-                writer.write("BIOGRAPHIE;" + b.getPositionX() + ";" + b.getPositionY() + ";"
-                        + b.getLargeur() + ";" + b.getHauteur() + ";" + b.getTexteBiographie());
-                writer.newLine();
-
-                // Statistiques (en-tete du module)
-                Statistiques stats = fiche.getStatistiques();
-                writer.write("STATISTIQUES;" + stats.getPositionX() + ";" + stats.getPositionY() + ";"
-                        + stats.getLargeur() + ";" + stats.getHauteur());
-                writer.newLine();
-                // Chaque statistique individuelle
-                for (Statistique stat : stats.getStatistiques()) {
-                    writer.write("STAT;" + stat.getIdStatistique() + ";" + stat.getNomStatistique()
-                            + ";" + stat.getValeurStatistique());
-                    writer.newLine();
-                }
-
-                // Competences (en-tete du module)
-                Competence comp = fiche.getCompetence();
-                writer.write("COMPETENCES;" + comp.getPositionX() + ";" + comp.getPositionY() + ";"
-                        + comp.getLargeur() + ";" + comp.getHauteur());
-                writer.newLine();
-                for (String c : comp.getCompetences()) {
-                    writer.write("COMP;" + c);
-                    writer.newLine();
-                }
-
-                // Equipements (en-tete du module)
-                Equipement equip = fiche.getEquipement();
-                writer.write("EQUIPEMENTS;" + equip.getPositionX() + ";" + equip.getPositionY() + ";"
-                        + equip.getLargeur() + ";" + equip.getHauteur());
-                writer.newLine();
-                for (String e : equip.getEquipements()) {
-                    writer.write("EQUIP;" + e);
-                    writer.newLine();
-                }
-
-                // Separateur entre fiches
-                writer.write("---");
-                writer.newLine();
-            }
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fichier))) {
+            // Sauvegarde toute la liste de fiches en une seule operation
+            // Les objets imbriques (Portrait, Biographie, etc.) sont automatiquement inclus
+            oos.writeObject(utilisateur.getFiches());
+            System.out.println("Fiches sauvegardees (serialisation) : " + cheminFichier);
         } catch (IOException e) {
             System.out.println("Erreur lors de la sauvegarde des fiches : " + e.getMessage());
         }
     }
 
     /**
-     * Charge les fiches d'un utilisateur depuis son fichier.
-     * Reconstruit les objets FichePersonnage avec tous leurs modules.
+     * Charge les fiches d'un utilisateur depuis son fichier serialise.
+     * Reconstruit automatiquement tous les objets grace a la deserialisation.
      */
+    @SuppressWarnings("unchecked")
     public void chargerFiches(Utilisateur utilisateur) {
-        String cheminFichier = DOSSIER_DATA + "fiches_" + utilisateur.getIdUtilisateur() + ".txt";
+        String cheminFichier = DOSSIER_DATA + "fiches_" + utilisateur.getIdUtilisateur() + ".dat";
         File fichier = new File(cheminFichier);
 
         if (!fichier.exists()) {
             return;
         }
 
-        // On vide les fiches actuelles pour recharger depuis le fichier
-        utilisateur.getFiches().clear();
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(fichier))) {
-            String ligne;
-            FichePersonnage ficheEnCours = null;
-
-            while ((ligne = reader.readLine()) != null) {
-                if (ligne.equals("---")) {
-                    ficheEnCours = null;
-                    continue;
-                }
-
-                String[] parties = ligne.split(";", -1);
-
-                switch (parties[0]) {
-                    case "FICHE":
-                        int idFiche = Integer.parseInt(parties[1]);
-                        String nomFiche = parties[2];
-                        ficheEnCours = utilisateur.creerFiche(nomFiche);
-                        break;
-
-                    case "PORTRAIT":
-                        if (ficheEnCours != null) {
-                            ficheEnCours.getPortrait().modifierPosition(
-                                    Integer.parseInt(parties[1]), Integer.parseInt(parties[2]));
-                            ficheEnCours.getPortrait().modifierTaille(
-                                    Integer.parseInt(parties[3]), Integer.parseInt(parties[4]));
-                            if (parties.length > 5 && !parties[5].isEmpty()) {
-                                ficheEnCours.modifierPortrait(parties[5]);
-                            }
-                        }
-                        break;
-
-                    case "BIOGRAPHIE":
-                        if (ficheEnCours != null) {
-                            ficheEnCours.getBiographie().modifierPosition(
-                                    Integer.parseInt(parties[1]), Integer.parseInt(parties[2]));
-                            ficheEnCours.getBiographie().modifierTaille(
-                                    Integer.parseInt(parties[3]), Integer.parseInt(parties[4]));
-                            if (parties.length > 5 && !parties[5].isEmpty()) {
-                                ficheEnCours.modifierBiographie(parties[5]);
-                            }
-                        }
-                        break;
-
-                    case "STATISTIQUES":
-                        if (ficheEnCours != null) {
-                            ficheEnCours.getStatistiques().modifierPosition(
-                                    Integer.parseInt(parties[1]), Integer.parseInt(parties[2]));
-                            ficheEnCours.getStatistiques().modifierTaille(
-                                    Integer.parseInt(parties[3]), Integer.parseInt(parties[4]));
-                        }
-                        break;
-
-                    case "STAT":
-                        if (ficheEnCours != null) {
-                            ficheEnCours.getStatistiques().ajouterStatistique(
-                                    parties[2], Integer.parseInt(parties[3]));
-                        }
-                        break;
-
-                    case "COMPETENCES":
-                        if (ficheEnCours != null) {
-                            ficheEnCours.getCompetence().modifierPosition(
-                                    Integer.parseInt(parties[1]), Integer.parseInt(parties[2]));
-                            ficheEnCours.getCompetence().modifierTaille(
-                                    Integer.parseInt(parties[3]), Integer.parseInt(parties[4]));
-                        }
-                        break;
-
-                    case "COMP":
-                        if (ficheEnCours != null && parties.length > 1) {
-                            ficheEnCours.getCompetence().ajouterCompetence(parties[1]);
-                        }
-                        break;
-
-                    case "EQUIPEMENTS":
-                        if (ficheEnCours != null) {
-                            ficheEnCours.getEquipement().modifierPosition(
-                                    Integer.parseInt(parties[1]), Integer.parseInt(parties[2]));
-                            ficheEnCours.getEquipement().modifierTaille(
-                                    Integer.parseInt(parties[3]), Integer.parseInt(parties[4]));
-                        }
-                        break;
-
-                    case "EQUIP":
-                        if (ficheEnCours != null && parties.length > 1) {
-                            ficheEnCours.getEquipement().ajouterEquipement(parties[1]);
-                        }
-                        break;
-                }
-            }
-        } catch (IOException e) {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fichier))) {
+            // Charge toute la liste de fiches en une seule operation
+            // Le cast (List<FichePersonnage>) est necessaire car readObject() retourne Object
+            List<FichePersonnage> fichesChargees = (List<FichePersonnage>) ois.readObject();
+            
+            // On vide les fiches actuelles et on ajoute celles chargees
+            utilisateur.getFiches().clear();
+            utilisateur.getFiches().addAll(fichesChargees);
+            
+            System.out.println("Fiches chargees (deserialisation) : " + fichesChargees.size() + " fiche(s)");
+        } catch (IOException | ClassNotFoundException e) {
             System.out.println("Erreur lors du chargement des fiches : " + e.getMessage());
         }
     }

@@ -3,6 +3,10 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Module equipement contenant la liste des equipements du personnage.
+ * Herite de Module qui implemente deja Serializable.
+ */
 public class Equipement extends Module {
 
     private List<String> equipements;
