@@ -1,0 +1,11 @@
+FICHE;1;Guerrier des Ombres
+PORTRAIT;50;50;250;250;portrait_guerrier.png
+BIOGRAPHIE;0;200;400;200;Un guerrier sombre ne dans les tenebres.
+STATISTIQUES;200;0;300;200
+STAT;1;Force;20
+STAT;2;Agilite;14
+COMPETENCES;0;400;300;200
+COMP;Combat a l'epee
+EQUIPEMENTS;300;400;300;200
+EQUIP;Epee des Ombres
+---
