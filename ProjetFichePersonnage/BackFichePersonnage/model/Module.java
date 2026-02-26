@@ -2,10 +2,6 @@ package model;
 
 import java.io.Serializable;
 
-/**
- * Classe abstraite representant un module de fiche.
- * Implemente Serializable pour permettre la sauvegarde binaire.
- */
 public abstract class Module implements Serializable {
 
     private static final long serialVersionUID = 1L;

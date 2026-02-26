@@ -3,10 +3,6 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Module statistiques contenant la liste des stats du personnage.
- * Herite de Module qui implemente deja Serializable.
- */
 public class Statistiques extends Module {
 
     private List<Statistique> statistiques;

@@ -3,10 +3,6 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Module competences contenant la liste des competences du personnage.
- * Herite de Module qui implemente deja Serializable.
- */
 public class Competence extends Module {
 
     private List<String> competences;

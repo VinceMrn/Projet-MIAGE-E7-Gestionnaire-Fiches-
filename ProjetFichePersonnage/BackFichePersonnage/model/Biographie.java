@@ -1,9 +1,5 @@
 package model;
 
-/**
- * Module biographie contenant le texte descriptif du personnage.
- * Herite de Module qui implemente deja Serializable.
- */
 public class Biographie extends Module {
 
     private String texteBiographie;

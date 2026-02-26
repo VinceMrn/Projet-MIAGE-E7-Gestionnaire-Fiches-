@@ -2,10 +2,6 @@ package model;
 
 import java.io.Serializable;
 
-/**
- * Represente une fiche de personnage de jeu de role.
- * Implemente Serializable pour permettre la sauvegarde binaire.
- */
 public class FichePersonnage implements Serializable {
 
     private static final long serialVersionUID = 1L;

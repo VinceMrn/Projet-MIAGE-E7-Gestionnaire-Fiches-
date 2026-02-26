@@ -2,10 +2,6 @@ package model;
 
 import java.io.Serializable;
 
-/**
- * Represente une statistique individuelle (ex: Force, Agilite).
- * Implemente Serializable pour permettre la sauvegarde binaire.
- */
 public class Statistique implements Serializable {
 
     private static final long serialVersionUID = 1L;

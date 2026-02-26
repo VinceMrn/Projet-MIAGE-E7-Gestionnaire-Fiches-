@@ -1,9 +1,5 @@
 package model;
 
-/**
- * Module portrait contenant l'image du personnage.
- * Herite de Module qui implemente deja Serializable.
- */
 public class Portrait extends Module {
 
     private String imagePortrait;

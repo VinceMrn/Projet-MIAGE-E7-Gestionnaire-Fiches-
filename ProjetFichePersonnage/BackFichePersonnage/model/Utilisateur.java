@@ -6,18 +6,14 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Represente un utilisateur avec son compte protege par mot de passe.
- * Le mot de passe est stocke sous forme de hash SHA-256 (jamais en clair).
- * Implemente Serializable pour permettre la sauvegarde binaire.
- */
+
 public class Utilisateur implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     private int idUtilisateur;
     private String nomUtilisateur;
-    private String motdepasseHash; // hash SHA-256, jamais le mot de passe en clair
+    private String motdepasseHash; 
     private List<FichePersonnage> fiches;
 
     /**
