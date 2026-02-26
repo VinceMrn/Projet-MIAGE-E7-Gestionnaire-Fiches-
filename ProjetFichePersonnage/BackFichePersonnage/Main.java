@@ -88,8 +88,8 @@ public class Main {
         gestionFiche.supprimerFiche(2);
         System.out.println("Fiches restantes : " + gestionFiche.listerFiches().size());
 
-        System.out.println("\n=== TEST 12 : Persistance ===");
-        System.out.println("Les fiches sont sauvegardees dans data/fiches_1.txt");
+        System.out.println("\n=== TEST 12 : Persistance ===" );
+        System.out.println("Les fiches sont sauvegardees dans data/fiches_1.dat (serialisation)");
         System.out.println("Nombre d'utilisateurs sauvegardes : " + gestionUtilisateur.getUtilisateurs().size());
 
         gestionUtilisateur.seDeconnecter();
@@ -99,9 +99,12 @@ public class Main {
         // ============================================================
 
         System.out.println("\n=== DEMARRAGE SERVEUR API ===");
-        ServeurAPI serveur = new ServeurAPI(gestionUtilisateur);
+        ServeurAPI serveur = new ServeurAPI(gestionUtilisateur, gestionFiche);
         serveur.demarrer();
-        System.out.println("Le serveur tourne. Ouvrez le frontend React pour tester login/signup.");
+        System.out.println("Endpoints disponibles :");
+        System.out.println("  POST /api/signup, /api/login, /api/logout");
+        System.out.println("  GET  /api/fiches, /api/fiches/{id}");
+        System.out.println("  PUT  /api/fiches/{id}/portrait, /biographie, /module/position");
         System.out.println("Appuyez sur Entree pour arreter le serveur...");
         System.in.read();
         serveur.arreter();
