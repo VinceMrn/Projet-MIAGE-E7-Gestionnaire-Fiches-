@@ -1,14 +1,12 @@
-<?xml version="1.0" encoding="UTF-8"?><project name="Création de gestion des fiches des personnages" company="Sara, Vincent, Zine" webLink="https://github.com/VinceMrn/Projet-MIAGE-E7-Gestionnaire-Fiches-" view-date="2026-02-13" view-index="0" gantt-divider-location="351" resource-divider-location="300" version="3.3.3322" locale="fr_FR">
+<?xml version="1.0" encoding="UTF-8"?><project name="Création de gestion des fiches des personnages" company="Sara, Vincent, Zine" webLink="https://github.com/VinceMrn/Projet-MIAGE-E7-Gestionnaire-Fiches-" view-date="2026-02-11" view-index="0" gantt-divider-location="481" resource-divider-location="300" version="3.3.3316" locale="fr_FR">
     <description><![CDATA[Projet en classe de L3 MIAGE FA/FI, par l'equipe 7 constituée de Sara, Vincent et Zine. Débuté le 21 janvier]]></description>
-    <view zooming-state="default:2" id="gantt-chart">
-        <field id="tpd3" name="Nom" width="200" order="0"/>
-        <field id="tpd4" name="Date de début" width="75" order="1"/>
-        <field id="tpd5" name="Date de fin" width="75" order="2"/>
+    <view zooming-state="default:3" id="gantt-chart">
+        <field id="tpd3" name="Nom" width="240" order="0"/>
+        <field id="tpd4" name="Date de début" width="120" order="1"/>
+        <field id="tpd5" name="Date de fin" width="120" order="2"/>
         <field id="tpd15" name="Notes" width="20" order="3"/>
-        <option id="taskLabelUp" value="taskDates"/>
-        <option id="taskLabelDown" value="resources"/>
-        <option id="taskLabelLeft" value="name"/>
-        <option id="taskLabelRight" value="name"/>
+        <option id="taskLabelUp" value="name"/>
+        <option id="taskLabelDown" value="length"/>
         <option id="filter.completedTasks" value="false"/>
         <option id="filter.dueTodayTasks" value="false"/>
         <option id="filter.overdueTasks" value="false"/>
@@ -16,8 +14,8 @@
         <option id="color.recent"><![CDATA[#ff3333]]></option>
     </view>
     <view id="resource-table">
-        <field id="0" name="Nom" width="210" order="0"/>
-        <field id="1" name="Rôle par défaut" width="86" order="1"/>
+        <field id="0" name="Nom" width="209" order="0"/>
+        <field id="1" name="Rôle par défaut" width="85" order="1"/>
     </view>
     <!-- -->
     <calendars base-id="fr">
@@ -93,36 +91,47 @@
             <taskproperty id="tpd8" name="coordinator" type="default" valuetype="text"/>
             <taskproperty id="tpd9" name="predecessorsr" type="default" valuetype="text"/>
         </taskproperties>
-        <task id="0" uid="efade8fd42e147448723a29871268fc9" name="GESTION DES FICHES DES PERSONNNAGES" meeting="false" start="2026-01-21" duration="105" complete="0" expand="true">
-            <task id="1" uid="7713a3ee92f0473faaaad8fa6faacf01" name="PHASE 0" meeting="false" start="2026-01-21" duration="15" complete="0" expand="true">
-                <task id="10" uid="7900527ff9ab4b55adf5c27ca138bab0" name="INTRODUCTION DU PROJET" meeting="false" start="2026-01-21" duration="15" complete="0" expand="true">
+        <task id="0" uid="efade8fd42e147448723a29871268fc9" name="GESTION DES FICHES DES PERSONNNAGES" meeting="false" start="2026-01-21" duration="51" complete="0" expand="true">
+            <task id="1" uid="7713a3ee92f0473faaaad8fa6faacf01" name="PHASE 1 : INTRODUCTION DU PROJET" meeting="false" start="2026-01-21" duration="5" complete="0" expand="true">
+                <task id="10" uid="7900527ff9ab4b55adf5c27ca138bab0" name="CHOIX DU PROJET" meeting="false" start="2026-01-21" duration="2" complete="0" expand="true">
                     <notes><![CDATA[Introduction du projet en cours et choix de projet.]]></notes>
                 </task>
-                <task id="9" uid="55cb68002c834be39b22030128a1dbda" name="MISE EN PLACE DE L'ENIRONNEMENT" meeting="false" start="2026-01-21" duration="15" complete="0" expand="true">
+                <task id="9" uid="55cb68002c834be39b22030128a1dbda" name="MISE EN PLACE DE L'ENIRONNEMENT" meeting="false" start="2026-01-23" duration="3" complete="0" expand="false">
                     <notes><![CDATA[Création du github et des branches.
 ]]></notes>
+                    <task id="19" uid="8e51ec1a0af841c4a690f0532e462c5e" name="Création du Gantt" meeting="false" start="2026-01-23" duration="3" complete="0" expand="true"/>
+                    <task id="20" uid="34d041e067da41e9998715ab2af4c74d" name="Création du répertoire GitHub" meeting="false" start="2026-01-23" duration="3" complete="0" expand="true"/>
+                    <task id="22" uid="451b5d35249b4f62aaf334898acdd3dc" name="Création du Diagramme de Classe" meeting="false" start="2026-01-23" duration="3" complete="0" expand="true"/>
                 </task>
             </task>
-            <task id="2" uid="64eb2e4e88f84b0aaf7678d172859c6a" name="PHASE 1 - DIAGRAMME DE CLASSE" meeting="false" start="2026-02-04" duration="16" complete="0" expand="true">
-                <task id="6" uid="b517ed8106cf43188a79543f92e7a6b9" name="UML" meeting="false" start="2026-02-04" duration="16" complete="0" expand="true">
-                    <notes><![CDATA[Création des classes et méthodes. 
-Développement du diagramme de classe.
-]]></notes>
+            <task id="2" uid="64eb2e4e88f84b0aaf7678d172859c6a" name="PHASE 2 : DIAGRAMME DE CLASSE" meeting="false" start="2026-01-26" duration="19" complete="0" expand="true">
+                <task id="6" uid="b517ed8106cf43188a79543f92e7a6b9" name="Version de Zara ( Diagramme de Classe )" meeting="false" start="2026-01-26" duration="12" complete="0" expand="true"/>
+                <task id="24" uid="4a32d90d9c484a5cab94981e51a618dd" name="Version de Zine ( Diagramme de Classe )" meeting="false" start="2026-01-26" duration="12" complete="0" expand="true"/>
+                <task id="23" uid="5daac2d11778432bbeb98b7f3410bd0a" name="Version de Vincent ( Diagramme de Classe )" meeting="false" start="2026-01-26" duration="12" complete="0" expand="true"/>
+                <task id="27" uid="15f155773ae642eb86d743917a4f68f4" name="Version de Finale ( Diagramme de Classe )" meeting="false" start="2026-02-07" duration="7" complete="0" expand="true"/>
+            </task>
+            <task id="3" uid="49cfd30285fa4e9eab7a934cd7438707" name="PHASE 3 : DÉVELOPPEMENT" meeting="false" start="2026-02-14" duration="27" complete="0" expand="true">
+                <task id="35" uid="c390d8cab41247bc8fa7f3cb696f9f0f" name="Développement Back-end" meeting="false" start="2026-02-14" duration="27" complete="0" expand="true">
+                    <task id="41" uid="9cbd9f79582549a5ba0ae4eccdd03471" name="Création du Model d'Objet Fiche Personnage" meeting="false" start="2026-02-14" duration="9" complete="0" expand="true"/>
+                    <task id="42" uid="e7446f718122444b91c34cbaeb33e67b" name="Création des Méthodes Fiches Personnages" meeting="false" start="2026-02-21" duration="7" complete="0" expand="true"/>
+                    <task id="32" uid="cf09480b2ddf49b4bef74fe47c46a050" name="Gestion des Droits Utilisateur" meeting="false" start="2026-02-25" duration="12" complete="0" expand="true">
+                        <notes><![CDATA[- Création de la Classe d'Objet Utilisateur
+- Création du Service de gestion des Droits]]></notes>
+                    </task>
+                    <task id="34" uid="bc8fb6071f7245f486aa9325d064fd45" name="Création du Serveur API" meeting="false" start="2026-03-08" duration="5" complete="0" expand="true"/>
+                    <task id="40" uid="6aa3e982e34f48d990427952a123f72a" name="Création de la Serializable" meeting="false" start="2026-02-25" duration="12" complete="0" expand="true"/>
+                    <task id="33" uid="f2bbed0a144a45b8b2f7e920601744e6" name="Sauvegarde et Cryptage des Fiches Personnages" meeting="false" start="2026-02-14" duration="27" complete="0" expand="true">
+                        <task id="43" uid="6a2dbf7d14ec45c1ae8370f7485d8df8" name="Phase de Test de Cryptage" meeting="false" start="2026-02-14" duration="20" complete="0" expand="true"/>
+                        <task id="44" uid="24afde96bfbb47e6be653f6f71ffeaea" name="Phase développement du Cryptage" meeting="false" start="2026-03-05" duration="8" complete="0" expand="true"/>
+                    </task>
                 </task>
-            </task>
-            <task id="3" uid="49cfd30285fa4e9eab7a934cd7438707" name="PHASE 2 - CREATION DU MODEL" meeting="false" start="2026-02-19" duration="60" complete="0" expand="true">
-                <depend id="4" type="2" difference="0" hardness="Strong"/>
-                <task id="7" uid="7ffb734c3266477da084a957746fd4c2" name="DEVELOPPEMENT DES CLASSE ET OBJETS" meeting="false" start="2026-02-19" duration="60" complete="0" expand="true">
-                    <notes><![CDATA[25 fevrier : debut cryptage, serveurAPI et classes du model]]></notes>
-                    <depend id="8" type="2" difference="0" hardness="Strong"/>
+                <task id="36" uid="e714b24937ae4b708be4c3620e82c507" name="Développement Front-end" color="#000000" meeting="false" start="2026-03-05" duration="8" complete="0" expand="true">
+                    <task id="37" uid="da20114971ee406384ccd7eba3c22af9" name="Création des Vus de Gestion Utilisateur" color="#8cb6ce" meeting="false" start="2026-03-05" duration="8" complete="0" expand="true">
+                        <notes><![CDATA[- Création de la page Login
+- Création de la page SignUp]]></notes>
+                    </task>
+                    <task id="45" uid="303970918bab4484a3f9be0af35d474e" name="Création des Vus de Fiche Personnages" meeting="false" start="2026-03-10" duration="3" complete="0" expand="true"/>
                 </task>
-            </task>
-            <task id="4" uid="7b22daf19ab84b458d674cdee030639d" name="PHASE 3 - CREATION DES FONCTIONNALITES PRIMAIRES" meeting="false" start="2026-04-21" duration="14" complete="0" expand="true">
-                <depend id="5" type="2" difference="0" hardness="Strong"/>
-                <task id="8" uid="cb7a5301b23744c9823cdf84114c9558" name="INTERFACE" meeting="false" start="2026-04-21" duration="14" complete="0" expand="true"/>
-            </task>
-            <task id="5" uid="46a4e4ab60d445ca9040f0c1e8968e94" name="PHASE 4" meeting="false" start="2026-05-07" duration="1" complete="0" expand="true">
-                <task id="13" uid="7f77e949138c4fc09fc68b1f09deaa2e" name="DEADLINE POUR RENDRE" color="#ff3333" meeting="false" start="2026-05-07" duration="1" complete="0" expand="true"/>
             </task>
         </task>
     </tasks>
@@ -132,8 +141,32 @@ Développement du diagramme de classe.
         <resource id="2" name="Zine" function="1" contacts="" phone=""/>
     </resources>
     <allocations>
-        <allocation task-id="6" resource-id="0" function="1" responsible="false" load="100.0"/>
-        <allocation task-id="6" resource-id="1" function="1" responsible="false" load="100.0"/>
+        <allocation task-id="20" resource-id="0" function="1" responsible="false" load="100.0"/>
+        <allocation task-id="23" resource-id="0" function="1" responsible="true" load="100.0"/>
+        <allocation task-id="32" resource-id="0" function="1" responsible="true" load="100.0"/>
+        <allocation task-id="34" resource-id="0" function="1" responsible="true" load="100.0"/>
+        <allocation task-id="36" resource-id="0" function="1" responsible="true" load="100.0"/>
+        <allocation task-id="37" resource-id="0" function="1" responsible="true" load="100.0"/>
+        <allocation task-id="41" resource-id="0" function="1" responsible="true" load="100.0"/>
+        <allocation task-id="42" resource-id="0" function="1" responsible="true" load="100.0"/>
+        <allocation task-id="44" resource-id="0" function="1" responsible="true" load="100.0"/>
+        <allocation task-id="19" resource-id="1" function="1" responsible="true" load="100.0"/>
+        <allocation task-id="10" resource-id="1" function="1" responsible="false" load="100.0"/>
+        <allocation task-id="6" resource-id="1" function="1" responsible="true" load="100.0"/>
+        <allocation task-id="27" resource-id="1" function="1" responsible="false" load="100.0"/>
+        <allocation task-id="33" resource-id="1" function="1" responsible="true" load="100.0"/>
+        <allocation task-id="35" resource-id="1" function="1" responsible="true" load="100.0"/>
+        <allocation task-id="36" resource-id="1" function="1" responsible="true" load="100.0"/>
+        <allocation task-id="20" resource-id="2" function="1" responsible="true" load="100.0"/>
+        <allocation task-id="10" resource-id="2" function="1" responsible="false" load="100.0"/>
+        <allocation task-id="24" resource-id="2" function="1" responsible="true" load="100.0"/>
+        <allocation task-id="27" resource-id="2" function="1" responsible="false" load="100.0"/>
+        <allocation task-id="35" resource-id="2" function="1" responsible="false" load="100.0"/>
+        <allocation task-id="36" resource-id="2" function="1" responsible="true" load="100.0"/>
+        <allocation task-id="40" resource-id="2" function="1" responsible="true" load="100.0"/>
+        <allocation task-id="41" resource-id="2" function="1" responsible="false" load="100.0"/>
+        <allocation task-id="42" resource-id="2" function="1" responsible="false" load="100.0"/>
+        <allocation task-id="45" resource-id="2" function="1" responsible="true" load="100.0"/>
     </allocations>
     <vacations/>
     <previous/>
