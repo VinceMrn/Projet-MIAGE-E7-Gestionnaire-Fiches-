@@ -4,10 +4,6 @@ import model.Utilisateur;
 import service.GestionUtilisateur;
 import service.JsonUtils;
 
-/**
- * Routes d'authentification :
- * POST /api/signup, POST /api/login, POST /api/logout, GET /api/utilisateur
- */
 public class RouteAuth implements Route {
 
     private GestionUtilisateur gestionUtilisateur;

@@ -41,66 +41,80 @@ public class ServeurAPI {
 
     public void arreter() {
         enMarche = false;
-        try { serverSocket.close(); } catch (IOException e) {}
+        try { serverSocket.close(); } catch (IOException e) { /* ignore */ }
         System.out.println("Serveur arrete.");
     }
 
+    // --- Classe interne pour regrouper les infos d'une requête ---
+    private static class RequeteHTTP {
+        String methode;
+        String chemin;
+        String body;
+    }
+
+    // --- Lire et parser la requête HTTP depuis le socket ---
+    private RequeteHTTP lireRequete(BufferedReader in) throws IOException {
+        String premiereLigne = in.readLine();
+        if (premiereLigne == null) return null;
+
+        String[] parts = premiereLigne.split(" ");
+        RequeteHTTP req = new RequeteHTTP();
+        req.methode = parts[0];
+        req.chemin = parts[1];
+
+        // Lire les headers pour trouver Content-Length
+        int contentLength = 0;
+        String ligne;
+        while ((ligne = in.readLine()) != null && !ligne.isEmpty()) {
+            if (ligne.startsWith("Content-Length:")) {
+                contentLength = Integer.parseInt(ligne.substring(15).trim());
+            }
+        }
+
+        // Lire le body si présent
+        if (contentLength > 0) {
+            char[] buffer = new char[contentLength];
+            in.read(buffer, 0, contentLength);
+            req.body = new String(buffer);
+        } else {
+            req.body = "";
+        }
+
+        return req;
+    }
+
+    // --- Trouver la route et produire [code, json] ---
+    private String[] router(RequeteHTTP req) {
+        if ("OPTIONS".equals(req.methode)) {
+            return new String[]{"204", ""};
+        }
+
+        for (Route route : routes) {
+            if (route.correspond(req.chemin)) {
+                return route.traiter(req.methode, req.chemin, req.body);
+            }
+        }
+
+        return new String[]{"404", "{\"erreur\":\"Route inconnue\"}"};
+    }
+
+    // --- Méthode principale : lire, router, répondre ---
     private void traiterRequete(Socket client) {
         try (BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
              OutputStream out = client.getOutputStream()) {
 
-            // Lire la premiere ligne : "GET /api/fiches HTTP/1.1"
-            String premiereLigne = in.readLine();
-            if (premiereLigne == null) { client.close(); return; }
+            RequeteHTTP req = lireRequete(in);
+            if (req == null) return;
 
-            String[] parts = premiereLigne.split(" ");
-            String methode = parts[0];
-            String chemin = parts[1];
-
-            // Lire les headers pour trouver Content-Length
-            int contentLength = 0;
-            String ligne;
-            while ((ligne = in.readLine()) != null && !ligne.isEmpty()) {
-                if (ligne.startsWith("Content-Length:")) {
-                    contentLength = Integer.parseInt(ligne.substring(15).trim());
-                }
-            }
-
-            // Lire le body si present
-            String body = "";
-            if (contentLength > 0) {
-                char[] buffer = new char[contentLength];
-                in.read(buffer, 0, contentLength);
-                body = new String(buffer);
-            }
-
-            // Requete preflight CORS (le navigateur envoie OPTIONS avant chaque requete)
-            if ("OPTIONS".equals(methode)) {
-                repondre(out, 204, "");
-                client.close();
-                return;
-            }
-
-            // Chercher quelle route correspond au chemin
-            for (Route route : routes) {
-                if (route.correspond(chemin)) {
-                    String[] resultat = route.traiter(methode, chemin, body);
-                    repondre(out, Integer.parseInt(resultat[0]), resultat[1]);
-                    client.close();
-                    return;
-                }
-            }
-
-            // Aucune route trouvee
-            repondre(out, 404, "{\"erreur\":\"Route inconnue\"}");
-            client.close();
+            String[] resultat = router(req);
+            repondre(out, Integer.parseInt(resultat[0]), resultat[1]);
 
         } catch (IOException e) {
             System.out.println("Erreur requete : " + e.getMessage());
         }
     }
 
-    // Envoie une reponse HTTP brute sur le socket
+    // --- Envoie une réponse HTTP brute ---
     private void repondre(OutputStream out, int code, String json) throws IOException {
         byte[] contenu = json.getBytes("UTF-8");
         String entete = "HTTP/1.1 " + code + " OK\r\n"

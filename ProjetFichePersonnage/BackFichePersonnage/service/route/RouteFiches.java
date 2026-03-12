@@ -5,14 +5,6 @@ import service.GestionFiche;
 import service.GestionUtilisateur;
 import service.JsonUtils;
 
-/**
- * Routes des fiches de personnage :
- * GET/POST /api/fiches
- * GET/DELETE /api/fiches/{id}
- * PUT /api/fiches/{id}/portrait, /biographie
- * POST /api/fiches/{id}/statistiques, /competences, /equipements
- * PUT /api/fiches/{id}/module/position, /module/taille
- */
 public class RouteFiches implements Route {
 
     private GestionUtilisateur gestionUtilisateur;
