@@ -1,15 +1,18 @@
 package service.route;
 
 import model.Utilisateur;
+import service.GestionFiche;
 import service.GestionUtilisateur;
 import service.JsonUtils;
 
 public class RouteAuth implements Route {
 
     private GestionUtilisateur gestionUtilisateur;
+    private GestionFiche gestionFiche;
 
-    public RouteAuth(GestionUtilisateur gestionUtilisateur) {
+    public RouteAuth(GestionUtilisateur gestionUtilisateur, GestionFiche gestionFiche) {
         this.gestionUtilisateur = gestionUtilisateur;
+        this.gestionFiche = gestionFiche;
     }
 
     public boolean correspond(String chemin) {
@@ -36,6 +39,7 @@ public class RouteAuth implements Route {
                 gestionUtilisateur.seDeconnecter();
                 Utilisateur u = gestionUtilisateur.seConnecter(nom, mdp);
                 if (u != null) {
+                    gestionFiche.chargerFiches(u);
                     return new String[]{"200", JsonUtils.succesAvecIdNom(u.getIdUtilisateur(), u.getNomUtilisateur())};
                 }
                 return new String[]{"401", JsonUtils.erreur("Nom ou mot de passe incorrect")};

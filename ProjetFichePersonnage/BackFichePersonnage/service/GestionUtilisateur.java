@@ -24,12 +24,7 @@ public class GestionUtilisateur {
             }
         }
 
-        int id = 1;
-        for (Utilisateur u : utilisateurs) {
-            if (u.getIdUtilisateur() >= id) {
-                id = u.getIdUtilisateur() + 1;
-            }
-        }
+        int id = utilisateurs.size() + 1;
 
         Utilisateur nouveau = new Utilisateur(id, nomUtilisateur, motdepasse);
         utilisateurs.add(nouveau);

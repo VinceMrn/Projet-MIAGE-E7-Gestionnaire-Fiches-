@@ -15,7 +15,7 @@ public class ServeurAPI {
 
     public ServeurAPI(GestionUtilisateur gestionUtilisateur, GestionFiche gestionFiche) {
         this.routes = new Route[]{
-            new RouteAuth(gestionUtilisateur),
+            new RouteAuth(gestionUtilisateur, gestionFiche),
             new RouteFiches(gestionUtilisateur, gestionFiche)
         };
     }
