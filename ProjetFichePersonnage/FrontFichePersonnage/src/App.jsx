@@ -16,13 +16,13 @@ function AppContent() {
   if (!utilisateur) {
     if (page === 'signup') {
       return (
-        <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+        <div>
           <SignupForm onSwitchToLogin={() => setPage('login')} />
         </div>
       )
     }
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+      <div>
         <LoginForm
           onSwitchToSignup={() => setPage('signup')}
           onSuccess={() => setPage('fiches')}

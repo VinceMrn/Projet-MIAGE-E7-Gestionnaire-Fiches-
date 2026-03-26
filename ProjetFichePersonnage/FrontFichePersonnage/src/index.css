@@ -1,1 +1,121 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&display=swap');
 @import "tailwindcss";
+
+@theme {
+  --color-parchment: #d4c5a0;
+  --color-parchment-dark: #b8a882;
+  --color-parchment-light: #e8dcc4;
+  --color-wood: #3e2a1a;
+  --color-wood-light: #5c3d26;
+  --color-stone: #4a4a4a;
+  --color-stone-dark: #2d2d2d;
+  --color-stone-darker: #1a1a1a;
+  --color-moss: #4a6741;
+  --color-moss-dark: #355230;
+  --color-gold: #c9a84c;
+  --color-gold-dark: #a68a3a;
+  --color-gold-light: #e0c76e;
+  --color-blood: #8b2f2f;
+  --color-blood-dark: #6b1f1f;
+
+  --font-medieval: "Cinzel", "Georgia", serif;
+  --font-body: "Crimson Text", "Georgia", serif;
+}
+
+html, body {
+  background: #111827;
+}
+
+/* ========== ANIMATIONS ========== */
+
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes fade-in-up {
+  0% { opacity: 0; transform: translateY(30px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* ========== CLASSES ========== */
+
+.font-medieval { font-family: var(--font-medieval); }
+.font-body { font-family: var(--font-body); }
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.8s ease-out forwards;
+}
+
+.gold-shimmer {
+  background: linear-gradient(90deg, var(--color-gold-dark) 0%, var(--color-gold-light) 50%, var(--color-gold-dark) 100%);
+  background-size: 200% auto;
+  animation: shimmer 4s linear infinite;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Fond scene */
+.bg-medieval {
+  background: #83858b;
+}
+
+/* Carte parchemin */
+.card-medieval {
+  background: linear-gradient(145deg, rgba(62, 42, 26, 0.95), rgba(45, 30, 18, 0.98));
+  border: 1px solid rgba(201, 168, 76, 0.25);
+  box-shadow:
+    0 0 20px rgba(0, 0, 0, 0.5),
+    0 0 60px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(201, 168, 76, 0.1);
+}
+
+/* Input */
+.input-medieval {
+  background: rgba(26, 26, 26, 0.8);
+  border: 1px solid rgba(201, 168, 76, 0.2);
+  color: var(--color-parchment);
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  transition: all 0.3s ease;
+}
+.input-medieval::placeholder {
+  color: rgba(212, 197, 160, 0.35);
+  font-style: italic;
+}
+.input-medieval:focus {
+  outline: none;
+  border-color: var(--color-gold);
+  box-shadow: 0 0 10px rgba(201, 168, 76, 0.2), inset 0 0 5px rgba(201, 168, 76, 0.05);
+}
+
+/* Bouton */
+.btn-medieval {
+  background: linear-gradient(180deg, var(--color-moss) 0%, var(--color-moss-dark) 100%);
+  border: 1px solid rgba(201, 168, 76, 0.3);
+  color: var(--color-parchment-light);
+  font-family: var(--font-medieval);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+.btn-medieval:hover {
+  background: linear-gradient(180deg, #567d4b 0%, var(--color-moss) 100%);
+  border-color: var(--color-gold);
+  box-shadow: 0 0 20px rgba(201, 168, 76, 0.3), 0 4px 15px rgba(0, 0, 0, 0.4);
+  transform: translateY(-1px);
+}
+.btn-medieval:active {
+  transform: translateY(0);
+}
+
+/* Separateur dore */
+.divider-medieval {
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, var(--color-gold) 50%, transparent 100%);
+  opacity: 0.3;
+}

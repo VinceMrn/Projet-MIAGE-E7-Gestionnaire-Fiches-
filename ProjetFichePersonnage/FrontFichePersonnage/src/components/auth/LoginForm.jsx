@@ -19,59 +19,82 @@ export default function LoginForm({ onSwitchToSignup, onSuccess }) {
   }
 
   return (
-    <div className="bg-gray-800 p-8 rounded-2xl shadow-xl w-full max-w-md">
-      <h1 className="text-2xl font-bold text-white text-center mb-2">
-        Gestionnaire de Fiches
-      </h1>
-      <p className="text-gray-400 text-center mb-6">Connectez-vous a votre compte</p>
+    <div className="min-h-screen w-full bg-medieval flex items-center justify-center">
+      <div className="card-medieval rounded-xl p-10 w-full max-w-md animate-fade-in-up">
 
-      {erreur && (
-        <div className="bg-red-900/50 border border-red-700 text-red-400 text-sm p-3 rounded-lg mb-4">
-          {erreur}
+        <div className="flex items-center justify-center mb-2">
+          <span className="text-gold opacity-40 text-2xl tracking-[0.5em] font-medieval">⚔</span>
         </div>
-      )}
 
-      <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <label className="block text-gray-300 text-sm font-medium mb-2">
-            Nom d'utilisateur
-          </label>
-          <input
-            type="text"
-            value={nom}
-            onChange={(e) => setNom(e.target.value)}
-            className="w-full bg-gray-700 border border-gray-600 rounded-lg py-3 px-4 text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
-            placeholder="Entrez votre nom"
-            required
-          />
-        </div>
-        <div className="mb-6">
-          <label className="block text-gray-300 text-sm font-medium mb-2">
-            Mot de passe
-          </label>
-          <input
-            type="password"
-            value={motdepasse}
-            onChange={(e) => setMotdepasse(e.target.value)}
-            className="w-full bg-gray-700 border border-gray-600 rounded-lg py-3 px-4 text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
-            placeholder="Entrez votre mot de passe"
-            required
-          />
-        </div>
-        <button
-          type="submit"
-          className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-4 rounded-lg transition"
-        >
-          Se connecter
-        </button>
-      </form>
+        <h1 className="font-medieval text-3xl font-bold text-center mb-1 gold-shimmer">
+          Grimoire des Héros
+        </h1>
+        <p className="font-body text-parchment-dark text-center text-sm italic mb-2">
+          Gestionnaire de Fiches de Personnages
+        </p>
 
-      <p className="text-gray-400 text-sm text-center mt-4">
-        Pas de compte ?{' '}
-        <button onClick={onSwitchToSignup} className="text-indigo-400 hover:text-indigo-300">
-          S'inscrire
-        </button>
-      </p>
+        <div className="divider-medieval my-6" />
+
+        <p className="font-body text-parchment-dark text-center mb-6 text-[0.95rem]">
+          Entrez vos identifiants, aventurier
+        </p>
+
+        {erreur && (
+          <div className="bg-blood-dark/40 border border-blood/50 text-red-300 text-sm p-3 rounded-lg mb-5 font-body text-center">
+            ⚠ {erreur}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit}>
+          <div className="mb-5">
+            <label className="block text-gold/70 text-xs font-medieval uppercase tracking-widest mb-2">
+              Nom d'aventurier
+            </label>
+            <input
+              type="text"
+              value={nom}
+              onChange={(e) => setNom(e.target.value)}
+              className="w-full input-medieval rounded-lg py-3 px-4"
+              placeholder="Votre nom..."
+              required
+            />
+          </div>
+
+          <div className="mb-7">
+            <label className="block text-gold/70 text-xs font-medieval uppercase tracking-widest mb-2">
+              Mot de passe
+            </label>
+            <input
+              type="password"
+              value={motdepasse}
+              onChange={(e) => setMotdepasse(e.target.value)}
+              className="w-full input-medieval rounded-lg py-3 px-4"
+              placeholder="Votre secret..."
+              required
+            />
+          </div>
+
+          <button type="submit" className="w-full btn-medieval py-3 px-4 rounded-lg">
+            Entrer dans le Royaume
+          </button>
+        </form>
+
+        <div className="divider-medieval my-6" />
+
+        <p className="font-body text-parchment-dark text-sm text-center">
+          Nouveau dans ces contrées ?{' '}
+          <button
+            onClick={onSwitchToSignup}
+            className="text-gold hover:text-gold-light transition font-semibold"
+          >
+            Rejoindre la Guilde
+          </button>
+        </p>
+
+        <div className="flex items-center justify-center mt-4">
+          <span className="text-gold opacity-20 text-xs tracking-[0.3em] font-medieval">◆ ◆ ◆</span>
+        </div>
+      </div>
     </div>
   )
 }
