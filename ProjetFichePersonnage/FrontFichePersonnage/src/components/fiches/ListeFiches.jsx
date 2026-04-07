@@ -7,7 +7,6 @@ export default function ListeFiches({ onSelectFiche, onCreerFiche }) {
   const [erreur, setErreur] = useState('')
   const [recherche, setRecherche] = useState('')
   const [tri, setTri] = useState('modifie')
-  const [bannerVisible, setBannerVisible] = useState(true)
 
   const chargerFiches = async () => {
     setChargement(true)
@@ -47,11 +46,6 @@ export default function ListeFiches({ onSelectFiche, onCreerFiche }) {
   const crimson = "'Crimson Text', Georgia, serif"
 
   const s = {
-    banner: { background: '#2e2410', border: '1px solid #6b5030', borderRadius: 7, padding: '16px 18px', marginBottom: 26, display: 'flex', gap: 12, alignItems: 'flex-start' },
-    bannerTitle: { fontFamily: cinzel, fontSize: 13, color: '#e8d5a0', fontWeight: 600, marginBottom: 6 },
-    bannerText: { fontSize: 13, color: '#a09070', lineHeight: 1.5, marginBottom: 10 },
-    bannerBtn: { background: '#4a3a20', border: '1px solid #6b5030', color: '#d4c4a0', padding: '5px 16px', borderRadius: 4, fontFamily: crimson, fontSize: 13, cursor: 'pointer' },
-    bannerClose: { background: 'transparent', border: 'none', color: '#6a5a3a', fontSize: 16, cursor: 'pointer', padding: 0 },
     sectionRow: { display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 4 },
     title: { fontFamily: cinzel, fontSize: 24, color: '#e8d5a0', fontWeight: 600 },
     count: { fontSize: 13, color: '#6a5a3a', fontStyle: 'italic' },
@@ -72,19 +66,6 @@ export default function ListeFiches({ onSelectFiche, onCreerFiche }) {
 
   return (
     <div style={{ fontFamily: crimson, color: '#d4c4a0' }}>
-
-      {/* Bannière */}
-      {bannerVisible && (
-        <div style={s.banner}>
-          <span style={{ fontSize: 15, color: '#c4a86a', flexShrink: 0, marginTop: 2 }}>✦</span>
-          <div style={{ flex: 1 }}>
-            <div style={s.bannerTitle}>Bienvenue dans le Grimoire des Héros !</div>
-            <div style={s.bannerText}>Nous avons créé un personnage de démonstration pour vous aider à démarrer. Cliquez sur une carte pour explorer l'éditeur, ou créez votre propre personnage !</div>
-            <button style={s.bannerBtn} onClick={() => setBannerVisible(false)}>Compris</button>
-          </div>
-          <button style={s.bannerClose} onClick={() => setBannerVisible(false)}>✕</button>
-        </div>
-      )}
 
       {/* Titre + bouton */}
       <div style={s.sectionRow}>

@@ -27,7 +27,7 @@ export default function Equipements({ equipements, idFiche, onUpdate }) {
     <div style={{ background: '#2a1f14', border: '1px solid #5c4a2a', borderRadius: 8, overflow: 'hidden', fontFamily: crimson }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', borderBottom: collapsed ? 'none' : '1px solid #3a2c18' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, paddingLeft: 36 }}>
-          <h3 style={{ fontFamily: cinzel, fontSize: 13, fontWeight: 600, color: '#e8d5a0', margin: 0, letterSpacing: '0.05em', textTransform: 'uppercase' }}>Equipment</h3>
+          <h3 style={{ fontFamily: cinzel, fontSize: 13, fontWeight: 600, color: '#e8d5a0', margin: 0, letterSpacing: '0.05em', textTransform: 'uppercase' }}>Équipement</h3>
         </div>
         <div style={{ display: 'flex', gap: 10 }}>
           <button onClick={() => setCollapsed(!collapsed)} style={{ background: 'transparent', border: 'none', color: '#6a5a3a', cursor: 'pointer', fontSize: 14 }}>{collapsed ? '∨' : '∧'}</button>
@@ -64,7 +64,7 @@ export default function Equipements({ equipements, idFiche, onUpdate }) {
             </form>
           ) : (
             <button onClick={() => setAjout(true)} style={{ width: '100%', marginTop: 12, background: 'transparent', border: '1px solid #3a2c18', color: '#6a5a3a', padding: '8px', borderRadius: 5, fontFamily: cinzel, fontSize: 11, cursor: 'pointer', letterSpacing: '0.04em' }}>
-              + Add Equipment
+              + Add Équipement
             </button>
           )}
         </div>

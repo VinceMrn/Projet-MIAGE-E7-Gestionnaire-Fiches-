@@ -18,12 +18,8 @@ export default function Layout({ children, page, onNavigate }) {
       {/* ── Header ── */}
       <header style={{ background: '#110d05', borderBottom: '1px solid #5c4a2a', padding: '10px 28px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         {/* Logo */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <div style={{ width: 38, height: 38, background: '#6b4f2a', border: '1px solid #8a6a3a', borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 19, cursor: 'pointer' }} onClick={() => onNavigate('fiches')}>📖</div>
-          <div onClick={() => onNavigate('fiches')} style={{ cursor: 'pointer' }}>
-            <div style={{ fontFamily: cinzel, fontSize: 16, fontWeight: 600, color: '#e8d5a0', letterSpacing: '0.06em', textTransform: 'uppercase' }}>Grimoire des Héros</div>
-            <div style={{ fontSize: 11, color: '#8a7a5a', fontStyle: 'italic' }}>Gestionnaire de Fiches de Personnages RPG</div>
-          </div>
+        <div onClick={() => onNavigate('fiches')} style={{ cursor: 'pointer' }}>
+          <div style={{ fontFamily: cinzel, fontSize: 16, fontWeight: 600, color: '#e8d5a0', letterSpacing: '0.06em', textTransform: 'uppercase' }}>Grimoire des Héros</div>
         </div>
 
         {/* Nav droite */}
@@ -51,7 +47,7 @@ export default function Layout({ children, page, onNavigate }) {
 
       {/* ── Footer ── */}
       <footer style={{ background: '#110d05', borderTop: '1px solid #2e2410', padding: '10px 28px', textAlign: 'center', fontSize: 12, color: '#4a3a1a' }}>
-        Grimoire des Héros • Gestionnaire de Fiches de Personnages RPG
+        Grimoire des Héros
       </footer>
     </div>
   )

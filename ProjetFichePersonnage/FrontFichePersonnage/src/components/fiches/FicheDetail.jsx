@@ -160,7 +160,6 @@ export default function FicheDetail({ idFiche, onRetour }) {
   const [fiche, setFiche] = useState(null)
   const [chargement, setChargement] = useState(true)
   const [erreur, setErreur] = useState('')
-  const [astucesVisible, setAstucesVisible] = useState(true)
   const [modules, setModules] = useState(MODULES_DEFAUT)
   const [modalVisible, setModalVisible] = useState(false)
   const [nomCustom, setNomCustom] = useState('')
@@ -276,31 +275,7 @@ export default function FicheDetail({ idFiche, onRetour }) {
   return (
     <div style={{ fontFamily: crimson, color: '#d4c4a0' }}>
 
-      {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <button onClick={onRetour} style={{ background: 'transparent', border: 'none', color: '#a09070', fontFamily: cinzel, fontSize: 12, cursor: 'pointer', letterSpacing: '0.04em' }}>← Retour</button>
-          <div style={{ width: 1, height: 20, background: '#5c4a2a' }} />
-          <h2 style={{ fontFamily: cinzel, fontSize: 20, fontWeight: 600, color: '#e8d5a0', margin: 0, letterSpacing: '0.06em', textTransform: 'uppercase' }}>{fiche.nom}</h2>
-        </div>
-        <button onClick={() => setModalVisible(true)} style={{ background: '#4a7030', border: '1px solid #6a9040', color: '#c8e0a0', padding: '7px 16px', borderRadius: 6, fontFamily: cinzel, fontSize: 12, cursor: 'pointer', fontWeight: 600 }}>
-          + Ajouter Module
-        </button>
-      </div>
 
-      {/* Astuces rapides */}
-      {astucesVisible && (
-        <div style={{ background: '#2e2410', border: '1px solid #6b5030', borderRadius: 7, padding: '12px 16px', marginBottom: 20, display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-          <span style={{ color: '#c4a86a', fontSize: 14, flexShrink: 0 }}>ℹ ✦</span>
-          <div style={{ flex: 1 }}>
-            <div style={{ fontFamily: cinzel, fontSize: 12, color: '#e8d5a0', fontWeight: 600, marginBottom: 5 }}>Astuces Rapides :</div>
-            <div style={{ fontSize: 13, color: '#a09070', lineHeight: 1.6 }}>
-              Cliquez sur le nom/description pour éditer • Cliquez "…" pour les options • Les modifications sont automatiquement sauvegardées
-            </div>
-          </div>
-          <button onClick={() => setAstucesVisible(false)} style={{ background: 'transparent', border: 'none', color: '#6a5a3a', fontSize: 16, cursor: 'pointer', padding: 0 }}>✕</button>
-        </div>
-      )}
 
       {/* Infos personnage */}
       <p style={{ fontSize: 13, color: '#8a7a5a', fontStyle: 'italic', marginBottom: 24 }}>

@@ -25,7 +25,7 @@ export default function Biographie({ biographie, idFiche, onUpdate }) {
     <div style={{ background: '#2a1f14', border: '1px solid #5c4a2a', borderRadius: 8, overflow: 'hidden', fontFamily: crimson }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', borderBottom: collapsed ? 'none' : '1px solid #3a2c18' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, paddingLeft: 36 }}>
-          <h3 style={{ fontFamily: cinzel, fontSize: 13, fontWeight: 600, color: '#e8d5a0', margin: 0, letterSpacing: '0.05em', textTransform: 'uppercase' }}>Biography</h3>
+          <h3 style={{ fontFamily: cinzel, fontSize: 13, fontWeight: 600, color: '#e8d5a0', margin: 0, letterSpacing: '0.05em', textTransform: 'uppercase' }}>Biographie</h3>
         </div>
         <div style={{ display: 'flex', gap: 10 }}>
           <button onClick={() => setCollapsed(!collapsed)} style={{ background: 'transparent', border: 'none', color: '#6a5a3a', cursor: 'pointer', fontSize: 14 }}>{collapsed ? '∨' : '∧'}</button>
@@ -56,7 +56,7 @@ export default function Biographie({ biographie, idFiche, onUpdate }) {
               <p style={{ fontSize: 14, color: '#c4b490', lineHeight: 1.7, whiteSpace: 'pre-wrap', margin: '0 0 12px' }}>
                 {biographie.texte || <span style={{ color: '#5a4a2a', fontStyle: 'italic' }}>Aucune biographie</span>}
               </p>
-              <button onClick={() => setEdition(true)} style={{ background: 'transparent', border: '1px solid #4a3a1a', color: '#8a7a5a', padding: '5px 14px', borderRadius: 4, fontFamily: cinzel, fontSize: 11, cursor: 'pointer' }}>✎ Edit Biography</button>
+              <button onClick={() => setEdition(true)} style={{ background: 'transparent', border: '1px solid #4a3a1a', color: '#8a7a5a', padding: '5px 14px', borderRadius: 4, fontFamily: cinzel, fontSize: 11, cursor: 'pointer' }}>✎ Edit Biographie</button>
             </div>
           )}
         </div>

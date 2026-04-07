@@ -47,7 +47,7 @@ export default function Portrait({ portrait, idFiche, onUpdate }) {
               <div style={{ fontSize: 32, color: '#5c4a2a', marginBottom: 8 }}>👤</div>
               <div style={{ fontSize: 12, color: '#6a5a3a', marginBottom: 4 }}>Drag & drop une image</div>
               <div style={{ fontSize: 11, color: '#4a3a1a' }}>ou</div>
-              <button onClick={() => setEdition(true)} style={{ marginTop: 8, background: 'transparent', border: '1px solid #5c4a2a', color: '#a09070', padding: '5px 14px', borderRadius: 4, fontFamily: cinzel, fontSize: 11, cursor: 'pointer' }}>↑ Choose File</button>
+              <button onClick={() => setEdition(true)} style={{ marginTop: 8, background: 'transparent', border: '1px solid #5c4a2a', color: '#a09070', padding: '5px 14px', borderRadius: 4, fontFamily: cinzel, fontSize: 11, cursor: 'pointer' }}>↑ Choisir une image</button>
             </div>
           )}
 
