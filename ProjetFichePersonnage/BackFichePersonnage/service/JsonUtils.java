@@ -2,6 +2,7 @@ package service;
 
 import model.*;
 import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Utilitaires pour le parsing et la serialisation JSON.
@@ -119,8 +120,99 @@ public class JsonUtils {
         }
         json.append("]}");
 
+            // Modules personnalisés
+            java.util.List<ModulePersonnalise> modulesPerso = fiche.getModulesPersonnalises();
+            json.append(",\"modulesPersonnalises\":[");
+            for (int i = 0; i < modulesPerso.size(); i++) {
+                ModulePersonnalise mp = modulesPerso.get(i);
+                json.append("{");
+                json.append("\"id\":\"").append(mp.getId()).append("\"");
+                json.append(",\"nom\":\"").append(mp.getNom()).append("\"");
+                json.append(",\"type\":\"").append(mp.getType()).append("\"");
+
+                // contenuTexte
+                if (mp.getContenuTexte() != null) {
+                    json.append(",\"contenuTexte\":\"").append(mp.getContenuTexte()).append("\"");
+                }
+
+                // contenuListe
+                json.append(",\"contenuListe\":[");
+                java.util.List<String> cl = mp.getContenuListe();
+                for (int j = 0; j < cl.size(); j++) {
+                    json.append("\"").append(cl.get(j)).append("\"");
+                    if (j < cl.size() - 1) json.append(",");
+                }
+                json.append("]");
+
+                // contenuStats
+                json.append(",\"contenuStats\":[");
+                java.util.List<Statistique> cs = mp.getContenuStats();
+                for (int j = 0; j < cs.size(); j++) {
+                    Statistique s = cs.get(j);
+                    json.append("{\"nom\":\"").append(s.getNomStatistique()).append("\",\"valeur\":").append(s.getValeurStatistique()).append("}");
+                    if (j < cs.size() - 1) json.append(",");
+                }
+                json.append("]");
+
+                json.append("}");
+                if (i < modulesPerso.size() - 1) json.append(",");
+            }
+            json.append("]");
+        // Ferme l'objet fiche
         json.append("}");
         return json.toString();
+    }
+
+    // Extraire un tableau de strings simple: "cle": ["a","b"]
+    public static List<String> extraireArrayStrings(String json, String cle) {
+        List<String> res = new ArrayList<>();
+        String recherche = "\"" + cle + "\"";
+        int idx = json.indexOf(recherche);
+        if (idx == -1) return null;
+        idx = json.indexOf('[', idx);
+        if (idx == -1) return null;
+        int fin = json.indexOf(']', idx);
+        if (fin == -1) return null;
+        String contenu = json.substring(idx + 1, fin).trim();
+        if (contenu.isEmpty()) return res;
+        int i = 0;
+        while (i < contenu.length()) {
+            while (i < contenu.length() && contenu.charAt(i) != '"') i++;
+            if (i >= contenu.length()) break;
+            int debut = i + 1;
+            int finq = contenu.indexOf('"', debut);
+            if (finq == -1) break;
+            res.add(contenu.substring(debut, finq));
+            i = finq + 1;
+        }
+        return res;
+    }
+
+    // Extraire un tableau d'objets statistiques: [{"nom":"...","valeur":N},...]
+    public static List<Statistique> extraireArrayStatistiques(String json, String cle) {
+        List<Statistique> res = new ArrayList<>();
+        String recherche = "\"" + cle + "\"";
+        int idx = json.indexOf(recherche);
+        if (idx == -1) return null;
+        idx = json.indexOf('[', idx);
+        if (idx == -1) return null;
+        int fin = json.indexOf(']', idx);
+        if (fin == -1) return null;
+        String contenu = json.substring(idx + 1, fin).trim();
+        if (contenu.isEmpty()) return res;
+        int i = 0;
+        while (i < contenu.length()) {
+            int objStart = contenu.indexOf('{', i);
+            if (objStart == -1) break;
+            int objEnd = contenu.indexOf('}', objStart);
+            if (objEnd == -1) break;
+            String obj = contenu.substring(objStart + 1, objEnd);
+            String nom = extraireString("{" + obj + "}", "nom");
+            Integer val = extraireInt("{" + obj + "}", "valeur");
+            if (nom != null && val != null) res.add(new Statistique(0, nom, val));
+            i = objEnd + 1;
+        }
+        return res;
     }
 
     /**

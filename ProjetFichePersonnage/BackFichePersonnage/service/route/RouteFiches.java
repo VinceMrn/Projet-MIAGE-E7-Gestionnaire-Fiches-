@@ -5,6 +5,14 @@ import service.GestionFiche;
 import service.GestionUtilisateur;
 import service.JsonUtils;
 
+/**
+ * Routes des fiches de personnage :
+ * GET/POST /api/fiches
+ * GET/DELETE /api/fiches/{id}
+ * PUT /api/fiches/{id}/portrait, /biographie
+ * POST /api/fiches/{id}/statistiques, /competences, /equipements
+ * PUT /api/fiches/{id}/module/position, /module/taille
+ */
 public class RouteFiches implements Route {
 
     private GestionUtilisateur gestionUtilisateur;
@@ -20,89 +28,216 @@ public class RouteFiches implements Route {
     }
 
     public String[] traiter(String methode, String chemin, String body) {
+        // Verification connexion
         if (gestionUtilisateur.getUtilisateurConnecte() == null) {
-            return r(401, JsonUtils.erreur("Non connecte"));
+            return reponse(401, JsonUtils.erreur("Non connecte"));
         }
 
-        String[] s = chemin.split("/"); // ["", "api", "fiches", ...]
-
-        // GET /api/fiches → liste
-        if (chemin.equals("/api/fiches") && "GET".equals(methode)) {
-            return r(200, JsonUtils.listeFichesVersJSON(gestionFiche.listerFiches()));
+        // /api/fiches
+        if (chemin.equals("/api/fiches")) {
+            return traiterListeOuCreation(methode, body);
         }
 
-        // POST /api/fiches → creer
-        if (chemin.equals("/api/fiches") && "POST".equals(methode)) {
-            String nom = JsonUtils.extraireString(body, "nom");
-            FichePersonnage f = gestionFiche.creerFiche(nom);
-            return r(201, JsonUtils.succesAvecIdNom(f.getIdFichePersonnage(), f.getNomFichePersonnage()));
+        // /api/fiches/{id}...
+        String[] segments = chemin.split("/");
+        int idFiche;
+        try {
+            idFiche = Integer.parseInt(segments[3]);
+        } catch (Exception e) {
+            return reponse(400, JsonUtils.erreur("ID invalide"));
         }
 
-        // A partir d'ici on a besoin d'un ID : /api/fiches/{id}/...
-        if (s.length < 4) return r(404, JsonUtils.erreur("Route inconnue"));
-        int id = Integer.parseInt(s[3]);
-
-        // GET /api/fiches/{id}
-        if (s.length == 4 && "GET".equals(methode)) {
-            FichePersonnage f = gestionFiche.getFiche(id);
-            return f != null ? r(200, JsonUtils.ficheVersJSON(f)) : r(404, JsonUtils.erreur("Fiche non trouvee"));
+        // /api/fiches/{id}
+        if (segments.length == 4) {
+            return traiterFiche(methode, idFiche);
         }
 
-        // DELETE /api/fiches/{id}
-        if (s.length == 4 && "DELETE".equals(methode)) {
-            return gestionFiche.supprimerFiche(id) ? r(200, JsonUtils.succes()) : r(404, JsonUtils.erreur("Fiche non trouvee"));
+        // /api/fiches/{id}/{ressource}
+        if (segments.length >= 5) {
+            return traiterRessource(methode, body, idFiche, segments);
         }
 
-        if (s.length < 5) return r(404, JsonUtils.erreur("Route inconnue"));
-        String ressource = s[4];
-
-        // PUT /api/fiches/{id}/portrait
-        if ("portrait".equals(ressource) && "PUT".equals(methode)) {
-            gestionFiche.modifierPortrait(id, JsonUtils.extraireString(body, "image"));
-            return r(200, JsonUtils.succes());
-        }
-
-        // PUT /api/fiches/{id}/biographie
-        if ("biographie".equals(ressource) && "PUT".equals(methode)) {
-            gestionFiche.modifierBiographie(id, JsonUtils.extraireString(body, "texte"));
-            return r(200, JsonUtils.succes());
-        }
-
-        // POST /api/fiches/{id}/statistiques
-        if ("statistiques".equals(ressource) && "POST".equals(methode)) {
-            gestionFiche.ajouterStatistique(id, JsonUtils.extraireString(body, "nom"), JsonUtils.extraireInt(body, "valeur"));
-            return r(201, JsonUtils.succes());
-        }
-
-        // POST /api/fiches/{id}/competences
-        if ("competences".equals(ressource) && "POST".equals(methode)) {
-            gestionFiche.ajouterCompetence(id, JsonUtils.extraireString(body, "nom"));
-            return r(201, JsonUtils.succes());
-        }
-
-        // POST /api/fiches/{id}/equipements
-        if ("equipements".equals(ressource) && "POST".equals(methode)) {
-            gestionFiche.ajouterEquipement(id, JsonUtils.extraireString(body, "nom"));
-            return r(201, JsonUtils.succes());
-        }
-
-        // PUT /api/fiches/{id}/module/position
-        if ("module".equals(ressource) && s.length >= 6 && "PUT".equals(methode)) {
-            String module = JsonUtils.extraireString(body, "module");
-            if ("position".equals(s[5])) {
-                gestionFiche.modifierPositionModule(id, module, JsonUtils.extraireInt(body, "posX"), JsonUtils.extraireInt(body, "posY"));
-                return r(200, JsonUtils.succes());
-            }
-            if ("taille".equals(s[5])) {
-                gestionFiche.modifierTailleModule(id, module, JsonUtils.extraireInt(body, "largeur"), JsonUtils.extraireInt(body, "hauteur"));
-                return r(200, JsonUtils.succes());
-            }
-        }
-
-        return r(404, JsonUtils.erreur("Route inconnue"));
+        return reponse(404, JsonUtils.erreur("Route inconnue"));
     }
 
-    private String[] r(int code, String json) {
+    private String[] traiterListeOuCreation(String methode, String body) {
+        if ("GET".equals(methode)) {
+            return reponse(200, JsonUtils.listeFichesVersJSON(gestionFiche.listerFiches()));
+        }
+        if ("POST".equals(methode)) {
+            String nom = JsonUtils.extraireString(body, "nom");
+            if (nom == null || nom.isEmpty()) {
+                return reponse(400, JsonUtils.erreur("Nom requis"));
+            }
+            FichePersonnage f = gestionFiche.creerFiche(nom);
+            return reponse(201, JsonUtils.succesAvecIdNom(f.getIdFichePersonnage(), f.getNomFichePersonnage()));
+        }
+        return reponse(405, JsonUtils.erreur("Methode non autorisee"));
+    }
+
+    private String[] traiterFiche(String methode, int idFiche) {
+        if ("GET".equals(methode)) {
+            FichePersonnage fiche = gestionFiche.getFiche(idFiche);
+            if (fiche == null) return reponse(404, JsonUtils.erreur("Fiche non trouvee"));
+            return reponse(200, JsonUtils.ficheVersJSON(fiche));
+        }
+        if ("DELETE".equals(methode)) {
+            boolean ok = gestionFiche.supprimerFiche(idFiche);
+            return ok ? reponse(200, JsonUtils.succes()) : reponse(404, JsonUtils.erreur("Fiche non trouvee"));
+        }
+        return reponse(405, JsonUtils.erreur("Methode non autorisee"));
+    }
+
+    private String[] traiterRessource(String methode, String body, int idFiche, String[] segments) {
+        String ressource = segments[4];
+
+        switch (ressource) {
+            case "portrait":
+                if ("PUT".equals(methode)) {
+                    gestionFiche.modifierPortrait(idFiche, JsonUtils.extraireString(body, "image"));
+                    return reponse(200, JsonUtils.succes());
+                }
+                return reponse(405, JsonUtils.erreur("Methode non autorisee"));
+
+            case "biographie":
+                if ("PUT".equals(methode)) {
+                    gestionFiche.modifierBiographie(idFiche, JsonUtils.extraireString(body, "texte"));
+                    return reponse(200, JsonUtils.succes());
+                }
+                return reponse(405, JsonUtils.erreur("Methode non autorisee"));
+
+            case "statistiques":
+                if ("POST".equals(methode)) {
+                    String nom = JsonUtils.extraireString(body, "nom");
+                    Integer val = JsonUtils.extraireInt(body, "valeur");
+                    if (nom != null && val != null) {
+                        gestionFiche.ajouterStatistique(idFiche, nom, val);
+                        return reponse(201, JsonUtils.succes());
+                    }
+                    return reponse(400, JsonUtils.erreur("nom et valeur requis"));
+                }
+                return reponse(405, JsonUtils.erreur("Methode non autorisee"));
+
+            case "competences":
+                if ("POST".equals(methode)) {
+                    String nom = JsonUtils.extraireString(body, "nom");
+                    if (nom != null) {
+                        gestionFiche.ajouterCompetence(idFiche, nom);
+                        return reponse(201, JsonUtils.succes());
+                    }
+                    return reponse(400, JsonUtils.erreur("nom requis"));
+                }
+                return reponse(405, JsonUtils.erreur("Methode non autorisee"));
+
+            case "equipements":
+                if ("POST".equals(methode)) {
+                    String nom = JsonUtils.extraireString(body, "nom");
+                    if (nom != null) {
+                        gestionFiche.ajouterEquipement(idFiche, nom);
+                        return reponse(201, JsonUtils.succes());
+                    }
+                    return reponse(400, JsonUtils.erreur("nom requis"));
+                }
+                return reponse(405, JsonUtils.erreur("Methode non autorisee"));
+
+            case "module":
+                return traiterModule(methode, body, idFiche, segments);
+
+            case "rename":
+                if ("PUT".equals(methode)) {
+                    String nom = JsonUtils.extraireString(body, "nom");
+                    if (nom == null || nom.isEmpty()) {
+                        return reponse(400, JsonUtils.erreur("Nom requis"));
+                    }
+                    boolean ok = gestionFiche.modifierNomFiche(idFiche, nom);
+                    return ok ? reponse(200, JsonUtils.succes()) : reponse(404, JsonUtils.erreur("Fiche non trouvee"));
+                }
+                return reponse(405, JsonUtils.erreur("Methode non autorisee"));
+
+            case "modules-personnalises":
+                // POST /api/fiches/{id}/modules-personnalises
+                if ("POST".equals(methode)) {
+                    String mid = JsonUtils.extraireString(body, "id");
+                    String mnom = JsonUtils.extraireString(body, "nom");
+                    String mtype = JsonUtils.extraireString(body, "type");
+                    if (mnom == null || mnom.isEmpty() || mtype == null || mtype.isEmpty()) {
+                        return reponse(400, JsonUtils.erreur("nom et type requis"));
+                    }
+                    model.ModulePersonnalise mp = new model.ModulePersonnalise(mid != null ? mid : java.util.UUID.randomUUID().toString(), mnom, mtype);
+                    String texte = JsonUtils.extraireString(body, "contenuTexte");
+                    if (texte != null) mp.setContenuTexte(texte);
+                    java.util.List<String> liste = JsonUtils.extraireArrayStrings(body, "contenuListe");
+                    if (liste != null) mp.setContenuListe(liste);
+                    java.util.List<model.Statistique> stats = JsonUtils.extraireArrayStatistiques(body, "contenuStats");
+                    if (stats != null) mp.setContenuStats(stats);
+                    gestionFiche.ajouterModulePersonnalise(idFiche, mp);
+                    return reponse(201, JsonUtils.succes());
+                }
+
+                // PUT /api/fiches/{id}/modules-personnalises/{idModule}
+                if (segments.length >= 6 && "PUT".equals(methode)) {
+                    String idModule = segments[5];
+                    String mid = JsonUtils.extraireString(body, "id");
+                    String mnom = JsonUtils.extraireString(body, "nom");
+                    String mtype = JsonUtils.extraireString(body, "type");
+                    if (mnom == null || mnom.isEmpty()) mnom = "Module";
+                    model.ModulePersonnalise mp = new model.ModulePersonnalise(mid != null ? mid : idModule, mnom, mtype != null ? mtype : "texte");
+                    String texte = JsonUtils.extraireString(body, "contenuTexte");
+                    if (texte != null) mp.setContenuTexte(texte);
+                    java.util.List<String> liste = JsonUtils.extraireArrayStrings(body, "contenuListe");
+                    if (liste != null) mp.setContenuListe(liste);
+                    java.util.List<model.Statistique> stats = JsonUtils.extraireArrayStatistiques(body, "contenuStats");
+                    if (stats != null) mp.setContenuStats(stats);
+                    gestionFiche.modifierModulePersonnalise(idFiche, idModule, mp);
+                    return reponse(200, JsonUtils.succes());
+                }
+
+                // DELETE /api/fiches/{id}/modules-personnalises/{idModule}
+                if (segments.length >= 6 && "DELETE".equals(methode)) {
+                    String idModule = segments[5];
+                    gestionFiche.supprimerModulePersonnalise(idFiche, idModule);
+                    return reponse(200, JsonUtils.succes());
+                }
+
+                return reponse(405, JsonUtils.erreur("Methode non autorisee"));
+
+            default:
+                return reponse(404, JsonUtils.erreur("Route inconnue"));
+        }
+    }
+
+    private String[] traiterModule(String methode, String body, int idFiche, String[] segments) {
+        if (segments.length < 6 || !"PUT".equals(methode)) {
+            return reponse(405, JsonUtils.erreur("Methode non autorisee"));
+        }
+
+        String action = segments[5];
+        String module = JsonUtils.extraireString(body, "module");
+
+        if ("position".equals(action)) {
+            Integer x = JsonUtils.extraireInt(body, "posX");
+            Integer y = JsonUtils.extraireInt(body, "posY");
+            if (module != null && x != null && y != null) {
+                boolean ok = gestionFiche.modifierPositionModule(idFiche, module, x, y);
+                return ok ? reponse(200, JsonUtils.succes()) : reponse(400, JsonUtils.erreur("Module inconnu"));
+            }
+            return reponse(400, JsonUtils.erreur("module, posX, posY requis"));
+        }
+
+        if ("taille".equals(action)) {
+            Integer l = JsonUtils.extraireInt(body, "largeur");
+            Integer h = JsonUtils.extraireInt(body, "hauteur");
+            if (module != null && l != null && h != null) {
+                boolean ok = gestionFiche.modifierTailleModule(idFiche, module, l, h);
+                return ok ? reponse(200, JsonUtils.succes()) : reponse(400, JsonUtils.erreur("Module inconnu"));
+            }
+            return reponse(400, JsonUtils.erreur("module, largeur, hauteur requis"));
+        }
+
+        return reponse(404, JsonUtils.erreur("Route inconnue"));
+    }
+
+    private String[] reponse(int code, String json) {
         return new String[]{ String.valueOf(code), json };
     }
 }

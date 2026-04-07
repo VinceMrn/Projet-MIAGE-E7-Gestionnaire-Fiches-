@@ -8,50 +8,51 @@ export default function Layout({ children, page, onNavigate }) {
     onNavigate('login')
   }
 
+  const cinzel = "'Cinzel', serif"
+  const crimson = "'Crimson Text', Georgia, serif"
+
   return (
-    <div className="min-h-screen bg-gray-900">
-      {/* Navbar */}
-      <nav className="bg-gray-800 border-b border-gray-700">
-        <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-          <button
-            onClick={() => onNavigate('fiches')}
-            className="text-xl font-bold text-white hover:text-indigo-400 transition"
-          >
-            Gestionnaire de Fiches
-          </button>
+    <div style={{ fontFamily: crimson, background: '#1a1208', minHeight: '100vh', color: '#d4c4a0', display: 'flex', flexDirection: 'column' }}>
+      <style>{`@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap');`}</style>
 
-          <div className="flex items-center gap-4">
-            <button
-              onClick={() => onNavigate('fiches')}
-              className={`text-sm font-medium transition ${
-                page === 'fiches' ? 'text-indigo-400' : 'text-gray-400 hover:text-white'
-              }`}
-            >
-              Mes Fiches
-            </button>
-
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-indigo-600 rounded-full flex items-center justify-center">
-                <span className="text-sm text-white font-bold">
-                  {utilisateur.nom.charAt(0).toUpperCase()}
-                </span>
-              </div>
-              <span className="text-gray-300 text-sm">{utilisateur.nom}</span>
-              <button
-                onClick={handleLogout}
-                className="text-red-400 hover:text-red-300 text-sm font-medium transition"
-              >
-                Deconnexion
-              </button>
-            </div>
+      {/* ── Header ── */}
+      <header style={{ background: '#110d05', borderBottom: '1px solid #5c4a2a', padding: '10px 28px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        {/* Logo */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <div style={{ width: 38, height: 38, background: '#6b4f2a', border: '1px solid #8a6a3a', borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 19, cursor: 'pointer' }} onClick={() => onNavigate('fiches')}>📖</div>
+          <div onClick={() => onNavigate('fiches')} style={{ cursor: 'pointer' }}>
+            <div style={{ fontFamily: cinzel, fontSize: 16, fontWeight: 600, color: '#e8d5a0', letterSpacing: '0.06em', textTransform: 'uppercase' }}>Grimoire des Héros</div>
+            <div style={{ fontSize: 11, color: '#8a7a5a', fontStyle: 'italic' }}>Gestionnaire de Fiches de Personnages RPG</div>
           </div>
         </div>
-      </nav>
 
-      {/* Contenu */}
-      <main className="max-w-6xl mx-auto px-4 py-8">
+        {/* Nav droite */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
+          <span
+            onClick={() => onNavigate('fiches')}
+            style={{ fontFamily: cinzel, fontSize: 13, color: page === 'fiches' ? '#e8d5a0' : '#a09070', borderBottom: page === 'fiches' ? '1px solid #8a6a3a' : '1px solid transparent', paddingBottom: 1, cursor: 'pointer', letterSpacing: '0.04em' }}
+          >
+            Mes Fiches
+          </span>
+          <div style={{ width: 1, height: 18, background: '#3a2c18' }} />
+          <div style={{ width: 32, height: 32, borderRadius: '50%', background: '#5a3a8a', border: '1px solid #8a6ab0', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: cinzel, fontSize: 13, fontWeight: 600, color: '#d4b8f0' }}>
+            {utilisateur?.nom?.charAt(0).toUpperCase()}
+          </div>
+          <span style={{ fontFamily: cinzel, fontSize: 13, color: '#d4c4a0' }}>{utilisateur?.nom}</span>
+          <div style={{ width: 1, height: 18, background: '#3a2c18' }} />
+          <button onClick={handleLogout} style={{ background: 'transparent', border: 'none', color: '#c06050', fontFamily: cinzel, fontSize: 13, cursor: 'pointer' }}>Déconnexion</button>
+        </div>
+      </header>
+
+      {/* ── Contenu ── */}
+      <main style={{ flex: 1, padding: '28px 32px' }}>
         {children}
       </main>
+
+      {/* ── Footer ── */}
+      <footer style={{ background: '#110d05', borderTop: '1px solid #2e2410', padding: '10px 28px', textAlign: 'center', fontSize: 12, color: '#4a3a1a' }}>
+        Grimoire des Héros • Gestionnaire de Fiches de Personnages RPG
+      </footer>
     </div>
   )
 }

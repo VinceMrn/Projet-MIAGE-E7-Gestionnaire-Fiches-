@@ -5,6 +5,7 @@ export default function Competences({ competences, idFiche, onUpdate }) {
   const [nom, setNom] = useState('')
   const [erreur, setErreur] = useState('')
   const [ajout, setAjout] = useState(false)
+  const [collapsed, setCollapsed] = useState(false)
 
   const handleAjouter = async (e) => {
     e.preventDefault()
@@ -19,50 +20,51 @@ export default function Competences({ competences, idFiche, onUpdate }) {
     }
   }
 
+  const cinzel = "'Cinzel', serif"
+  const crimson = "'Crimson Text', Georgia, serif"
+
   return (
-    <div className="bg-gray-800 rounded-xl p-5 border border-gray-700">
-      <div className="flex items-center justify-between mb-3">
-        <h3 className="text-lg font-semibold text-white">Competences</h3>
-        <button
-          onClick={() => setAjout(!ajout)}
-          className="text-indigo-400 hover:text-indigo-300 text-sm"
-        >
-          {ajout ? 'Annuler' : '+ Ajouter'}
-        </button>
+    <div style={{ background: '#2a1f14', border: '1px solid #5c4a2a', borderRadius: 8, overflow: 'hidden', fontFamily: crimson }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', borderBottom: collapsed ? 'none' : '1px solid #3a2c18' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, paddingLeft: 36 }}>
+          <h3 style={{ fontFamily: cinzel, fontSize: 13, fontWeight: 600, color: '#e8d5a0', margin: 0, letterSpacing: '0.05em', textTransform: 'uppercase' }}>Skills & Abilities</h3>
+        </div>
+        <div style={{ display: 'flex', gap: 10 }}>
+          <button onClick={() => setCollapsed(!collapsed)} style={{ background: 'transparent', border: 'none', color: '#6a5a3a', cursor: 'pointer', fontSize: 14 }}>{collapsed ? '∨' : '∧'}</button>
+          <button style={{ background: 'transparent', border: 'none', color: '#6a5a3a', cursor: 'pointer', fontSize: 16 }}>⋮</button>
+        </div>
       </div>
 
-      {erreur && (
-        <div className="bg-red-900/50 border border-red-700 text-red-400 text-sm p-2 rounded mb-3">
-          {erreur}
-        </div>
-      )}
+      {!collapsed && (
+        <div style={{ padding: '16px' }}>
+          {erreur && <div style={{ background: '#4a1515', border: '1px solid #8a3030', color: '#f0a0a0', padding: '8px 12px', borderRadius: 5, fontSize: 12, marginBottom: 12 }}>{erreur}</div>}
 
-      {competences.liste.length === 0 ? (
-        <p className="text-gray-500 text-sm">Aucune competence</p>
-      ) : (
-        <div className="flex flex-wrap gap-2">
-          {competences.liste.map((comp, i) => (
-            <span key={i} className="bg-gray-700 text-gray-300 text-sm px-3 py-1 rounded-full">
-              {comp}
-            </span>
-          ))}
-        </div>
-      )}
+          {competences.liste.length === 0 ? (
+            <p style={{ color: '#5a4a2a', fontStyle: 'italic', fontSize: 13 }}>Aucune compétence</p>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+              {competences.liste.map((comp, i) => (
+                <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#1e1509', border: '1px solid #3a2c18', borderRadius: 5, padding: '8px 12px' }}>
+                  <span style={{ fontSize: 13, color: '#b0a080' }}>{comp.nom ?? comp}</span>
+                  {comp.valeur !== undefined && <span style={{ fontSize: 13, color: '#c4a86a', fontWeight: 600 }}>{comp.valeur}</span>}
+                </div>
+              ))}
+            </div>
+          )}
 
-      {ajout && (
-        <form onSubmit={handleAjouter} className="mt-3 flex gap-2">
-          <input
-            type="text"
-            value={nom}
-            onChange={(e) => setNom(e.target.value)}
-            className="flex-1 bg-gray-700 border border-gray-600 rounded-lg py-2 px-3 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-indigo-500"
-            placeholder="Nom de la competence"
-            required
-          />
-          <button type="submit" className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm py-2 px-3 rounded-lg transition">
-            OK
-          </button>
-        </form>
+          {ajout ? (
+            <form onSubmit={handleAjouter} style={{ display: 'flex', gap: 8, marginTop: 12 }}>
+              <input type="text" value={nom} onChange={e => setNom(e.target.value)} required placeholder="Nom de la compétence"
+                style={{ flex: 1, background: '#1e1509', border: '1px solid #4a3a1a', color: '#d4c4a0', padding: '7px 10px', borderRadius: 5, fontFamily: crimson, fontSize: 13, outline: 'none' }} />
+              <button type="submit" style={{ background: '#4a7030', border: '1px solid #6a9040', color: '#c8e0a0', padding: '7px 12px', borderRadius: 5, fontFamily: cinzel, fontSize: 11, cursor: 'pointer' }}>OK</button>
+              <button type="button" onClick={() => setAjout(false)} style={{ background: 'transparent', border: '1px solid #4a3a1a', color: '#8a7a5a', padding: '7px 12px', borderRadius: 5, fontFamily: cinzel, fontSize: 11, cursor: 'pointer' }}>✕</button>
+            </form>
+          ) : (
+            <button onClick={() => setAjout(true)} style={{ width: '100%', marginTop: 12, background: 'transparent', border: '1px solid #3a2c18', color: '#6a5a3a', padding: '8px', borderRadius: 5, fontFamily: cinzel, fontSize: 11, cursor: 'pointer', letterSpacing: '0.04em' }}>
+              + Add Skill
+            </button>
+          )}
+        </div>
       )}
     </div>
   )
