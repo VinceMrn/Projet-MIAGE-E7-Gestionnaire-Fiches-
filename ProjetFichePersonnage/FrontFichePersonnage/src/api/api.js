@@ -102,3 +102,23 @@ export function modifierTailleModule(idFiche, module, largeur, hauteur) {
     body: JSON.stringify({ module, largeur, hauteur })
   })
 }
+
+export function ajouterModulePersonnalise(idFiche, module) {
+  return requete(`/fiches/${idFiche}/modules-personnalises`, {
+    method: 'POST',
+    body: JSON.stringify(module),
+  })
+}
+
+export function modifierModulePersonnalise(idFiche, idModule, module) {
+  return requete(`/fiches/${idFiche}/modules-personnalises/${idModule}`, {
+    method: 'PUT',
+    body: JSON.stringify(module),
+  })
+}
+
+export function supprimerModulePersonnalise(idFiche, idModule) {
+  return requete(`/fiches/${idFiche}/modules-personnalises/${idModule}`, {
+    method: 'DELETE',
+  })
+}

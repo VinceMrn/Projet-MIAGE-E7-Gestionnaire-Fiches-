@@ -1,6 +1,8 @@
 package model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FichePersonnage implements Serializable {
 
@@ -13,6 +15,7 @@ public class FichePersonnage implements Serializable {
     private Statistiques statistiques;
     private Competence competence;
     private Equipement equipement;
+    private List<ModulePersonnalise> modulesPersonnalises;
 
     public FichePersonnage(int idFichePersonnage, String nomFichePersonnage) {
         this.idFichePersonnage = idFichePersonnage;
@@ -22,6 +25,7 @@ public class FichePersonnage implements Serializable {
         this.statistiques = new Statistiques(200, 0, 300, 200);
         this.competence = new Competence(0, 400, 300, 200);
         this.equipement = new Equipement(300, 400, 300, 200);
+        this.modulesPersonnalises = new ArrayList<>();
     }
 
     public void modifierPortrait(String imagePortrait) {
@@ -42,6 +46,13 @@ public class FichePersonnage implements Serializable {
 
     public void modifierEquipement(Equipement equipement) {
         this.equipement = equipement;
+    }
+
+    /**
+     * Permet de renommer la fiche.
+     */
+    public void modifierNomFiche(String nouveauNom) {
+        this.nomFichePersonnage = nouveauNom;
     }
 
     public int getIdFichePersonnage() {
@@ -70,5 +81,12 @@ public class FichePersonnage implements Serializable {
 
     public Equipement getEquipement() {
         return equipement;
+    }
+
+    public List<ModulePersonnalise> getModulesPersonnalises() {
+        if (modulesPersonnalises == null) {
+            modulesPersonnalises = new java.util.ArrayList<>();
+        }
+        return modulesPersonnalises;
     }
 }
