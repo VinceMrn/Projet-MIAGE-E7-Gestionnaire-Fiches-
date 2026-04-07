@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useAuth } from '../../context/AuthContext'
+import bgImage from '../../assets/Gemini_Generated_Image_kl696hkl696hkl69.png'
 
 export default function LoginForm({ onSwitchToSignup, onSuccess }) {
   const { seConnecter } = useAuth()
@@ -19,7 +20,10 @@ export default function LoginForm({ onSwitchToSignup, onSuccess }) {
   }
 
   return (
-    <div className="min-h-screen w-full bg-medieval flex items-center justify-center">
+    <div
+      className="min-h-screen w-full flex items-center justify-center bg-cover bg-center bg-no-repeat"
+      style={{ backgroundImage: `url(${bgImage})` }}
+    >
       <div className="card-medieval rounded-xl p-10 w-full max-w-md animate-fade-in-up">
 
         <div className="flex items-center justify-center mb-2">

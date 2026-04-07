@@ -6,21 +6,6 @@ import Statistiques from '../modules/Statistiques'
 import Competences from '../modules/Competences'
 import Equipements from '../modules/Equipements'
 
-import {
-  DndContext,
-  closestCenter,
-  PointerSensor,
-  useSensor,
-  useSensors,
-} from '@dnd-kit/core'
-import {
-  arrayMove,
-  SortableContext,
-  verticalListSortingStrategy,
-  useSortable,
-} from '@dnd-kit/sortable'
-import { CSS } from '@dnd-kit/utilities'
-
 const MODULES_DEFAUT = [
   { id: 'portrait',     label: 'Portrait' },
   { id: 'biographie',   label: 'Biographie' },
@@ -171,17 +156,6 @@ function ModuleCustom({ module, onSupprimer, idFiche, onSaved }) {
   )
 }
 
-function SortableModule({ id, children }) {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id })
-  const style = { transform: CSS.Transform.toString(transform), transition, opacity: isDragging ? 0.5 : 1, position: 'relative' }
-  return (
-    <div ref={setNodeRef} style={style}>
-      <div {...attributes} {...listeners} style={{ position: 'absolute', top: 13, left: 14, cursor: 'grab', color: '#5c4a2a', fontSize: 16, zIndex: 10, userSelect: 'none', lineHeight: 1 }} title="Glisser pour réordonner">⠿</div>
-      {children}
-    </div>
-  )
-}
-
 export default function FicheDetail({ idFiche, onRetour }) {
   const [fiche, setFiche] = useState(null)
   const [chargement, setChargement] = useState(true)
@@ -191,25 +165,6 @@ export default function FicheDetail({ idFiche, onRetour }) {
   const [modalVisible, setModalVisible] = useState(false)
   const [nomCustom, setNomCustom] = useState('')
   const [typeCustom, setTypeCustom] = useState('texte')
-
-  const sensors = useSensors(useSensor(PointerSensor))
-  const storageKey = `fiches.modules.order.${idFiche}`
-
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem(storageKey)
-      if (raw) {
-        const ids = JSON.parse(raw)
-        const ordered = []
-        ids.forEach(i => {
-          const found = MODULES_DEFAUT.find(m => m.id === i)
-          if (found) ordered.push(found)
-        })
-        MODULES_DEFAUT.forEach(m => { if (!ordered.find(x => x.id === m.id)) ordered.push(m) })
-        setModules(ordered)
-      }
-    } catch (e) {}
-  }, [idFiche])
 
   const chargerFiche = async () => {
     setChargement(true)
@@ -252,20 +207,6 @@ export default function FicheDetail({ idFiche, onRetour }) {
   }
 
   useEffect(() => { chargerFiche() }, [idFiche])
-
-  const handleDragEnd = (event) => {
-    const { active, over } = event
-    if (!over) return
-    if (active.id !== over.id) {
-      setModules(prev => {
-        const oldIndex = prev.findIndex(m => m.id === active.id)
-        const newIndex = prev.findIndex(m => m.id === over.id)
-        const next = arrayMove(prev, oldIndex, newIndex)
-        try { localStorage.setItem(storageKey, JSON.stringify(next.map(n => n.id))) } catch (e) {}
-        return next
-      })
-    }
-  }
 
   const handleToggleModule = (mod) => {
     const existe = modules.find(m => m.id === mod.id)
@@ -354,7 +295,7 @@ export default function FicheDetail({ idFiche, onRetour }) {
           <div style={{ flex: 1 }}>
             <div style={{ fontFamily: cinzel, fontSize: 12, color: '#e8d5a0', fontWeight: 600, marginBottom: 5 }}>Astuces Rapides :</div>
             <div style={{ fontSize: 13, color: '#a09070', lineHeight: 1.6 }}>
-              Cliquez sur le nom/description pour éditer • Glissez les modules par l'icône ⠿ pour réordonner • Cliquez "…" pour les options • Les modifications sont automatiquement sauvegardées
+              Cliquez sur le nom/description pour éditer • Cliquez "…" pour les options • Les modifications sont automatiquement sauvegardées
             </div>
           </div>
           <button onClick={() => setAstucesVisible(false)} style={{ background: 'transparent', border: 'none', color: '#6a5a3a', fontSize: 16, cursor: 'pointer', padding: 0 }}>✕</button>
@@ -366,18 +307,12 @@ export default function FicheDetail({ idFiche, onRetour }) {
         {[fiche.classe, fiche.niveau && `Level ${fiche.niveau}`, fiche.alignement].filter(Boolean).join(' • ')}
       </p>
 
-      {/* Modules drag & drop */}
-      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-        <SortableContext items={modules.map(m => m.id)} strategy={verticalListSortingStrategy}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-            {modules.map(m => (
-              <SortableModule key={m.id} id={m.id}>
-                {renderModule(m)}
-              </SortableModule>
-            ))}
-          </div>
-        </SortableContext>
-      </DndContext>
+      {/* Modules */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+        {modules.map(m => (
+          <div key={m.id}>{renderModule(m)}</div>
+        ))}
+      </div>
 
       {/* Modal */}
       {modalVisible && (
