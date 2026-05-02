@@ -46,6 +46,37 @@ public class GestionUtilisateur {
         utilisateurConnecte = null;
     }
 
+    /**
+     * Modifie l'identifiant de l'utilisateur connecte.
+     * Echoue si non connecte ou si le nom est deja pris par un autre utilisateur.
+     */
+    public boolean modifierIdentifiant(String nouveauNom) {
+        if (utilisateurConnecte == null) return false;
+        if (nouveauNom == null || nouveauNom.isEmpty()) return false;
+        // verifie unicite (sauf pour soi-meme)
+        for (Utilisateur autre : utilisateurs) {
+            if (autre != utilisateurConnecte && autre.getNomUtilisateur().equals(nouveauNom)) {
+                return false;
+            }
+        }
+        utilisateurConnecte.modifierNomUtilisateur(nouveauNom);
+        sauvegarderUtilisateurs();
+        return true;
+    }
+
+    /**
+     * Modifie le mot de passe de l'utilisateur connecte.
+     * Echoue si non connecte ou si l'ancien mot de passe ne correspond pas.
+     */
+    public boolean modifierMotDePasse(String ancienMdp, String nouveauMdp) {
+        if (utilisateurConnecte == null) return false;
+        if (nouveauMdp == null || nouveauMdp.isEmpty()) return false;
+        if (!utilisateurConnecte.verifierMotDePasse(ancienMdp)) return false;
+        utilisateurConnecte.modifierMotDePasse(nouveauMdp);
+        sauvegarderUtilisateurs();
+        return true;
+    }
+
     public Utilisateur getUtilisateurConnecte() {
         return utilisateurConnecte;
     }

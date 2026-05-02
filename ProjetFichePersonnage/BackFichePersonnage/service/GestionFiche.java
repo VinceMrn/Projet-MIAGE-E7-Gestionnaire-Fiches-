@@ -4,7 +4,11 @@ import model.*;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Service qui gere les fiches de personnages avec controle des droits.
@@ -260,6 +264,54 @@ public class GestionFiche {
         sauvegarderFiches(gestionUtilisateur.getUtilisateurConnecte());
         System.out.println("Taille du module '" + nomModule + "' modifiee (" + largeur + "x" + hauteur + ").");
         return true;
+    }
+
+    // ===== Elements existants chez l'utilisateur connecte =====
+
+    /**
+     * Retourne la liste unique des competences presentes dans toutes les fiches
+     * de l'utilisateur connecte (toutes fiches confondues, sans doublons).
+     */
+    public List<String> listerCompetencesUtilisateur() {
+        Utilisateur u = gestionUtilisateur.getUtilisateurConnecte();
+        if (u == null) return new ArrayList<>();
+        Set<String> set = new LinkedHashSet<>();
+        for (FichePersonnage f : u.getFiches()) {
+            set.addAll(f.getCompetence().getCompetences());
+        }
+        return new ArrayList<>(set);
+    }
+
+    /**
+     * Retourne la liste unique des equipements presents dans toutes les fiches
+     * de l'utilisateur connecte (sans doublons).
+     */
+    public List<String> listerEquipementsUtilisateur() {
+        Utilisateur u = gestionUtilisateur.getUtilisateurConnecte();
+        if (u == null) return new ArrayList<>();
+        Set<String> set = new LinkedHashSet<>();
+        for (FichePersonnage f : u.getFiches()) {
+            set.addAll(f.getEquipement().getEquipements());
+        }
+        return new ArrayList<>(set);
+    }
+
+    /**
+     * Retourne les statistiques uniques (par nom) presentes dans toutes les fiches
+     * de l'utilisateur connecte. Garde la premiere valeur rencontree.
+     */
+    public List<Statistique> listerStatistiquesUtilisateur() {
+        Utilisateur u = gestionUtilisateur.getUtilisateurConnecte();
+        if (u == null) return new ArrayList<>();
+        Map<String, Statistique> map = new LinkedHashMap<>();
+        for (FichePersonnage f : u.getFiches()) {
+            for (Statistique s : f.getStatistiques().getStatistiques()) {
+                if (!map.containsKey(s.getNomStatistique())) {
+                    map.put(s.getNomStatistique(), s);
+                }
+            }
+        }
+        return new ArrayList<>(map.values());
     }
 
     // ===== Modules personnalisés =====

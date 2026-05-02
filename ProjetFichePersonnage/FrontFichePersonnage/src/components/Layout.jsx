@@ -31,10 +31,16 @@ export default function Layout({ children, page, onNavigate }) {
             Mes Fiches
           </span>
           <div style={{ width: 1, height: 18, background: '#3a2c18' }} />
-          <div style={{ width: 32, height: 32, borderRadius: '50%', background: '#5a3a8a', border: '1px solid #8a6ab0', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: cinzel, fontSize: 13, fontWeight: 600, color: '#d4b8f0' }}>
-            {utilisateur?.nom?.charAt(0).toUpperCase()}
+          <div
+            onClick={() => onNavigate('parametres')}
+            title="Paramètres du compte"
+            style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer', padding: '4px 8px', borderRadius: 4, background: page === 'parametres' ? '#2a1f14' : 'transparent' }}
+          >
+            <div style={{ width: 32, height: 32, borderRadius: '50%', background: '#5a3a8a', border: '1px solid #8a6ab0', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: cinzel, fontSize: 13, fontWeight: 600, color: '#d4b8f0' }}>
+              {utilisateur?.nom?.charAt(0).toUpperCase()}
+            </div>
+            <span style={{ fontFamily: cinzel, fontSize: 13, color: page === 'parametres' ? '#e8d5a0' : '#d4c4a0' }}>{utilisateur?.nom}</span>
           </div>
-          <span style={{ fontFamily: cinzel, fontSize: 13, color: '#d4c4a0' }}>{utilisateur?.nom}</span>
           <div style={{ width: 1, height: 18, background: '#3a2c18' }} />
           <button onClick={handleLogout} style={{ background: 'transparent', border: 'none', color: '#c06050', fontFamily: cinzel, fontSize: 13, cursor: 'pointer' }}>Déconnexion</button>
         </div>

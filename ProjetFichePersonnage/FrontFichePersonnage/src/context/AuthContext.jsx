@@ -21,8 +21,18 @@ export function AuthProvider({ children }) {
     setUtilisateur(null)
   }
 
+  const modifierIdentifiant = async (nouveauNom) => {
+    const data = await api.modifierIdentifiant(nouveauNom)
+    setUtilisateur({ id: data.id, nom: data.nom })
+    return data
+  }
+
+  const modifierMotDePasse = async (ancien, nouveau) => {
+    return await api.modifierMotDePasse(ancien, nouveau)
+  }
+
   return (
-    <AuthContext.Provider value={{ utilisateur, seConnecter, sInscrire, seDeconnecter }}>
+    <AuthContext.Provider value={{ utilisateur, seConnecter, sInscrire, seDeconnecter, modifierIdentifiant, modifierMotDePasse }}>
       {children}
     </AuthContext.Provider>
   )

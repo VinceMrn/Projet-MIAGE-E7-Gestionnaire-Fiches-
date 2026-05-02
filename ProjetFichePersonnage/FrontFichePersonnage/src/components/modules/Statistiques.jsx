@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import * as api from '../../api/api'
+import SelecteurExistants from './SelecteurExistants'
 
-export default function Statistiques({ statistiques, idFiche, onUpdate }) {
+export default function Statistiques({ statistiques, idFiche, onUpdate, suggestions = [] }) {
   const [nom, setNom] = useState('')
   const [valeur, setValeur] = useState('')
   const [erreur, setErreur] = useState('')
@@ -16,6 +17,16 @@ export default function Statistiques({ statistiques, idFiche, onUpdate }) {
       setNom('')
       setValeur('')
       setAjout(false)
+      onUpdate()
+    } catch (err) {
+      setErreur(err.message)
+    }
+  }
+
+  const ajouterDepuisExistant = async (item) => {
+    setErreur('')
+    try {
+      await api.ajouterStatistique(idFiche, item.nom, item.valeur)
       onUpdate()
     } catch (err) {
       setErreur(err.message)
@@ -53,6 +64,13 @@ export default function Statistiques({ statistiques, idFiche, onUpdate }) {
               ))}
             </div>
           )}
+
+          <SelecteurExistants
+            items={suggestions}
+            dejaPresents={statistiques.liste.map(s => s.nom)}
+            onChoisir={ajouterDepuisExistant}
+            label="statistique"
+          />
 
           {ajout ? (
             <form onSubmit={handleAjouter} style={{ display: 'flex', gap: 8, marginTop: 12 }}>

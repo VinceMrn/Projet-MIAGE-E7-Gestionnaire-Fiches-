@@ -35,6 +35,9 @@ public class Utilisateur implements Serializable {
         fiches.removeIf(fiche -> fiche.getIdFichePersonnage() == idFichePersonnage);
     }
 
+    public void modifierNomUtilisateur(String nouveau) { this.nomUtilisateur = nouveau; }
+    public void modifierMotDePasse(String nouveau) { this.motdepasse = nouveau; }
+
     public int getIdUtilisateur() { return idUtilisateur; }
     public String getNomUtilisateur() { return nomUtilisateur; }
     public String getMotdepasse() { return motdepasse; }

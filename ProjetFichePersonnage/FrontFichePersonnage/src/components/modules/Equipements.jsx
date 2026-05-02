@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import * as api from '../../api/api'
+import SelecteurExistants from './SelecteurExistants'
 
-export default function Equipements({ equipements, idFiche, onUpdate }) {
+export default function Equipements({ equipements, idFiche, onUpdate, suggestions = [] }) {
   const [nom, setNom] = useState('')
   const [erreur, setErreur] = useState('')
   const [ajout, setAjout] = useState(false)
@@ -14,6 +15,16 @@ export default function Equipements({ equipements, idFiche, onUpdate }) {
       await api.ajouterEquipement(idFiche, nom)
       setNom('')
       setAjout(false)
+      onUpdate()
+    } catch (err) {
+      setErreur(err.message)
+    }
+  }
+
+  const ajouterDepuisExistant = async (item) => {
+    setErreur('')
+    try {
+      await api.ajouterEquipement(idFiche, item)
       onUpdate()
     } catch (err) {
       setErreur(err.message)
@@ -54,6 +65,13 @@ export default function Equipements({ equipements, idFiche, onUpdate }) {
               ))}
             </div>
           )}
+
+          <SelecteurExistants
+            items={suggestions}
+            dejaPresents={equipements.liste.map(e => e.nom ?? e)}
+            onChoisir={ajouterDepuisExistant}
+            label="équipement"
+          />
 
           {ajout ? (
             <form onSubmit={handleAjouter} style={{ display: 'flex', gap: 8, marginTop: 12 }}>

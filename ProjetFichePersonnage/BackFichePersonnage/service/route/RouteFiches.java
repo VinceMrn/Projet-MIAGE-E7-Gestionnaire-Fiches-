@@ -40,6 +40,12 @@ public class RouteFiches implements Route {
 
         // /api/fiches/{id}...
         String[] segments = chemin.split("/");
+
+        // /api/fiches/elements/{competences|equipements|statistiques}
+        if (segments.length >= 5 && "elements".equals(segments[3])) {
+            return traiterElements(methode, segments[4]);
+        }
+
         int idFiche;
         try {
             idFiche = Integer.parseInt(segments[3]);
@@ -235,6 +241,38 @@ public class RouteFiches implements Route {
         }
 
         return reponse(404, JsonUtils.erreur("Route inconnue"));
+    }
+
+    private String[] traiterElements(String methode, String type) {
+        if (!"GET".equals(methode)) {
+            return reponse(405, JsonUtils.erreur("Methode non autorisee"));
+        }
+        StringBuilder json = new StringBuilder("[");
+        if ("competences".equals(type)) {
+            java.util.List<String> liste = gestionFiche.listerCompetencesUtilisateur();
+            for (int i = 0; i < liste.size(); i++) {
+                json.append("\"").append(liste.get(i)).append("\"");
+                if (i < liste.size() - 1) json.append(",");
+            }
+        } else if ("equipements".equals(type)) {
+            java.util.List<String> liste = gestionFiche.listerEquipementsUtilisateur();
+            for (int i = 0; i < liste.size(); i++) {
+                json.append("\"").append(liste.get(i)).append("\"");
+                if (i < liste.size() - 1) json.append(",");
+            }
+        } else if ("statistiques".equals(type)) {
+            java.util.List<model.Statistique> liste = gestionFiche.listerStatistiquesUtilisateur();
+            for (int i = 0; i < liste.size(); i++) {
+                model.Statistique s = liste.get(i);
+                json.append("{\"nom\":\"").append(s.getNomStatistique())
+                    .append("\",\"valeur\":").append(s.getValeurStatistique()).append("}");
+                if (i < liste.size() - 1) json.append(",");
+            }
+        } else {
+            return reponse(404, JsonUtils.erreur("Type inconnu"));
+        }
+        json.append("]");
+        return reponse(200, json.toString());
     }
 
     private String[] reponse(int code, String json) {

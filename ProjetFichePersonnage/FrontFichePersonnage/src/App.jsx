@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { AuthProvider, useAuth } from './context/AuthContext'
 import LoginForm from './components/auth/LoginForm'
 import SignupForm from './components/auth/SignupForm'
+import ParametresCompte from './components/auth/ParametresCompte'
 import Layout from './components/Layout'
 import ListeFiches from './components/fiches/ListeFiches'
 import CreerFiche from './components/fiches/CreerFiche'
@@ -48,6 +49,8 @@ function AppContent() {
             onRetour={() => setPage('fiches')}
           />
         )
+      case 'parametres':
+        return <ParametresCompte onRetour={() => setPage('fiches')} />
       default:
         return (
           <ListeFiches

@@ -33,6 +33,20 @@ export function getUtilisateur() {
   return requete('/utilisateur')
 }
 
+export function modifierIdentifiant(nom) {
+  return requete('/utilisateur/identifiant', {
+    method: 'PUT',
+    body: JSON.stringify({ nom })
+  })
+}
+
+export function modifierMotDePasse(ancien, nouveau) {
+  return requete('/utilisateur/motdepasse', {
+    method: 'PUT',
+    body: JSON.stringify({ ancien, nouveau })
+  })
+}
+
 // ===== FICHES =====
 export function listerFiches() {
   return requete('/fiches')
@@ -87,6 +101,19 @@ export function ajouterEquipement(idFiche, nom) {
     method: 'POST',
     body: JSON.stringify({ nom })
   })
+}
+
+// Elements existants chez l'utilisateur (toutes fiches confondues, sans doublons)
+export function listerCompetencesExistantes() {
+  return requete('/fiches/elements/competences')
+}
+
+export function listerEquipementsExistants() {
+  return requete('/fiches/elements/equipements')
+}
+
+export function listerStatistiquesExistantes() {
+  return requete('/fiches/elements/statistiques')
 }
 
 export function modifierPositionModule(idFiche, module, posX, posY) {

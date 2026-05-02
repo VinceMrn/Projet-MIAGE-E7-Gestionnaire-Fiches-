@@ -216,14 +216,17 @@ public class JsonUtils {
     }
 
     /**
-     * Convertit une liste de fiches en JSON leger (id + nom seulement).
+     * Convertit une liste de fiches en JSON leger (id + nom + image portrait).
      */
     public static String listeFichesVersJSON(List<FichePersonnage> fiches) {
         StringBuilder json = new StringBuilder("[");
         for (int i = 0; i < fiches.size(); i++) {
             FichePersonnage f = fiches.get(i);
+            String image = f.getPortrait() != null ? f.getPortrait().getImagePortrait() : "";
+            if (image == null) image = "";
             json.append("{\"id\":").append(f.getIdFichePersonnage())
-                .append(",\"nom\":\"").append(f.getNomFichePersonnage()).append("\"}");
+                .append(",\"nom\":\"").append(f.getNomFichePersonnage()).append("\"")
+                .append(",\"portrait\":\"").append(image).append("\"}");
             if (i < fiches.size() - 1) json.append(",");
         }
         json.append("]");

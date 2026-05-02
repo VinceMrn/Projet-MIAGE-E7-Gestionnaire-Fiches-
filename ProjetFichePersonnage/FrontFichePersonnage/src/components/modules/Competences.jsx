@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import * as api from '../../api/api'
+import SelecteurExistants from './SelecteurExistants'
 
-export default function Competences({ competences, idFiche, onUpdate }) {
+export default function Competences({ competences, idFiche, onUpdate, suggestions = [] }) {
   const [nom, setNom] = useState('')
   const [erreur, setErreur] = useState('')
   const [ajout, setAjout] = useState(false)
@@ -14,6 +15,16 @@ export default function Competences({ competences, idFiche, onUpdate }) {
       await api.ajouterCompetence(idFiche, nom)
       setNom('')
       setAjout(false)
+      onUpdate()
+    } catch (err) {
+      setErreur(err.message)
+    }
+  }
+
+  const ajouterDepuisExistant = async (item) => {
+    setErreur('')
+    try {
+      await api.ajouterCompetence(idFiche, item)
       onUpdate()
     } catch (err) {
       setErreur(err.message)
@@ -51,6 +62,13 @@ export default function Competences({ competences, idFiche, onUpdate }) {
               ))}
             </div>
           )}
+
+          <SelecteurExistants
+            items={suggestions}
+            dejaPresents={competences.liste.map(c => c.nom ?? c)}
+            onChoisir={ajouterDepuisExistant}
+            label="compétence"
+          />
 
           {ajout ? (
             <form onSubmit={handleAjouter} style={{ display: 'flex', gap: 8, marginTop: 12 }}>
