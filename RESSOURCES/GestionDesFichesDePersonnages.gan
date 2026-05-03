@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?><project name="Création de gestion des fiches des personnages" company="Sara, Vincent, Zine" webLink="https://github.com/VinceMrn/Projet-MIAGE-E7-Gestionnaire-Fiches-" view-date="2026-05-04" view-index="0" gantt-divider-location="325" resource-divider-location="300" version="3.3.3316" locale="fr_FR">
+    <description><![CDATA[Projet en classe de L3 MIAGE FA/FI, par l'équipe 7 constituée de Sara, Vincent et Zine. Débuté le 21 janvier 2026. Soutenance et rendu final le 21 mai 2026. Application Java orientée objet permettant de gérer des fiches de personnages de jeu de rôle (création de comptes protégés par mot de passe, fiches modulaires : portrait, biographie, statistiques, compétences, équipement). Fonctionnalités secondaires : cryptage des fichiers et import/export de templates.]]></description>
+    <view zooming-state="default:5" id="gantt-chart">
+        <field id="tpd3" name="Nom" width="154" order="0"/>
+        <field id="tpd4" name="Date de début" width="77" order="1"/>
+        <field id="tpd5" name="Date de fin" width="77" order="2"/>
+        <field id="tpd15" name="Notes" width="20" order="3"/>
+        <option id="taskLabelUp" value="name"/>
+        <option id="taskLabelDown" value="length"/>
+        <option id="filter.completedTasks" value="false"/>
+        <option id="filter.dueTodayTasks" value="false"/>
+        <option id="filter.overdueTasks" value="false"/>
+        <option id="filter.inProgressTodayTasks" value="false"/>
+        <option id="color.recent"><![CDATA[#ff3333]]></option>
+    </view>
+    <view id="resource-table">
+        <field id="0" name="Nom" width="209" order="0"/>
+        <field id="1" name="Rôle par défaut" width="85" order="1"/>
+    </view>
+    <!-- -->
+    <calendars base-id="fr">
+        <day-types>
+            <day-type id="0"/>
+            <day-type id="1"/>
+            <default-week id="1" name="default" sun="1" mon="0" tue="0" wed="0" thu="0" fri="0" sat="1"/>
+            <only-show-weekends value="true"/>
+            <overriden-day-types/>
+            <days/>
+        </day-types>
+        <date year="" month="1" date="1" type="HOLIDAY"><![CDATA[1er janvier]]></date>
+        <date year="" month="5" date="1" type="HOLIDAY"><![CDATA[1er mai]]></date>
+        <date year="" month="5" date="8" type="HOLIDAY"><![CDATA[8 mai]]></date>
+        <date year="" month="7" date="14" type="HOLIDAY"><![CDATA[14 juillet]]></date>
+        <date year="" month="8" date="15" type="HOLIDAY"><![CDATA[Assomption]]></date>
+        <date year="" month="11" date="1" type="HOLIDAY"><![CDATA[Toussaint]]></date>
+        <date year="" month="11" date="11" type="HOLIDAY"><![CDATA[11 novembre]]></date>
+        <date year="" month="12" date="25" type="HOLIDAY"><![CDATA[Jour de Noël]]></date>
+        <date year="2015" month="4" date="6" type="HOLIDAY"><![CDATA[Lundi de Pâques]]></date>
+        <date year="2015" month="5" date="14" type="HOLIDAY"><![CDATA[Ascension]]></date>
+        <date year="2015" month="5" date="25" type="HOLIDAY"><![CDATA[Lundi de Pentecôte]]></date>
+        <date year="2016" month="3" date="28" type="HOLIDAY"><![CDATA[Lundi de Pâques]]></date>
+        <date year="2016" month="5" date="5" type="HOLIDAY"><![CDATA[Ascension]]></date>
+        <date year="2016" month="5" date="16" type="HOLIDAY"><![CDATA[Lundi de Pentecôte]]></date>
+        <date year="2017" month="4" date="17" type="HOLIDAY"><![CDATA[Lundi de Pâques]]></date>
+        <date year="2017" month="5" date="25" type="HOLIDAY"><![CDATA[Ascension]]></date>
+        <date year="2017" month="6" date="5" type="HOLIDAY"><![CDATA[Lundi de Pentecôte]]></date>
+        <date year="2018" month="4" date="2" type="HOLIDAY"><![CDATA[Lundi de Pâques]]></date>
+        <date year="2018" month="5" date="10" type="HOLIDAY"><![CDATA[Ascension]]></date>
+        <date year="2018" month="5" date="21" type="HOLIDAY"><![CDATA[Lundi de Pentecôte]]></date>
+        <date year="2019" month="4" date="22" type="HOLIDAY"><![CDATA[Lundi de Pâques]]></date>
+        <date year="2019" month="5" date="30" type="HOLIDAY"><![CDATA[Ascension]]></date>
+        <date year="2019" month="6" date="10" type="HOLIDAY"><![CDATA[Lundi de Pentecôte]]></date>
+        <date year="2020" month="4" date="13" type="HOLIDAY"><![CDATA[Lundi de Pâques]]></date>
+        <date year="2020" month="5" date="21" type="HOLIDAY"><![CDATA[Ascension]]></date>
+        <date year="2020" month="6" date="1" type="HOLIDAY"><![CDATA[Lundi de Pentecôte]]></date>
+        <date year="2021" month="4" date="5" type="HOLIDAY"><![CDATA[Lundi de Pâques]]></date>
+        <date year="2021" month="5" date="13" type="HOLIDAY"><![CDATA[Ascension]]></date>
+        <date year="2021" month="5" date="24" type="HOLIDAY"><![CDATA[Lundi de Pentecôte]]></date>
+        <date year="2022" month="4" date="18" type="HOLIDAY"><![CDATA[Lundi de Pâques]]></date>
+        <date year="2022" month="5" date="26" type="HOLIDAY"><![CDATA[Ascension]]></date>
+        <date year="2022" month="6" date="6" type="HOLIDAY"><![CDATA[Lundi de Pentecôte]]></date>
+        <date year="2023" month="4" date="10" type="HOLIDAY"><![CDATA[Lundi de Pâques]]></date>
+        <date year="2023" month="5" date="18" type="HOLIDAY"><![CDATA[Ascension]]></date>
+        <date year="2023" month="5" date="29" type="HOLIDAY"><![CDATA[Lundi de Pentecôte]]></date>
+        <date year="2024" month="4" date="1" type="HOLIDAY"><![CDATA[Lundi de Pâques]]></date>
+        <date year="2024" month="5" date="9" type="HOLIDAY"><![CDATA[Ascension]]></date>
+        <date year="2024" month="5" date="20" type="HOLIDAY"><![CDATA[Lundi de Pentecôte]]></date>
+        <date year="2025" month="4" date="21" type="HOLIDAY"><![CDATA[Lundi de Pâques]]></date>
+        <date year="2025" month="5" date="29" type="HOLIDAY"><![CDATA[Ascension]]></date>
+        <date year="2025" month="6" date="9" type="HOLIDAY"><![CDATA[Lundi de Pentecôte]]></date>
+        <date year="2026" month="4" date="6" type="HOLIDAY"><![CDATA[Lundi de Pâques]]></date>
+        <date year="2026" month="5" date="14" type="HOLIDAY"><![CDATA[Ascension]]></date>
+        <date year="2026" month="5" date="25" type="HOLIDAY"><![CDATA[Lundi de Pentecôte]]></date>
+    </calendars>
+    <tasks empty-milestones="true">
+        <taskproperties>
+            <taskproperty id="tpd0" name="type" type="default" valuetype="icon"/>
+            <taskproperty id="tpd1" name="priority" type="default" valuetype="icon"/>
+            <taskproperty id="tpd2" name="info" type="default" valuetype="icon"/>
+            <taskproperty id="tpd3" name="name" type="default" valuetype="text"/>
+            <taskproperty id="tpd4" name="begindate" type="default" valuetype="date"/>
+            <taskproperty id="tpd5" name="enddate" type="default" valuetype="date"/>
+            <taskproperty id="tpd6" name="duration" type="default" valuetype="int"/>
+            <taskproperty id="tpd7" name="completion" type="default" valuetype="int"/>
+            <taskproperty id="tpd8" name="coordinator" type="default" valuetype="text"/>
+            <taskproperty id="tpd9" name="predecessorsr" type="default" valuetype="text"/>
+        </taskproperties>
+        <task id="0" uid="efade8fd42e147448723a29871268fc9" name="GESTION DES FICHES DES PERSONNAGES" meeting="false" start="2026-01-21" duration="116" complete="70" expand="true">
+            <notes><![CDATA[Projet L3 MIAGE - Équipe 7 (Sara, Vincent, Zine)
+Sujet : Gestionnaire de fiches de personnages de jeu de rôle.
+Deadline finale : 21 mai 2026 (soutenance).
+Repo : https://github.com/VinceMrn/Projet-MIAGE-E7-Gestionnaire-Fiches-]]></notes>
+            <task id="1" uid="7713a3ee92f0473faaaad8fa6faacf01" name="PHASE 1 : INTRODUCTION DU PROJET" meeting="false" start="2026-01-21" duration="5" complete="100" expand="true">
+                <notes><![CDATA[Cadrage du projet, choix du sujet, mise en place de l'environnement de travail collaboratif.]]></notes>
+                <task id="10" uid="7900527ff9ab4b55adf5c27ca138bab0" name="CHOIX DU PROJET" meeting="false" start="2026-01-21" duration="2" complete="100" expand="true">
+                    <notes><![CDATA[Présentation des sujets en cours et choix du projet "Gestionnaire de fiches de personnages" parmi la liste proposée par l'enseignant.]]></notes>
+                </task>
+                <task id="9" uid="55cb68002c834be39b22030128a1dbda" name="MISE EN PLACE DE L'ENVIRONNEMENT" meeting="false" start="2026-01-23" duration="3" complete="100" expand="true">
+                    <notes><![CDATA[Création du dépôt GitHub, des branches de travail (main / dev / feature), initialisation du diagramme de Gantt et préparation du diagramme de classes.]]></notes>
+                    <task id="19" uid="8e51ec1a0af841c4a690f0532e462c5e" name="Création du Gantt" meeting="false" start="2026-01-23" duration="3" complete="100" expand="true">
+                        <notes><![CDATA[Mise en place du diagramme de Gantt sur GanttProject pour le suivi du projet.]]></notes>
+                    </task>
+                    <task id="20" uid="34d041e067da41e9998715ab2af4c74d" name="Création du répertoire GitHub" meeting="false" start="2026-01-23" duration="3" complete="100" expand="true">
+                        <notes><![CDATA[Création du repository GitHub, configuration des accès pour les trois membres, mise en place du .gitignore et du README initial.]]></notes>
+                    </task>
+                    <task id="22" uid="451b5d35249b4f62aaf334898acdd3dc" name="Première ébauche du Diagramme de Classes" meeting="false" start="2026-01-23" duration="3" complete="100" expand="true">
+                        <notes><![CDATA[Premières réflexions sur l'architecture orientée objet : entités principales (Utilisateur, FichePersonnage, Module).]]></notes>
+                    </task>
+                </task>
+            </task>
+            <task id="2" uid="64eb2e4e88f84b0aaf7678d172859c6a" name="PHASE 2 : DIAGRAMME DE CLASSES" meeting="false" start="2026-01-26" duration="19" complete="100" expand="true">
+                <notes><![CDATA[Conception orientée objet : chaque membre a proposé sa propre version du diagramme de classes, puis fusion en une version finale validée par l'équipe.]]></notes>
+                <task id="6" uid="b517ed8106cf43188a79543f92e7a6b9" name="Version de Sara (Diagramme de Classes)" meeting="false" start="2026-01-26" duration="12" complete="100" expand="true">
+                    <notes><![CDATA[Proposition de Sara : focus sur la modularité de la fiche et la relation Utilisateur-Fiche.]]></notes>
+                </task>
+                <task id="24" uid="4a32d90d9c484a5cab94981e51a618dd" name="Version de Zine (Diagramme de Classes)" meeting="false" start="2026-01-26" duration="12" complete="100" expand="true">
+                    <notes><![CDATA[Proposition de Zine : approche centrée sur les modules (portrait, bio, stats, compétences, équipement) comme classes filles d'un Module abstrait.]]></notes>
+                </task>
+                <task id="23" uid="5daac2d11778432bbeb98b7f3410bd0a" name="Version de Vincent (Diagramme de Classes)" meeting="false" start="2026-01-26" duration="12" complete="100" expand="true">
+                    <notes><![CDATA[Proposition de Vincent : intégration de la gestion des droits utilisateur et de la sérialisation dès la modélisation.]]></notes>
+                </task>
+                <task id="27" uid="15f155773ae642eb86d743917a4f68f4" name="Version Finale (Diagramme de Classes)" meeting="false" start="2026-02-07" duration="7" complete="100" expand="true">
+                    <notes><![CDATA[Fusion des trois propositions : Utilisateur, FichePersonnage, Module abstrait avec ses sous-classes (Portrait, Biographie, Statistiques, Compétences, Équipement). Diagramme validé par l'équipe et utilisé comme référence pour le développement.]]></notes>
+                </task>
+            </task>
+            <task id="3" uid="49cfd30285fa4e9eab7a934cd7438707" name="PHASE 3 : DÉVELOPPEMENT" meeting="false" start="2026-02-14" duration="83" complete="71" expand="true">
+                <notes><![CDATA[Phase de développement principale : implémentation du back-end (modèle, services, persistance) et du front-end (vues, design).]]></notes>
+                <task id="35" uid="c390d8cab41247bc8fa7f3cb696f9f0f" name="Développement Back-end" meeting="false" start="2026-02-14" duration="83" complete="68" expand="true">
+                    <notes><![CDATA[Implémentation Java de l'architecture : modèle objet, services métier, gestion des droits]]></notes>
+                    <task id="41" uid="9cbd9f79582549a5ba0ae4eccdd03471" name="Création du Modèle d'Objet Fiche Personnage" meeting="false" start="2026-02-14" duration="9" complete="100" expand="true">
+                        <notes><![CDATA[Implémentation des classes FichePersonnage et Module (classe abstraite + sous-classes : Portrait, Biographie, Statistiques, Compétences, Équipement).]]></notes>
+                    </task>
+                    <task id="42" uid="e7446f718122444b91c34cbaeb33e67b" name="Création des Méthodes de Gestion Fiches Personnages" meeting="false" start="2026-02-21" duration="20" complete="100" expand="true">
+                        <notes><![CDATA[Méthodes CRUD sur les fiches : créer, lire, modifier, supprimer une fiche. Méthodes de gestion modulaire (ajouter/retirer/réordonner un module).]]></notes>
+                    </task>
+                    <task id="32" uid="cf09480b2ddf49b4bef74fe47c46a050" name="Création des méthodes de Gestion des Droits Utilisateur" meeting="false" start="2026-02-21" duration="30" complete="100" expand="true">
+                        <notes><![CDATA[- Création de la classe Utilisateur (login, mot de passe haché)
+- Service d'authentification (création de compte, connexion)
+- Service de gestion des droits : un utilisateur n'accède qu'à ses propres fiches.]]></notes>
+                    </task>
+                    <task id="34" uid="bc8fb6071f7245f486aa9325d064fd45" name="Création du Serveur API" meeting="false" start="2026-03-08" duration="7" complete="100" expand="true">
+                        <notes><![CDATA[Mise en place de l'API interne entre back-end et front-end ]]></notes>
+                    </task>
+                    <task id="40" uid="6aa3e982e34f48d990427952a123f72a" name="Création de la Sérialisation" meeting="false" start="2026-02-25" duration="30" complete="100" expand="true">
+                        <notes><![CDATA[Sérialisation/désérialisation des objets Utilisateur et FichePersonnage pour la sauvegarde]]></notes>
+                    </task>
+                    <task id="33" uid="f2bbed0a144a45b8b2f7e920601744e6" name="Sauvegarde et Cryptage des Fiches Personnages" meeting="false" start="2026-02-14" duration="83" complete="54" expand="true">
+                        <notes><![CDATA[Persistance des fiches sur disque avec cryptage des fichiers sauvegardés (fonctionnalité secondaire).]]></notes>
+                        <task id="43" uid="6a2dbf7d14ec45c1ae8370f7485d8df8" name="Phase de Test de Cryptage" meeting="false" start="2026-02-14" duration="20" complete="100" expand="true">
+                            <notes><![CDATA[Recherche et tests des bibliothèques de cryptage Java]]></notes>
+                        </task>
+                        <task id="44" uid="24afde96bfbb47e6be653f6f71ffeaea" name="Phase développement du Cryptage" meeting="false" start="2026-03-05" duration="64" complete="40" expand="true">
+                            <notes><![CDATA[Intégration du cryptage sur les fichiers de sauvegarde. Clé dérivée du mot de passe utilisateur.]]></notes>
+                        </task>
+                    </task>
+                    <task id="48" uid="a4f600469f59429b99ad0787fbb789e5" name="Déplacement des Modules Fiches Personnages" color="#000000" meeting="false" start="2026-03-28" duration="41" complete="26" expand="true">
+                        <notes><![CDATA[Fonctionnalité principale : permettre à l'utilisateur de réorganiser librement la position des modules sur la fiche (drag and drop).]]></notes>
+                        <task id="49" uid="98c401167cbd43608a5cb1fa11af6015" name="Réflexion sur la fonctionnalité de position" color="#8cb6ce" meeting="false" start="2026-03-28" duration="10" complete="100" expand="true">
+                            <notes><![CDATA[Étude des solutions techniques : système d'index sur chaque module, persistance de la position, refresh de la vue.]]></notes>
+                        </task>
+                        <task id="50" uid="06d55b9c1dc94b9c93d9d89920eeefd5" name="Développement de la fonctionnalité de position" color="#8cb6ce" meeting="false" start="2026-04-04" duration="34" complete="5" expand="true">
+                            <notes><![CDATA[Implémentation du drag and drop côté front-end et de la persistance de l'ordre des modules côté back-end.]]></notes>
+                        </task>
+                    </task>
+                </task>
+                <task id="36" uid="e714b24937ae4b708be4c3620e82c507" name="Développement Front-end" color="#000000" meeting="false" start="2026-03-05" duration="59" complete="78" expand="true">
+                    <notes><![CDATA[Interface graphique JavaFX : vues d'authentification, de gestion des fiches et d'édition modulaire.]]></notes>
+                    <task id="37" uid="da20114971ee406384ccd7eba3c22af9" name="Création des Vues de Gestion Utilisateur" color="#8cb6ce" meeting="false" start="2026-03-05" duration="9" complete="100" expand="true">
+                        <notes><![CDATA[Vues fonctionnelles : écran de connexion, écran de création de compte, écran de gestion du profil.]]></notes>
+                    </task>
+                    <task id="46" uid="a547a2f82c0e40fd9651bde4165a2e6c" name="Design des Vues de Gestion Utilisateur" color="#8cb6ce" meeting="false" start="2026-03-16" duration="40" complete="100" expand="true">
+                        <notes><![CDATA[Mise en forme CSS, charte graphique, ergonomie des vues d'authentification et de profil.]]></notes>
+                    </task>
+                    <task id="45" uid="303970918bab4484a3f9be0af35d474e" name="Création des Vues de Fiche Personnages" meeting="false" start="2026-03-10" duration="4" complete="100" expand="true">
+                        <notes><![CDATA[Vues fonctionnelles d'édition de fiche : affichage des modules (portrait, biographie, statistiques, compétences, équipement) et édition de leur contenu.]]></notes>
+                    </task>
+                    <task id="47" uid="53fab217fd024b9d887cd8746c6886b6" name="Design des Vues de Fiche Personnages" color="#8cb6ce" meeting="false" start="2026-03-16" duration="48" complete="55" expand="true">
+                        <notes><![CDATA[Mise en forme des fiches : style "carnet d'aventurier", lisibilité, mise en valeur du portrait. Travail en cours.]]></notes>
+                    </task>
+                </task>
+            </task>
+            <task id="100" uid="f7c54d2acb734735a22afb2295d0da75" name="PHASE 4 : FONCTIONNALITÉS TEMPLATES" meeting="false" start="2026-05-04" duration="8" complete="0" expand="true">
+                <notes><![CDATA[Fonctionnalités facultatives du sujet : système de templates de fiches (création, sauvegarde, import/export). Ainsi permettre l'utilisateur de pouvoir exporter ou importer des fiches a sa liste]]></notes>
+                <task id="102" uid="2d87ac2ba2514f41b2b3831067a78bad" name="Développement Création de Templates" meeting="false" start="2026-05-04" duration="7" complete="0" expand="true">
+                    <notes><![CDATA[Implémentation du service permettant à un utilisateur de transformer une fiche existante en template réutilisable.]]></notes>
+                </task>
+                <task id="104" uid="157aa82f250c4c61a90c0f6f434325bd" name="Vue dédiée aux Templates" meeting="false" start="2026-05-12" duration="1" complete="0" expand="true">
+                    <notes><![CDATA[Petite interface front-end pour lister, importer, exporter et appliquer un template lors de la création d'une fiche.]]></notes>
+                </task>
+            </task>
+            <task id="200" uid="c004187d344f44edb54814d21b08eaad" name="PHASE 5 : INTÉGRATION ET TESTS" meeting="false" start="2026-05-04" duration="9" complete="0" expand="true">
+                <notes><![CDATA[Vérification de l'intégration back-end / front-end, tests unitaires JUnit, tests d'intégration et chasse aux bugs avant la soutenance.]]></notes>
+                <task id="201" uid="91e57a6f928641e58090d4894c8c6b86" name="Tests unitaires" meeting="false" start="2026-05-04" duration="4" complete="0" expand="true">
+                    <notes><![CDATA[Test de l'ensemble de l'appli, identifier les bugs et améliorations]]></notes>
+                </task>
+                <task id="203" uid="cec1a0f7566749acbbd2fedd630bd56a" name="Correction des bugs identifiés" meeting="false" start="2026-05-09" duration="5" complete="0" expand="true">
+                    <notes><![CDATA[Correction sur les anomalies remontées par les tests unitaires et d'intégration. Priorité aux bugs bloquants pour la démo.]]></notes>
+                </task>
+            </task>
+            <task id="300" uid="ee97f241ca974de0adeca3ef1124fc0f" name="PHASE 6 : PRÉPARATION SOUTENANCE" meeting="false" start="2026-05-13" duration="7" complete="0" expand="true">
+                <notes><![CDATA[Production des livrables et préparation de la présentation orale pour le 21 mai 2026.]]></notes>
+                <task id="301" uid="3def041381f5449d82a6c4f9734873f3" name="Rédaction du rapport de projet" meeting="false" start="2026-05-13" duration="4" complete="0" expand="true">
+                    <notes><![CDATA[Rapport écrit : présentation du sujet, choix d'architecture, diagramme de classes final, répartition des tâches, retours d'expérience.]]></notes>
+                </task>
+                <task id="302" uid="f2fbb513077b46b991d599629ef4a410" name="Préparation du support de soutenance" meeting="false" start="2026-05-15" duration="3" complete="0" expand="true">
+                    <notes><![CDATA[Slides PowerPoint : contexte, démo des fonctionnalités principales, architecture, fonctionnalités secondaires, démonstration live, conclusion et perspectives.]]></notes>
+                </task>
+                <task id="303" uid="cc449b83432546438c44f415c0a842fe" name="Préparation de la démo" meeting="false" start="2026-05-18" duration="2" complete="0" expand="true">
+                    <notes><![CDATA[Scénario de démonstration : jeu de données de démo (utilisateurs et fiches préparés), parcours fluide à dérouler en live]]></notes>
+                </task>
+                <task id="304" uid="fcaebd5cda9741c28d604f658b0694c8" name="Répétitions de la soutenance" meeting="false" start="2026-05-19" duration="2" complete="0" expand="true">
+                    <notes><![CDATA[Deux passages complets en équipe]]></notes>
+                </task>
+                <task id="305" uid="ed98ab3c83c540bc85eda0ab79e28e6d" name="SOUTENANCE FINALE" meeting="true" start="2026-05-21" duration="0" complete="0" expand="true">
+                    <notes><![CDATA[SOUTENANCE FINALE]]></notes>
+                </task>
+            </task>
+        </task>
+    </tasks>
+    <resources>
+        <resource id="0" name="Vincent" function="1" contacts="" phone=""/>
+        <resource id="1" name="Sara" function="1" contacts="" phone=""/>
+        <resource id="2" name="Zine" function="1" contacts="" phone=""/>
+    </resources>
+    <allocations>
+        <allocation task-id="20" resource-id="0" function="1" responsible="false" load="100.0"/>
+        <allocation task-id="23" resource-id="0" function="1" responsible="true" load="100.0"/>
+        <allocation task-id="32" resource-id="0" function="1" responsible="true" load="100.0"/>
+        <allocation task-id="34" resource-id="0" function="1" responsible="true" load="100.0"/>
+        <allocation task-id="36" resource-id="0" function="1" responsible="true" load="100.0"/>
+        <allocation task-id="37" resource-id="0" function="1" responsible="true" load="100.0"/>
+        <allocation task-id="41" resource-id="0" function="1" responsible="true" load="100.0"/>
+        <allocation task-id="46" resource-id="0" function="1" responsible="true" load="100.0"/>
+        <allocation task-id="49" resource-id="0" function="1" responsible="false" load="33.0"/>
+        <allocation task-id="203" resource-id="0" function="1" responsible="false" load="33.0"/>
+        <allocation task-id="301" resource-id="0" function="1" responsible="false" load="33.0"/>
+        <allocation task-id="303" resource-id="0" function="1" responsible="true" load="100.0"/>
+        <allocation task-id="304" resource-id="0" function="1" responsible="true" load="100.0"/>
+        <allocation task-id="305" resource-id="0" function="1" responsible="true" load="100.0"/>
+        <allocation task-id="100" resource-id="0" function="1" responsible="true" load="100.0"/>
+        <allocation task-id="102" resource-id="0" function="1" responsible="true" load="100.0"/>
+        <allocation task-id="42" resource-id="0" function="1" responsible="false" load="30.0"/>
+        <allocation task-id="50" resource-id="0" function="1" responsible="true" load="80.0"/>
+        <allocation task-id="45" resource-id="0" function="1" responsible="false" load="30.0"/>
+        <allocation task-id="201" resource-id="0" function="1" responsible="false" load="33.0"/>
+        <allocation task-id="19" resource-id="1" function="1" responsible="true" load="100.0"/>
+        <allocation task-id="10" resource-id="1" function="1" responsible="false" load="100.0"/>
+        <allocation task-id="6" resource-id="1" function="1" responsible="true" load="100.0"/>
+        <allocation task-id="27" resource-id="1" function="1" responsible="false" load="100.0"/>
+        <allocation task-id="33" resource-id="1" function="1" responsible="true" load="100.0"/>
+        <allocation task-id="35" resource-id="1" function="1" responsible="true" load="100.0"/>
+        <allocation task-id="36" resource-id="1" function="1" responsible="true" load="100.0"/>
+        <allocation task-id="48" resource-id="1" function="1" responsible="true" load="100.0"/>
+        <allocation task-id="47" resource-id="1" function="1" responsible="false" load="100.0"/>
+        <allocation task-id="104" resource-id="1" function="1" responsible="true" load="100.0"/>
+        <allocation task-id="203" resource-id="1" function="1" responsible="false" load="33.0"/>
+        <allocation task-id="301" resource-id="1" function="1" responsible="false" load="33.0"/>
+        <allocation task-id="302" resource-id="1" function="1" responsible="true" load="100.0"/>
+        <allocation task-id="304" resource-id="1" function="1" responsible="true" load="100.0"/>
+        <allocation task-id="305" resource-id="1" function="1" responsible="true" load="100.0"/>
+        <allocation task-id="42" resource-id="1" function="1" responsible="false" load="10.0"/>
+        <allocation task-id="43" resource-id="1" function="1" responsible="true" load="100.0"/>
+        <allocation task-id="44" resource-id="1" function="1" responsible="true" load="100.0"/>
+        <allocation task-id="49" resource-id="1" function="1" responsible="false" load="33.0"/>
+        <allocation task-id="45" resource-id="1" function="1" responsible="false" load="20.0"/>
+        <allocation task-id="201" resource-id="1" function="1" responsible="false" load="33.0"/>
+        <allocation task-id="20" resource-id="2" function="1" responsible="true" load="100.0"/>
+        <allocation task-id="10" resource-id="2" function="1" responsible="false" load="100.0"/>
+        <allocation task-id="24" resource-id="2" function="1" responsible="true" load="100.0"/>
+        <allocation task-id="27" resource-id="2" function="1" responsible="false" load="100.0"/>
+        <allocation task-id="35" resource-id="2" function="1" responsible="false" load="100.0"/>
+        <allocation task-id="36" resource-id="2" function="1" responsible="true" load="100.0"/>
+        <allocation task-id="41" resource-id="2" function="1" responsible="false" load="100.0"/>
+        <allocation task-id="42" resource-id="2" function="1" responsible="true" load="60.0"/>
+        <allocation task-id="47" resource-id="2" function="1" responsible="true" load="100.0"/>
+        <allocation task-id="203" resource-id="2" function="1" responsible="false" load="33.0"/>
+        <allocation task-id="301" resource-id="2" function="1" responsible="false" load="33.0"/>
+        <allocation task-id="302" resource-id="2" function="1" responsible="false" load="50.0"/>
+        <allocation task-id="304" resource-id="2" function="1" responsible="true" load="100.0"/>
+        <allocation task-id="305" resource-id="2" function="1" responsible="true" load="100.0"/>
+        <allocation task-id="200" resource-id="2" function="1" responsible="true" load="100.0"/>
+        <allocation task-id="201" resource-id="2" function="1" responsible="false" load="33.0"/>
+        <allocation task-id="40" resource-id="2" function="1" responsible="true" load="100.0"/>
+        <allocation task-id="50" resource-id="2" function="1" responsible="false" load="20.0"/>
+        <allocation task-id="49" resource-id="2" function="1" responsible="false" load="33.0"/>
+        <allocation task-id="45" resource-id="2" function="1" responsible="true" load="50.0"/>
+    </allocations>
+    <vacations/>
+    <previous/>
+    <roles roleset-name="Default"/>
+    <roles>
+        <role id="1" name="Developpeur"/>
+    </roles>
+</project>
