@@ -67,6 +67,19 @@ export function supprimerFiche(id) {
   return requete(`/fiches/${id}`, { method: 'DELETE' })
 }
 
+// Export : retourne { nom, data (base64) }
+export function exporterFiche(id) {
+  return requete(`/fiches/${id}/export`)
+}
+
+// Import : envoie le base64 du fichier .fiche
+export function importerFiche(base64) {
+  return requete('/fiches/import', {
+    method: 'POST',
+    body: JSON.stringify({ data: base64 })
+  })
+}
+
 // ===== MODULES =====
 export function modifierPortrait(idFiche, image) {
   return requete(`/fiches/${idFiche}/portrait`, {

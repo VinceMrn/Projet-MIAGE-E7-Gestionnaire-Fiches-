@@ -404,6 +404,25 @@ public class GestionFiche {
         }
     }
 
+
+
+    //IMPORT et EXPORT
+
+    public byte[] exporterFiche(int idFiche) throws Exception {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        new ObjectOutputStream(baos).writeObject(getFiche(idFiche));
+        return baos.toByteArray();
+    }
+
+    public FichePersonnage importerFiche(byte[] data) throws Exception {
+        Utilisateur u = gestionUtilisateur.getUtilisateurConnecte();
+        FichePersonnage fiche = (FichePersonnage) new ObjectInputStream(new ByteArrayInputStream(data)).readObject();
+        fiche.setIdFichePersonnage(u.prochainIdFiche());
+        u.getFiches().add(fiche);
+        sauvegarderFiches(u);
+        return fiche;
+    }
+
     // ========== PERSISTANCE (SERIALISATION BINAIRE) ==========
 
     /**

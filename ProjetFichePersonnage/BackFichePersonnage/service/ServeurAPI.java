@@ -84,7 +84,7 @@ public class ServeurAPI {
     }
 
     // --- Trouver la route et produire [code, json] ---
-    private String[] router(RequeteHTTP req) {
+    private String[] router(RequeteHTTP req) throws Exception {
         if ("OPTIONS".equals(req.methode)) {
             return new String[]{"204", ""};
         }
@@ -109,7 +109,7 @@ public class ServeurAPI {
             String[] resultat = router(req);
             repondre(out, Integer.parseInt(resultat[0]), resultat[1]);
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             System.out.println("Erreur requete : " + e.getMessage());
         }
     }

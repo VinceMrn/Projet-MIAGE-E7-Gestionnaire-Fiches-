@@ -27,7 +27,7 @@ public class RouteFiches implements Route {
         return chemin.equals("/api/fiches") || chemin.startsWith("/api/fiches/");
     }
 
-    public String[] traiter(String methode, String chemin, String body) {
+    public String[] traiter(String methode, String chemin, String body) throws Exception {
         // Verification connexion
         if (gestionUtilisateur.getUtilisateurConnecte() == null) {
             return reponse(401, JsonUtils.erreur("Non connecte"));
@@ -44,6 +44,11 @@ public class RouteFiches implements Route {
         // /api/fiches/elements/{competences|equipements|statistiques}
         if (segments.length >= 5 && "elements".equals(segments[3])) {
             return traiterElements(methode, segments[4]);
+        }
+
+        // /api/fiches/import (POST) - importer une fiche depuis un .fiche base64
+        if (segments.length == 4 && "import".equals(segments[3])) {
+            return traiterImport(methode, body);
         }
 
         int idFiche;
@@ -94,7 +99,7 @@ public class RouteFiches implements Route {
         return reponse(405, JsonUtils.erreur("Methode non autorisee"));
     }
 
-    private String[] traiterRessource(String methode, String body, int idFiche, String[] segments) {
+    private String[] traiterRessource(String methode, String body, int idFiche, String[] segments) throws Exception {
         String ressource = segments[4];
 
         switch (ressource) {
@@ -148,6 +153,16 @@ public class RouteFiches implements Route {
 
             case "module":
                 return traiterModule(methode, body, idFiche, segments);
+
+            case "export":
+                if ("GET".equals(methode)) {
+                    byte[] data = gestionFiche.exporterFiche(idFiche);
+                    if (data == null) return reponse(404, JsonUtils.erreur("Fiche non trouvee"));
+                    model.FichePersonnage f = gestionFiche.getFiche(idFiche);
+                    String base64 = java.util.Base64.getEncoder().encodeToString(data);
+                    return reponse(200, JsonUtils.exportFicheVersJSON(f.getNomFichePersonnage(), base64));
+                }
+                return reponse(405, JsonUtils.erreur("Methode non autorisee"));
 
             case "rename":
                 if ("PUT".equals(methode)) {
@@ -273,6 +288,25 @@ public class RouteFiches implements Route {
         }
         json.append("]");
         return reponse(200, json.toString());
+    }
+
+    private String[] traiterImport(String methode, String body) throws Exception {
+        if (!"POST".equals(methode)) {
+            return reponse(405, JsonUtils.erreur("Methode non autorisee"));
+        }
+        String base64 = JsonUtils.extraireString(body, "data");
+        if (base64 == null || base64.isEmpty()) {
+            return reponse(400, JsonUtils.erreur("data (base64) requis"));
+        }
+        byte[] data;
+        try {
+            data = java.util.Base64.getDecoder().decode(base64);
+        } catch (IllegalArgumentException e) {
+            return reponse(400, JsonUtils.erreur("Base64 invalide"));
+        }
+        FichePersonnage fiche = gestionFiche.importerFiche(data);
+        if (fiche == null) return reponse(400, JsonUtils.erreur("Import echoue"));
+        return reponse(201, JsonUtils.succesAvecIdNom(fiche.getIdFichePersonnage(), fiche.getNomFichePersonnage()));
     }
 
     private String[] reponse(int code, String json) {

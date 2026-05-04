@@ -25,10 +25,15 @@ public class Utilisateur implements Serializable {
     }
 
     public FichePersonnage creerFiche(String nomFichePersonnage) {
-        int id = fiches.size() + 1;
-        FichePersonnage fiche = new FichePersonnage(id, nomFichePersonnage);
+        FichePersonnage fiche = new FichePersonnage(prochainIdFiche(), nomFichePersonnage);
         fiches.add(fiche);
         return fiche;
+    }
+
+    public int prochainIdFiche() {
+        int max = 0;
+        for (FichePersonnage f : fiches) if (f.getIdFichePersonnage() > max) max = f.getIdFichePersonnage();
+        return max + 1;
     }
 
     public void supprimerFiche(int idFichePersonnage) {

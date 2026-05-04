@@ -31,16 +31,40 @@ export default function Layout({ children, page, onNavigate }) {
             Mes Fiches
           </span>
           <div style={{ width: 1, height: 18, background: '#3a2c18' }} />
-          <div
+          <button
             onClick={() => onNavigate('parametres')}
             title="Paramètres du compte"
-            style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer', padding: '4px 8px', borderRadius: 4, background: page === 'parametres' ? '#2a1f14' : 'transparent' }}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 10,
+              cursor: 'pointer',
+              padding: '4px 12px 4px 4px',
+              borderRadius: 20,
+              border: `1px solid ${page === 'parametres' ? '#8a6a3a' : '#3a2c18'}`,
+              background: page === 'parametres' ? '#2a1f14' : 'transparent',
+              fontFamily: cinzel,
+              transition: 'all 0.2s',
+            }}
+            onMouseEnter={e => {
+              if (page !== 'parametres') {
+                e.currentTarget.style.borderColor = '#5c4a2a'
+                e.currentTarget.style.background = '#1e1509'
+              }
+            }}
+            onMouseLeave={e => {
+              if (page !== 'parametres') {
+                e.currentTarget.style.borderColor = '#3a2c18'
+                e.currentTarget.style.background = 'transparent'
+              }
+            }}
           >
             <div style={{ width: 32, height: 32, borderRadius: '50%', background: '#5a3a8a', border: '1px solid #8a6ab0', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: cinzel, fontSize: 13, fontWeight: 600, color: '#d4b8f0' }}>
               {utilisateur?.nom?.charAt(0).toUpperCase()}
             </div>
             <span style={{ fontFamily: cinzel, fontSize: 13, color: page === 'parametres' ? '#e8d5a0' : '#d4c4a0' }}>{utilisateur?.nom}</span>
-          </div>
+            <span style={{ fontSize: 14, color: page === 'parametres' ? '#c4a86a' : '#6a5a3a' }}>⚙</span>
+          </button>
           <div style={{ width: 1, height: 18, background: '#3a2c18' }} />
           <button onClick={handleLogout} style={{ background: 'transparent', border: 'none', color: '#c06050', fontFamily: cinzel, fontSize: 13, cursor: 'pointer' }}>Déconnexion</button>
         </div>

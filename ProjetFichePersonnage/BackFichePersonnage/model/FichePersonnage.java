@@ -59,6 +59,10 @@ public class FichePersonnage implements Serializable {
         return idFichePersonnage;
     }
 
+    public void setIdFichePersonnage(int idFichePersonnage) {
+        this.idFichePersonnage = idFichePersonnage;
+    }
+
     public String getNomFichePersonnage() {
         return nomFichePersonnage;
     }

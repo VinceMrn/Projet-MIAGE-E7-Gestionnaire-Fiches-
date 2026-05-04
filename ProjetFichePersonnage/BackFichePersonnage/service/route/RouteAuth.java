@@ -23,7 +23,7 @@ public class RouteAuth implements Route {
             || chemin.equals("/api/utilisateur/motdepasse");
     }
 
-    public String[] traiter(String methode, String chemin, String body) {
+    public String[] traiter(String methode, String chemin, String body) throws Exception {
         switch (chemin) {
             case "/api/signup": {
                 String nom = JsonUtils.extraireString(body, "nom");

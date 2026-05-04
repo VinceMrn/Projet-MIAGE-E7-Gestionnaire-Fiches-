@@ -253,4 +253,12 @@ public class JsonUtils {
     public static String succesAvecIdNom(int id, String nom) {
         return "{\"succes\":true,\"id\":" + id + ",\"nom\":\"" + nom + "\"}";
     }
+
+    /**
+     * Construit une reponse JSON pour l'export d'une fiche :
+     * { "nom": "...", "data": "<base64>" }
+     */
+    public static String exportFicheVersJSON(String nom, String base64) {
+        return "{\"nom\":\"" + nom + "\",\"data\":\"" + base64 + "\"}";
+    }
 }

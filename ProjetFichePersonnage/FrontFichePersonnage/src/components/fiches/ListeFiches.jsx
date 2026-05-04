@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import * as api from '../../api/api'
 
 export default function ListeFiches({ onSelectFiche, onCreerFiche }) {
@@ -7,6 +7,7 @@ export default function ListeFiches({ onSelectFiche, onCreerFiche }) {
   const [erreur, setErreur] = useState('')
   const [recherche, setRecherche] = useState('')
   const [tri, setTri] = useState('modifie')
+  const inputImportRef = useRef(null)
 
   const chargerFiches = async () => {
     setChargement(true)
@@ -34,6 +35,55 @@ export default function ListeFiches({ onSelectFiche, onCreerFiche }) {
     }
   }
 
+  // Export : recupere la fiche en base64 depuis l'API et declenche un telechargement .fiche
+  const handleExporter = async (e, id, nom) => {
+    e.stopPropagation()
+    try {
+      const { nom: nomServeur, data } = await api.exporterFiche(id)
+      // Decode base64 -> bytes -> Blob
+      const binaire = atob(data)
+      const bytes = new Uint8Array(binaire.length)
+      for (let i = 0; i < binaire.length; i++) bytes[i] = binaire.charCodeAt(i)
+      const blob = new Blob([bytes], { type: 'application/octet-stream' })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `${(nomServeur || nom || 'fiche').replace(/[^a-z0-9_-]+/gi, '_')}.fiche`
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      URL.revokeObjectURL(url)
+    } catch (err) {
+      setErreur(err.message)
+    }
+  }
+
+  // Import : declenche le selecteur de fichier
+  const handleClickImport = () => inputImportRef.current?.click()
+
+  // Lit le fichier choisi en base64 puis appelle l'API d'import
+  const handleFichierImport = async (e) => {
+    const fichier = e.target.files?.[0]
+    e.target.value = '' // reset pour permettre re-selection du meme fichier
+    if (!fichier) return
+    try {
+      const base64 = await new Promise((resolve, reject) => {
+        const reader = new FileReader()
+        reader.onload = () => {
+          const res = reader.result // "data:...;base64,XXXX"
+          const virgule = res.indexOf(',')
+          resolve(virgule >= 0 ? res.slice(virgule + 1) : res)
+        }
+        reader.onerror = () => reject(new Error('Lecture du fichier impossible'))
+        reader.readAsDataURL(fichier)
+      })
+      await api.importerFiche(base64)
+      chargerFiches()
+    } catch (err) {
+      setErreur(err.message)
+    }
+  }
+
   const fichesFiltrees = fiches
     .filter(f => f.nom?.toLowerCase().includes(recherche.toLowerCase()))
     .sort((a, b) => {
@@ -50,6 +100,9 @@ export default function ListeFiches({ onSelectFiche, onCreerFiche }) {
     title: { fontFamily: cinzel, fontSize: 24, color: '#e8d5a0', fontWeight: 600 },
     count: { fontSize: 13, color: '#6a5a3a', fontStyle: 'italic' },
     btnPrimary: { background: '#4a7030', border: '1px solid #6a9040', color: '#c8e0a0', padding: '9px 20px', borderRadius: 6, fontFamily: cinzel, fontSize: 13, cursor: 'pointer', fontWeight: 600 },
+    btnSecondary: { background: '#2e2410', border: '1px solid #4a3a1a', color: '#a09070', padding: '9px 16px', borderRadius: 6, fontFamily: cinzel, fontSize: 13, cursor: 'pointer', fontWeight: 600 },
+    actionsTop: { display: 'flex', gap: 10 },
+    expBtn: { background: 'transparent', border: 'none', color: '#6a8a40', fontSize: 12, cursor: 'pointer', fontFamily: crimson, marginRight: 8 },
     controls: { display: 'flex', gap: 10, margin: '16px 0 20px' },
     search: { flex: 1, background: '#110d05', border: '1px solid #4a3a1a', color: '#d4c4a0', padding: '9px 14px', borderRadius: 6, fontFamily: crimson, fontSize: 14, outline: 'none' },
     select: { background: '#110d05', border: '1px solid #4a3a1a', color: '#a09070', padding: '9px 12px', borderRadius: 6, fontFamily: crimson, fontSize: 13, outline: 'none', cursor: 'pointer' },
@@ -73,8 +126,20 @@ export default function ListeFiches({ onSelectFiche, onCreerFiche }) {
           <div style={s.title}>Mes Personnages</div>
           <div style={s.count}>{fichesFiltrees.length} personnage{fichesFiltrees.length !== 1 ? 's' : ''}</div>
         </div>
-        <button style={s.btnPrimary} onClick={onCreerFiche}>+ Nouveau Personnage</button>
+        <div style={s.actionsTop}>
+          <button style={s.btnSecondary} onClick={handleClickImport}>Importer</button>
+          <button style={s.btnPrimary} onClick={onCreerFiche}>+ Nouveau Personnage</button>
+        </div>
       </div>
+
+      {/* Input fichier cache pour l'import */}
+      <input
+        ref={inputImportRef}
+        type="file"
+        accept=".fiche"
+        style={{ display: 'none' }}
+        onChange={handleFichierImport}
+      />
 
       {/* Erreur */}
       {erreur && <div style={s.erreur}>{erreur}</div>}
@@ -116,7 +181,10 @@ export default function ListeFiches({ onSelectFiche, onCreerFiche }) {
                 <div style={s.cardInfo}>{[fiche.classe, fiche.niveau && `Niveau ${fiche.niveau}`, fiche.alignement].filter(Boolean).join(' • ')}</div>
                 <div style={s.cardMeta}>
                   <span>ID: {fiche.id}</span>
-                  <button style={s.delBtn} onClick={e => handleSupprimer(e, fiche.id)}>Supprimer</button>
+                  <span>
+                    <button style={s.expBtn} onClick={e => handleExporter(e, fiche.id, fiche.nom)}>Exporter</button>
+                    <button style={s.delBtn} onClick={e => handleSupprimer(e, fiche.id)}>Supprimer</button>
+                  </span>
                 </div>
               </div>
             </div>
