@@ -8,6 +8,9 @@ public class FichePersonnage implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    public static final int CANVAS_LARGEUR = 1350;
+    public static final int CANVAS_HAUTEUR = 600;
+
     private int idFichePersonnage;
     private String nomFichePersonnage;
     private Portrait portrait;

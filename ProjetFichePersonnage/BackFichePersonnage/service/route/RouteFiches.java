@@ -240,7 +240,7 @@ public class RouteFiches implements Route {
             Integer y = JsonUtils.extraireInt(body, "posY");
             if (module != null && x != null && y != null) {
                 boolean ok = gestionFiche.modifierPositionModule(idFiche, module, x, y);
-                return ok ? reponse(200, JsonUtils.succes()) : reponse(400, JsonUtils.erreur("Module inconnu"));
+                return ok ? reponse(200, JsonUtils.succes()) : reponse(400, JsonUtils.erreur("Collision ou module inconnu"));
             }
             return reponse(400, JsonUtils.erreur("module, posX, posY requis"));
         }
@@ -250,7 +250,7 @@ public class RouteFiches implements Route {
             Integer h = JsonUtils.extraireInt(body, "hauteur");
             if (module != null && l != null && h != null) {
                 boolean ok = gestionFiche.modifierTailleModule(idFiche, module, l, h);
-                return ok ? reponse(200, JsonUtils.succes()) : reponse(400, JsonUtils.erreur("Module inconnu"));
+                return ok ? reponse(200, JsonUtils.succes()) : reponse(400, JsonUtils.erreur("Collision ou module inconnu"));
             }
             return reponse(400, JsonUtils.erreur("module, largeur, hauteur requis"));
         }

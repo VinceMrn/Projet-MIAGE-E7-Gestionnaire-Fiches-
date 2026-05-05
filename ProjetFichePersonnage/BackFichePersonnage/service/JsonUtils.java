@@ -158,6 +158,11 @@ public class JsonUtils {
                 if (i < modulesPerso.size() - 1) json.append(",");
             }
             json.append("]");
+
+        // Canvas (zone max)
+        json.append(",\"canvas\":{\"largeur\":").append(FichePersonnage.CANVAS_LARGEUR)
+            .append(",\"hauteur\":").append(FichePersonnage.CANVAS_HAUTEUR).append("}");
+
         // Ferme l'objet fiche
         json.append("}");
         return json.toString();

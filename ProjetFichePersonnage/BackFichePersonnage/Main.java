@@ -20,159 +20,100 @@ public class Main {
 
 /*
  ============================================================
- DEMO : Gestion en ligne de commande sans serveur 
+ DEMO : Gestion spatiale des modules en ligne de commande
  ============================================================
-*/
 
-/*
-import service.GestionUtilisateur;
-import service.GestionFiche;
 import model.FichePersonnage;
-import java.util.List;
+import model.Module;
+import model.Sauvegarde;
+
 import java.util.Scanner;
 
 public class Main {
 
-    static GestionUtilisateur gestionUtilisateur = new GestionUtilisateur();
-    static GestionFiche gestionFiche = new GestionFiche(gestionUtilisateur);
+    static FichePersonnage fiche = new FichePersonnage(1, "Test");
     static Scanner scanner = new Scanner(System.in);
 
-    public static void main(String[] args) {
-        System.out.println("=== Gestionnaire de Fiches de Personnages ===");
-
+    public static void main(String[] args) throws Exception {
         boolean running = true;
         while (running) {
-            System.out.println("\n--- MENU PRINCIPAL ---");
-            if (gestionUtilisateur.getUtilisateurConnecte() != null) {
-                System.out.println("Connecte : " + gestionUtilisateur.getUtilisateurConnecte().getNomUtilisateur());
-            }
-            System.out.println("1. Inscription");
-            System.out.println("2. Connexion");
-            System.out.println("3. Deconnexion");
-            System.out.println("4. Creer une fiche");
-            System.out.println("5. Lister mes fiches");
-            System.out.println("6. Voir une fiche");
-            System.out.println("7. Supprimer une fiche");
-            System.out.println("8. Modifier la biographie d'une fiche");
-            System.out.println("9. Ajouter une competence");
-            System.out.println("10. Ajouter un equipement");
-            System.out.println("11. Ajouter une statistique");
+            System.out.println("\n--- GESTION SPATIALE DES MODULES ---");
+            System.out.println("1. Afficher l'etat des modules");
+            System.out.println("2. Deplacer un module");
+            System.out.println("3. Redimensionner un module");
+            System.out.println("4. Sauvegarder");
+            System.out.println("5. Recharger");
             System.out.println("0. Quitter");
             System.out.print("> ");
 
             String choix = scanner.nextLine().trim();
             switch (choix) {
-                case "1": inscription(); break;
-                case "2": connexion(); break;
-                case "3": deconnexion(); break;
-                case "4": creerFiche(); break;
-                case "5": listerFiches(); break;
-                case "6": voirFiche(); break;
-                case "7": supprimerFiche(); break;
-                case "8": modifierBiographie(); break;
-                case "9": ajouterCompetence(); break;
-                case "10": ajouterEquipement(); break;
-                case "11": ajouterStatistique(); break;
-                case "0": running = false; System.out.println("Au revoir !"); break;
+                case "1": afficher(); break;
+                case "2": deplacer(); break;
+                case "3": redimensionner(); break;
+                case "4": sauvegarder(); break;
+                case "5": recharger(); break;
+                case "0": running = false; break;
                 default: System.out.println("Choix invalide.");
             }
         }
     }
 
-    static void inscription() {
-        System.out.print("Nom d'utilisateur : ");
-        String nom = scanner.nextLine().trim();
-        System.out.print("Mot de passe : ");
-        String mdp = scanner.nextLine().trim();
-        var u = gestionUtilisateur.creerCompte(nom, mdp);
-        if (u != null) System.out.println("Compte cree pour " + u.getNomUtilisateur());
-        else System.out.println("Erreur : nom deja pris.");
-    }
-
-    static void connexion() {
-        System.out.print("Nom d'utilisateur : ");
-        String nom = scanner.nextLine().trim();
-        System.out.print("Mot de passe : ");
-        String mdp = scanner.nextLine().trim();
-        var u = gestionUtilisateur.seConnecter(nom, mdp);
-        if (u != null) {
-            gestionFiche.chargerFiches(u);
-            System.out.println("Connecte en tant que " + u.getNomUtilisateur());
-        } else {
-            System.out.println("Erreur : identifiants incorrects.");
+    static Module choisirModule() {
+        System.out.println("1. Portrait  2. Biographie  3. Statistiques  4. Competence  5. Equipement");
+        System.out.print("> ");
+        String c = scanner.nextLine().trim();
+        switch (c) {
+            case "1": return fiche.getPortrait();
+            case "2": return fiche.getBiographie();
+            case "3": return fiche.getStatistiques();
+            case "4": return fiche.getCompetence();
+            case "5": return fiche.getEquipement();
+            default: return null;
         }
     }
 
-    static void deconnexion() {
-        gestionUtilisateur.seDeconnecter();
-        System.out.println("Deconnecte.");
+    static void afficher() {
+        afficherModule("Portrait     ", fiche.getPortrait());
+        afficherModule("Biographie   ", fiche.getBiographie());
+        afficherModule("Statistiques ", fiche.getStatistiques());
+        afficherModule("Competence   ", fiche.getCompetence());
+        afficherModule("Equipement   ", fiche.getEquipement());
     }
 
-    static void creerFiche() {
-        System.out.print("Nom de la fiche : ");
-        String nom = scanner.nextLine().trim();
-        gestionFiche.creerFiche(nom);
+    static void afficherModule(String nom, Module m) {
+        System.out.println(nom + " | x=" + m.getPositionX() + " y=" + m.getPositionY()
+                + " | l=" + m.getLargeur() + " h=" + m.getHauteur());
     }
 
-    static void listerFiches() {
-        List<FichePersonnage> fiches = gestionFiche.listerFiches();
-        if (fiches.isEmpty()) { System.out.println("Aucune fiche."); return; }
-        for (FichePersonnage f : fiches) {
-            System.out.println("  [" + f.getIdFichePersonnage() + "] " + f.getNomFichePersonnage());
-        }
+    static void deplacer() {
+        Module m = choisirModule();
+        if (m == null) { System.out.println("Module invalide."); return; }
+        System.out.print("x : "); int x = Integer.parseInt(scanner.nextLine().trim());
+        System.out.print("y : "); int y = Integer.parseInt(scanner.nextLine().trim());
+        m.modifierPosition(x, y);
     }
 
-    static void voirFiche() {
-        System.out.print("ID de la fiche : ");
-        int id = Integer.parseInt(scanner.nextLine().trim());
-        FichePersonnage f = gestionFiche.getFiche(id);
-        if (f == null) return;
-        System.out.println("Nom        : " + f.getNomFichePersonnage());
-        System.out.println("Biographie : " + f.getBiographie().getTexteBiographie());
-        System.out.println("Stats      : " + f.getStatistiques().getStatistiques());
-        System.out.println("Competences: " + f.getCompetence().getCompetences());
-        System.out.println("Equipements: " + f.getEquipement().getEquipements());
+    static void redimensionner() {
+        Module m = choisirModule();
+        if (m == null) { System.out.println("Module invalide."); return; }
+        System.out.print("largeur : "); int l = Integer.parseInt(scanner.nextLine().trim());
+        System.out.print("hauteur : "); int h = Integer.parseInt(scanner.nextLine().trim());
+        m.modifierTaille(l, h);
     }
 
-    static void supprimerFiche() {
-        System.out.print("ID de la fiche a supprimer : ");
-        int id = Integer.parseInt(scanner.nextLine().trim());
-        gestionFiche.supprimerFiche(id);
+    static void sauvegarder() throws Exception {
+        System.out.print("Chemin : ");
+        String chemin = scanner.nextLine().trim();
+        Sauvegarde.sauvegarder(fiche, chemin);
+        System.out.println("Sauvegarde OK.");
     }
 
-    static void modifierBiographie() {
-        System.out.print("ID de la fiche : ");
-        int id = Integer.parseInt(scanner.nextLine().trim());
-        System.out.print("Nouvelle biographie : ");
-        String texte = scanner.nextLine().trim();
-        gestionFiche.modifierBiographie(id, texte);
-    }
-
-    static void ajouterCompetence() {
-        System.out.print("ID de la fiche : ");
-        int id = Integer.parseInt(scanner.nextLine().trim());
-        System.out.print("Nom de la competence : ");
-        String nom = scanner.nextLine().trim();
-        gestionFiche.ajouterCompetence(id, nom);
-    }
-
-    static void ajouterEquipement() {
-        System.out.print("ID de la fiche : ");
-        int id = Integer.parseInt(scanner.nextLine().trim());
-        System.out.print("Nom de l'equipement : ");
-        String nom = scanner.nextLine().trim();
-        gestionFiche.ajouterEquipement(id, nom);
-    }
-
-    static void ajouterStatistique() {
-        System.out.print("ID de la fiche : ");
-        int id = Integer.parseInt(scanner.nextLine().trim());
-        System.out.print("Nom de la statistique : ");
-        String nom = scanner.nextLine().trim();
-        System.out.print("Valeur : ");
-        int val = Integer.parseInt(scanner.nextLine().trim());
-        gestionFiche.ajouterStatistique(id, nom, val);
+    static void recharger() throws Exception {
+        System.out.print("Chemin : ");
+        String chemin = scanner.nextLine().trim();
+        fiche = Sauvegarde.charger(chemin);
+        System.out.println("Chargement OK.");
     }
 }
-
 */

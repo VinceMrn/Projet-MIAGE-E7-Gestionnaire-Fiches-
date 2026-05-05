@@ -241,9 +241,15 @@ public class GestionFiche {
             return false;
         }
 
-        module.modifierPosition(posX, posY);
+        int x = Math.max(0, Math.min(posX, FichePersonnage.CANVAS_LARGEUR - module.getLargeur()));
+        int y = Math.max(0, Math.min(posY, FichePersonnage.CANVAS_HAUTEUR - module.getHauteur()));
+        if (chevauche(fiche, nomModule, x, y, module.getLargeur(), module.getHauteur())) {
+            System.out.println("Erreur : collision avec un autre module.");
+            return false;
+        }
+        module.modifierPosition(x, y);
         sauvegarderFiches(gestionUtilisateur.getUtilisateurConnecte());
-        System.out.println("Position du module '" + nomModule + "' modifiee (" + posX + ", " + posY + ").");
+        System.out.println("Position du module '" + nomModule + "' modifiee (" + x + ", " + y + ").");
         return true;
     }
 
@@ -260,10 +266,34 @@ public class GestionFiche {
             return false;
         }
 
-        module2.modifierTaille(largeur, hauteur);
+        int l = Math.max(1, Math.min(largeur, FichePersonnage.CANVAS_LARGEUR - module2.getPositionX()));
+        int h = Math.max(1, Math.min(hauteur, FichePersonnage.CANVAS_HAUTEUR - module2.getPositionY()));
+        if (chevauche(fiche, nomModule, module2.getPositionX(), module2.getPositionY(), l, h)) {
+            System.out.println("Erreur : collision avec un autre module.");
+            return false;
+        }
+        module2.modifierTaille(l, h);
         sauvegarderFiches(gestionUtilisateur.getUtilisateurConnecte());
-        System.out.println("Taille du module '" + nomModule + "' modifiee (" + largeur + "x" + hauteur + ").");
+        System.out.println("Taille du module '" + nomModule + "' modifiee (" + l + "x" + h + ").");
         return true;
+    }
+
+    /**
+     * Verifie si le rectangle (x, y, l, h) chevauche un autre module fixe de la fiche.
+     */
+    private boolean chevauche(FichePersonnage fiche, String nomExclu, int x, int y, int l, int h) {
+        String[] noms = {"portrait", "biographie", "statistiques", "competence", "equipement"};
+        for (String nom : noms) {
+            if (nom.equalsIgnoreCase(nomExclu)) continue;
+            model.Module m = getModuleParNom(fiche, nom);
+            if (m == null) continue;
+            int x2 = m.getPositionX(), y2 = m.getPositionY();
+            int l2 = m.getLargeur(), h2 = m.getHauteur();
+            if (x < x2 + l2 && x + l > x2 && y < y2 + h2 && y + h > y2) {
+                return true;
+            }
+        }
+        return false;
     }
 
     // ===== Elements existants chez l'utilisateur connecte =====
