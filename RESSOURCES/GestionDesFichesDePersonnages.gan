@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="UTF-8"?><project name="Création de gestion des fiches des personnages" company="Sara, Vincent, Zine" webLink="https://github.com/VinceMrn/Projet-MIAGE-E7-Gestionnaire-Fiches-" view-date="2026-05-04" view-index="0" gantt-divider-location="325" resource-divider-location="300" version="3.3.3316" locale="fr_FR">
+<?xml version="1.0" encoding="UTF-8"?><project name="Création de gestion des fiches des personnages" company="Sara, Vincent, Zine" webLink="https://github.com/VinceMrn/Projet-MIAGE-E7-Gestionnaire-Fiches-" view-date="2026-04-13" view-index="0" gantt-divider-location="293" resource-divider-location="300" version="3.3.3316" locale="fr_FR">
     <description><![CDATA[Projet en classe de L3 MIAGE FA/FI, par l'équipe 7 constituée de Sara, Vincent et Zine. Débuté le 21 janvier 2026. Soutenance et rendu final le 21 mai 2026. Application Java orientée objet permettant de gérer des fiches de personnages de jeu de rôle (création de comptes protégés par mot de passe, fiches modulaires : portrait, biographie, statistiques, compétences, équipement). Fonctionnalités secondaires : cryptage des fichiers et import/export de templates.]]></description>
     <view zooming-state="default:5" id="gantt-chart">
-        <field id="tpd3" name="Nom" width="154" order="0"/>
-        <field id="tpd4" name="Date de début" width="77" order="1"/>
-        <field id="tpd5" name="Date de fin" width="77" order="2"/>
+        <field id="tpd3" name="Nom" width="138" order="0"/>
+        <field id="tpd4" name="Date de début" width="69" order="1"/>
+        <field id="tpd5" name="Date de fin" width="69" order="2"/>
         <field id="tpd15" name="Notes" width="20" order="3"/>
         <option id="taskLabelUp" value="name"/>
         <option id="taskLabelDown" value="length"/>
@@ -156,7 +156,7 @@ Repo : https://github.com/VinceMrn/Projet-MIAGE-E7-Gestionnaire-Fiches-]]></note
                     <task id="48" uid="a4f600469f59429b99ad0787fbb789e5" name="Déplacement des Modules Fiches Personnages" color="#000000" meeting="false" start="2026-03-28" duration="41" complete="26" expand="true">
                         <notes><![CDATA[Fonctionnalité principale : permettre à l'utilisateur de réorganiser librement la position des modules sur la fiche (drag and drop).]]></notes>
                         <task id="49" uid="98c401167cbd43608a5cb1fa11af6015" name="Réflexion sur la fonctionnalité de position" color="#8cb6ce" meeting="false" start="2026-03-28" duration="10" complete="100" expand="true">
-                            <notes><![CDATA[Étude des solutions techniques : système d'index sur chaque module, persistance de la position, refresh de la vue.]]></notes>
+                            <notes><![CDATA[Étude des solutions techniques, persistance de la position]]></notes>
                         </task>
                         <task id="50" uid="06d55b9c1dc94b9c93d9d89920eeefd5" name="Développement de la fonctionnalité de position" color="#8cb6ce" meeting="false" start="2026-04-04" duration="34" complete="5" expand="true">
                             <notes><![CDATA[Implémentation du drag and drop côté front-end et de la persistance de l'ordre des modules côté back-end.]]></notes>
@@ -164,7 +164,7 @@ Repo : https://github.com/VinceMrn/Projet-MIAGE-E7-Gestionnaire-Fiches-]]></note
                     </task>
                 </task>
                 <task id="36" uid="e714b24937ae4b708be4c3620e82c507" name="Développement Front-end" color="#000000" meeting="false" start="2026-03-05" duration="59" complete="78" expand="true">
-                    <notes><![CDATA[Interface graphique JavaFX : vues d'authentification, de gestion des fiches et d'édition modulaire.]]></notes>
+                    <notes><![CDATA[Interface graphique vues d'authentification, de gestion des fiches]]></notes>
                     <task id="37" uid="da20114971ee406384ccd7eba3c22af9" name="Création des Vues de Gestion Utilisateur" color="#8cb6ce" meeting="false" start="2026-03-05" duration="9" complete="100" expand="true">
                         <notes><![CDATA[Vues fonctionnelles : écran de connexion, écran de création de compte, écran de gestion du profil.]]></notes>
                     </task>
@@ -175,7 +175,7 @@ Repo : https://github.com/VinceMrn/Projet-MIAGE-E7-Gestionnaire-Fiches-]]></note
                         <notes><![CDATA[Vues fonctionnelles d'édition de fiche : affichage des modules (portrait, biographie, statistiques, compétences, équipement) et édition de leur contenu.]]></notes>
                     </task>
                     <task id="47" uid="53fab217fd024b9d887cd8746c6886b6" name="Design des Vues de Fiche Personnages" color="#8cb6ce" meeting="false" start="2026-03-16" duration="48" complete="55" expand="true">
-                        <notes><![CDATA[Mise en forme des fiches : style "carnet d'aventurier", lisibilité, mise en valeur du portrait. Travail en cours.]]></notes>
+                        <notes><![CDATA[Mise en forme des fiches : style fantasy, lisibilité, mise en valeur de l'affichage]]></notes>
                     </task>
                 </task>
             </task>
@@ -189,7 +189,7 @@ Repo : https://github.com/VinceMrn/Projet-MIAGE-E7-Gestionnaire-Fiches-]]></note
                 </task>
             </task>
             <task id="200" uid="c004187d344f44edb54814d21b08eaad" name="PHASE 5 : INTÉGRATION ET TESTS" meeting="false" start="2026-05-04" duration="9" complete="0" expand="true">
-                <notes><![CDATA[Vérification de l'intégration back-end / front-end, tests unitaires JUnit, tests d'intégration et chasse aux bugs avant la soutenance.]]></notes>
+                <notes><![CDATA[Vérification de l'intégration back-end / front-end, tests unitaires]]></notes>
                 <task id="201" uid="91e57a6f928641e58090d4894c8c6b86" name="Tests unitaires" meeting="false" start="2026-05-04" duration="4" complete="0" expand="true">
                     <notes><![CDATA[Test de l'ensemble de l'appli, identifier les bugs et améliorations]]></notes>
                 </task>
