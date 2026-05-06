@@ -6,9 +6,8 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.Arrays;
 import javax.crypto.*;
-import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
-import java.security.*;
+
 
 public class GestionSecurite {
     

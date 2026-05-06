@@ -13,10 +13,10 @@ public class ServeurAPI {
     private boolean enMarche;
     private Route[] routes;
 
-    public ServeurAPI(GestionUtilisateur gestionUtilisateur, GestionFiche gestionFiche) {
+    public ServeurAPI(GestionUtilisateur gestionUtilisateur, GestionFiche gestionFiche, GestionSession gestionSession) {
         this.routes = new Route[]{
-            new RouteAuth(gestionUtilisateur, gestionFiche),
-            new RouteFiches(gestionUtilisateur, gestionFiche)
+            new RouteAuth(gestionUtilisateur, gestionFiche, gestionSession),
+            new RouteFiches(gestionFiche, gestionSession)
         };
     }
 
@@ -50,6 +50,7 @@ public class ServeurAPI {
         String methode;
         String chemin;
         String body;
+        String sessionId;
     }
 
     // --- Lire et parser la requête HTTP depuis le socket ---
@@ -61,13 +62,16 @@ public class ServeurAPI {
         RequeteHTTP req = new RequeteHTTP();
         req.methode = parts[0];
         req.chemin = parts[1];
+        req.sessionId = "";
 
-        // Lire les headers pour trouver Content-Length
+        // Lire les headers pour trouver Content-Length et X-Session-Id
         int contentLength = 0;
         String ligne;
         while ((ligne = in.readLine()) != null && !ligne.isEmpty()) {
             if (ligne.startsWith("Content-Length:")) {
                 contentLength = Integer.parseInt(ligne.substring(15).trim());
+            } else if (ligne.startsWith("X-Session-Id:")) {
+                req.sessionId = ligne.substring(13).trim();
             }
         }
 
@@ -91,7 +95,7 @@ public class ServeurAPI {
 
         for (Route route : routes) {
             if (route.correspond(req.chemin)) {
-                return route.traiter(req.methode, req.chemin, req.body);
+                return route.traiter(req.methode, req.chemin, req.body, req.sessionId);
             }
         }
 
@@ -121,7 +125,7 @@ public class ServeurAPI {
             + "Content-Type: application/json\r\n"
             + "Access-Control-Allow-Origin: *\r\n"
             + "Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS\r\n"
-            + "Access-Control-Allow-Headers: Content-Type\r\n"
+            + "Access-Control-Allow-Headers: Content-Type, X-Session-Id\r\n"
             + "Content-Length: " + contenu.length + "\r\n"
             + "\r\n";
         out.write(entete.getBytes("UTF-8"));

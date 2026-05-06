@@ -21,25 +21,23 @@ import java.util.List;
 public class GestionFiche {
 
     private static final String DOSSIER_DATA = "data/";
-    private GestionUtilisateur gestionUtilisateur;
+  
 
-    public GestionFiche(GestionUtilisateur gestionUtilisateur) {
-        this.gestionUtilisateur = gestionUtilisateur;
+    public GestionFiche() {
     }
 
     /**
      * Cree une nouvelle fiche pour l'utilisateur connecte.
      * Verifie que l'utilisateur est connecte avant de creer.
      */
-    public FichePersonnage creerFiche(String nomFiche) {
-        Utilisateur connecte = gestionUtilisateur.getUtilisateurConnecte();
-        if (connecte == null) {
+    public FichePersonnage creerFiche(Utilisateur utilisateur, String nomFiche) {
+        if (utilisateur == null) {
             System.out.println("Erreur : vous devez etre connecte pour creer une fiche.");
             return null;
         }
 
-        FichePersonnage fiche = connecte.creerFiche(nomFiche);
-        sauvegarderFiches(connecte);
+        FichePersonnage fiche = utilisateur.creerFiche(nomFiche);
+        sauvegarderFiches(utilisateur);
         System.out.println("Fiche '" + nomFiche + "' creee avec succes (id=" + fiche.getIdFichePersonnage() + ").");
         return fiche;
     }
@@ -47,28 +45,26 @@ public class GestionFiche {
     /**
      * Retourne la liste des fiches de l'utilisateur connecte.
      */
-    public List<FichePersonnage> listerFiches() {
-        Utilisateur connecte = gestionUtilisateur.getUtilisateurConnecte();
-        if (connecte == null) {
+    public List<FichePersonnage> listerFiches(Utilisateur utilisateur) {
+        if (utilisateur == null) {
             System.out.println("Erreur : vous devez etre connecte pour voir vos fiches.");
             return new ArrayList<>();
         }
 
-        return connecte.getFiches();
+        return utilisateur.getFiches();
     }
 
     /**
      * Recupere une fiche par son ID.
      * Verifie que l'utilisateur connecte est bien le proprietaire.
      */
-    public FichePersonnage getFiche(int idFiche) {
-        Utilisateur connecte = gestionUtilisateur.getUtilisateurConnecte();
-        if (connecte == null) {
+    public FichePersonnage getFiche(Utilisateur utilisateur, int idFiche) {
+        if (utilisateur == null) {
             System.out.println("Erreur : vous devez etre connecte.");
             return null;
         }
 
-        for (FichePersonnage fiche : connecte.getFiches()) {
+        for (FichePersonnage fiche : utilisateur.getFiches()) {
             if (fiche.getIdFichePersonnage() == idFiche) {
                 return fiche;
             }
@@ -82,12 +78,12 @@ public class GestionFiche {
      * Modifie le portrait d'une fiche.
      * Verifie les droits avant modification.
      */
-    public boolean modifierPortrait(int idFiche, String imagePortrait) {
-        FichePersonnage fiche = getFiche(idFiche);
+    public boolean modifierPortrait(int idFiche, String imagePortrait, Utilisateur utilisateur) {
+        FichePersonnage fiche = getFiche(utilisateur, idFiche);
         if (fiche == null) return false;
 
         fiche.modifierPortrait(imagePortrait);
-        sauvegarderFiches(gestionUtilisateur.getUtilisateurConnecte());
+        sauvegarderFiches(utilisateur);
         System.out.println("Portrait de la fiche " + idFiche + " modifie.");
         return true;
     }
@@ -96,12 +92,12 @@ public class GestionFiche {
      * Modifie la biographie d'une fiche.
      * Verifie les droits avant modification.
      */
-    public boolean modifierBiographie(int idFiche, String texteBiographie) {
-        FichePersonnage fiche = getFiche(idFiche);
+    public boolean modifierBiographie(int idFiche, String texteBiographie, Utilisateur utilisateur) {
+        FichePersonnage fiche = getFiche(utilisateur, idFiche);
         if (fiche == null) return false;
 
         fiche.modifierBiographie(texteBiographie);
-        sauvegarderFiches(gestionUtilisateur.getUtilisateurConnecte());
+        sauvegarderFiches(utilisateur);
         System.out.println("Biographie de la fiche " + idFiche + " modifiee.");
         return true;
     }
@@ -109,12 +105,12 @@ public class GestionFiche {
     /**
      * Ajoute une statistique a une fiche.
      */
-    public boolean ajouterStatistique(int idFiche, String nomStat, int valeur) {
-        FichePersonnage fiche = getFiche(idFiche);
+    public boolean ajouterStatistique(int idFiche, String nomStat, int valeur, Utilisateur utilisateur) {
+        FichePersonnage fiche = getFiche(utilisateur, idFiche);
         if (fiche == null) return false;
 
         fiche.getStatistiques().ajouterStatistique(nomStat, valeur);
-        sauvegarderFiches(gestionUtilisateur.getUtilisateurConnecte());
+        sauvegarderFiches(utilisateur);
         System.out.println("Statistique '" + nomStat + "' ajoutee a la fiche " + idFiche + ".");
         return true;
     }
@@ -122,12 +118,12 @@ public class GestionFiche {
     /**
      * Modifie une statistique d'une fiche.
      */
-    public boolean modifierStatistique(int idFiche, int idStat, String nomStat, int valeur) {
-        FichePersonnage fiche = getFiche(idFiche);
+    public boolean modifierStatistique(int idFiche, int idStat, String nomStat, int valeur, Utilisateur utilisateur) {
+        FichePersonnage fiche = getFiche(utilisateur, idFiche);
         if (fiche == null) return false;
 
         fiche.getStatistiques().modifierStatistique(idStat, nomStat, valeur);
-        sauvegarderFiches(gestionUtilisateur.getUtilisateurConnecte());
+        sauvegarderFiches(utilisateur);
         System.out.println("Statistique " + idStat + " modifiee sur la fiche " + idFiche + ".");
         return true;
     }
@@ -135,12 +131,12 @@ public class GestionFiche {
     /**
      * Supprime une statistique d'une fiche.
      */
-    public boolean supprimerStatistique(int idFiche, int idStat) {
-        FichePersonnage fiche = getFiche(idFiche);
+    public boolean supprimerStatistique(int idFiche, int idStat, Utilisateur utilisateur) {
+        FichePersonnage fiche = getFiche(utilisateur, idFiche);
         if (fiche == null) return false;
 
         fiche.getStatistiques().supprimerStatistique(idStat);
-        sauvegarderFiches(gestionUtilisateur.getUtilisateurConnecte());
+        sauvegarderFiches(utilisateur);
         System.out.println("Statistique " + idStat + " supprimee de la fiche " + idFiche + ".");
         return true;
     }
@@ -148,12 +144,12 @@ public class GestionFiche {
     /**
      * Ajoute une competence a une fiche.
      */
-    public boolean ajouterCompetence(int idFiche, String nomCompetence) {
-        FichePersonnage fiche = getFiche(idFiche);
+    public boolean ajouterCompetence(int idFiche, String nomCompetence, Utilisateur utilisateur) {
+        FichePersonnage fiche = getFiche(utilisateur, idFiche);
         if (fiche == null) return false;
 
         fiche.getCompetence().ajouterCompetence(nomCompetence);
-        sauvegarderFiches(gestionUtilisateur.getUtilisateurConnecte());
+        sauvegarderFiches(utilisateur);
         System.out.println("Competence '" + nomCompetence + "' ajoutee a la fiche " + idFiche + ".");
         return true;
     }
@@ -161,12 +157,12 @@ public class GestionFiche {
     /**
      * Modifie une competence d'une fiche.
      */
-    public boolean modifierCompetence(int idFiche, String ancienNom, String nouveauNom) {
-        FichePersonnage fiche = getFiche(idFiche);
+    public boolean modifierCompetence(int idFiche, String ancienNom, String nouveauNom, Utilisateur utilisateur) {
+        FichePersonnage fiche = getFiche(utilisateur, idFiche);
         if (fiche == null) return false;
 
         fiche.getCompetence().modifierCompetence(ancienNom, nouveauNom);
-        sauvegarderFiches(gestionUtilisateur.getUtilisateurConnecte());
+        sauvegarderFiches(utilisateur);
         System.out.println("Competence '" + ancienNom + "' renommee en '" + nouveauNom + "'.");
         return true;
     }
@@ -174,12 +170,12 @@ public class GestionFiche {
     /**
      * Supprime une competence d'une fiche.
      */
-    public boolean supprimerCompetence(int idFiche, String nomCompetence) {
-        FichePersonnage fiche = getFiche(idFiche);
+    public boolean supprimerCompetence(int idFiche, String nomCompetence, Utilisateur utilisateur) {
+        FichePersonnage fiche = getFiche(utilisateur, idFiche);
         if (fiche == null) return false;
 
         fiche.getCompetence().supprimerCompetence(nomCompetence);
-        sauvegarderFiches(gestionUtilisateur.getUtilisateurConnecte());
+        sauvegarderFiches(utilisateur);
         System.out.println("Competence '" + nomCompetence + "' supprimee.");
         return true;
     }
@@ -187,12 +183,12 @@ public class GestionFiche {
     /**
      * Ajoute un equipement a une fiche.
      */
-    public boolean ajouterEquipement(int idFiche, String nomEquipement) {
-        FichePersonnage fiche = getFiche(idFiche);
+    public boolean ajouterEquipement(int idFiche, String nomEquipement, Utilisateur utilisateur) {
+        FichePersonnage fiche = getFiche(utilisateur, idFiche);
         if (fiche == null) return false;
 
         fiche.getEquipement().ajouterEquipement(nomEquipement);
-        sauvegarderFiches(gestionUtilisateur.getUtilisateurConnecte());
+        sauvegarderFiches(utilisateur);
         System.out.println("Equipement '" + nomEquipement + "' ajoute a la fiche " + idFiche + ".");
         return true;
     }
@@ -200,12 +196,12 @@ public class GestionFiche {
     /**
      * Modifie un equipement d'une fiche.
      */
-    public boolean modifierEquipement(int idFiche, String ancienNom, String nouveauNom) {
-        FichePersonnage fiche = getFiche(idFiche);
+    public boolean modifierEquipement(int idFiche, String ancienNom, String nouveauNom, Utilisateur utilisateur) {
+        FichePersonnage fiche = getFiche(utilisateur, idFiche);
         if (fiche == null) return false;
 
         fiche.getEquipement().modifier(ancienNom, nouveauNom);
-        sauvegarderFiches(gestionUtilisateur.getUtilisateurConnecte());
+        sauvegarderFiches(utilisateur);
         System.out.println("Equipement '" + ancienNom + "' renomme en '" + nouveauNom + "'.");
         return true;
     }
@@ -213,12 +209,12 @@ public class GestionFiche {
     /**
      * Supprime un equipement d'une fiche.
      */
-    public boolean supprimerEquipement(int idFiche, String nomEquipement) {
-        FichePersonnage fiche = getFiche(idFiche);
+    public boolean supprimerEquipement(int idFiche, String nomEquipement, Utilisateur utilisateur) {
+        FichePersonnage fiche = getFiche(utilisateur, idFiche);
         if (fiche == null) return false;
 
         fiche.getEquipement().supprimerEquipement(nomEquipement);
-        sauvegarderFiches(gestionUtilisateur.getUtilisateurConnecte());
+        sauvegarderFiches(utilisateur);
         System.out.println("Equipement '" + nomEquipement + "' supprime.");
         return true;
     }
@@ -227,8 +223,8 @@ public class GestionFiche {
      * Modifie la position d'un module sur la fiche.
      * Les modules sont : portrait, biographie, statistiques, competence, equipement.
      */
-    public boolean modifierPositionModule(int idFiche, String nomModule, int posX, int posY) {
-        FichePersonnage fiche = getFiche(idFiche);
+    public boolean modifierPositionModule(int idFiche, String nomModule, int posX, int posY, Utilisateur utilisateur) {
+        FichePersonnage fiche = getFiche(utilisateur, idFiche);
         if (fiche == null) return false;
 
         model.Module module = getModuleParNom(fiche, nomModule);
@@ -238,7 +234,7 @@ public class GestionFiche {
         }
 
         module.modifierPosition(posX, posY);
-        sauvegarderFiches(gestionUtilisateur.getUtilisateurConnecte());
+        sauvegarderFiches(utilisateur);
         System.out.println("Position du module '" + nomModule + "' modifiee (" + posX + ", " + posY + ").");
         return true;
     }
@@ -246,8 +242,8 @@ public class GestionFiche {
     /**
      * Modifie la taille d'un module sur la fiche.
      */
-    public boolean modifierTailleModule(int idFiche, String nomModule, int largeur, int hauteur) {
-        FichePersonnage fiche = getFiche(idFiche);
+    public boolean modifierTailleModule(int idFiche, String nomModule, int largeur, int hauteur, Utilisateur utilisateur) {
+        FichePersonnage fiche = getFiche(utilisateur, idFiche);
         if (fiche == null) return false;
 
         model.Module module2 = getModuleParNom(fiche, nomModule);
@@ -257,29 +253,29 @@ public class GestionFiche {
         }
 
         module2.modifierTaille(largeur, hauteur);
-        sauvegarderFiches(gestionUtilisateur.getUtilisateurConnecte());
+        sauvegarderFiches(utilisateur);
         System.out.println("Taille du module '" + nomModule + "' modifiee (" + largeur + "x" + hauteur + ").");
         return true;
     }
 
     // ===== Modules personnalisés =====
-    public boolean ajouterModulePersonnalise(int idFiche, model.ModulePersonnalise module) {
-        FichePersonnage fiche = getFiche(idFiche);
+    public boolean ajouterModulePersonnalise(int idFiche, model.ModulePersonnalise module, Utilisateur utilisateur) {
+        FichePersonnage fiche = getFiche(utilisateur, idFiche);
         if (fiche == null) return false;
         fiche.getModulesPersonnalises().add(module);
-        sauvegarderFiches(gestionUtilisateur.getUtilisateurConnecte());
+        sauvegarderFiches(utilisateur);
         System.out.println("Module personnalise '" + module.getNom() + "' ajoute a la fiche " + idFiche + ".");
         return true;
     }
 
-    public boolean modifierModulePersonnalise(int idFiche, String idModule, model.ModulePersonnalise module) {
-        FichePersonnage fiche = getFiche(idFiche);
+    public boolean modifierModulePersonnalise(int idFiche, String idModule, model.ModulePersonnalise module, Utilisateur utilisateur) {
+        FichePersonnage fiche = getFiche(utilisateur, idFiche);
         if (fiche == null) return false;
         java.util.List<model.ModulePersonnalise> liste = fiche.getModulesPersonnalises();
         for (int i = 0; i < liste.size(); i++) {
             if (liste.get(i).getId().equals(idModule)) {
                 liste.set(i, module);
-                sauvegarderFiches(gestionUtilisateur.getUtilisateurConnecte());
+                sauvegarderFiches(utilisateur);
                 System.out.println("Module personnalise '" + idModule + "' modifie sur la fiche " + idFiche + ".");
                 return true;
             }
@@ -287,13 +283,13 @@ public class GestionFiche {
         return false;
     }
 
-    public boolean supprimerModulePersonnalise(int idFiche, String idModule) {
-        FichePersonnage fiche = getFiche(idFiche);
+    public boolean supprimerModulePersonnalise(int idFiche, String idModule, Utilisateur utilisateur) {
+        FichePersonnage fiche = getFiche(utilisateur, idFiche);
         if (fiche == null) return false;
         java.util.List<model.ModulePersonnalise> liste = fiche.getModulesPersonnalises();
         boolean removed = liste.removeIf(m -> m.getId().equals(idModule));
         if (removed) {
-            sauvegarderFiches(gestionUtilisateur.getUtilisateurConnecte());
+            sauvegarderFiches(utilisateur);
             System.out.println("Module personnalise '" + idModule + "' supprime de la fiche " + idFiche + ".");
         }
         return removed;
@@ -302,19 +298,18 @@ public class GestionFiche {
     /**
      * Supprime une fiche de l'utilisateur connecte.
      */
-    public boolean supprimerFiche(int idFiche) {
-        Utilisateur connecte = gestionUtilisateur.getUtilisateurConnecte();
-        if (connecte == null) {
+    public boolean supprimerFiche(Utilisateur utilisateur, int idFiche) {
+        if (utilisateur == null) {
             System.out.println("Erreur : vous devez etre connecte.");
             return false;
         }
 
         // Verification que la fiche existe et appartient a l'utilisateur
-        FichePersonnage fiche = getFiche(idFiche);
+        FichePersonnage fiche = getFiche(utilisateur, idFiche);
         if (fiche == null) return false;
 
-        connecte.supprimerFiche(idFiche);
-        sauvegarderFiches(connecte);
+        utilisateur.supprimerFiche(idFiche);
+        sauvegarderFiches(utilisateur);
         System.out.println("Fiche " + idFiche + " supprimee.");
         return true;
     }
@@ -322,12 +317,12 @@ public class GestionFiche {
     /**
      * Renomme une fiche appartenant a l'utilisateur connecte.
      */
-    public boolean modifierNomFiche(int idFiche, String nouveauNom) {
-        FichePersonnage fiche = getFiche(idFiche);
+    public boolean modifierNomFiche(int idFiche, String nouveauNom, Utilisateur utilisateur) {
+        FichePersonnage fiche = getFiche(utilisateur, idFiche);
         if (fiche == null) return false;
 
         fiche.modifierNomFiche(nouveauNom);
-        sauvegarderFiches(gestionUtilisateur.getUtilisateurConnecte());
+        sauvegarderFiches(utilisateur);
         System.out.println("Fiche " + idFiche + " renommee en '" + nouveauNom + "'.");
         return true;
     }

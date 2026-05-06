@@ -250,4 +250,8 @@ public class JsonUtils {
     public static String succesAvecIdNom(int id, String nom) {
         return "{\"succes\":true,\"id\":" + id + ",\"nom\":\"" + nom + "\"}";
     }
+
+    public static String succesAvecIdNomSessionId(int id, String nom, String sessionId) {
+        return "{\"succes\":true,\"id\":" + id + ",\"nom\":\"" + nom + "\",\"sessionId\":\"" + sessionId + "\"}";
+    }
 }

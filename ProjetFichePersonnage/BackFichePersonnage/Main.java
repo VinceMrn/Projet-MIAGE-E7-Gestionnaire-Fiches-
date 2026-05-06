@@ -2,14 +2,16 @@
 import service.GestionUtilisateur;
 import service.GestionFiche;
 import service.ServeurAPI;
+import service.GestionSession;
 
 public class Main {
 
     public static void main(String[] args) throws Exception {
         GestionUtilisateur gestionUtilisateur = new GestionUtilisateur();
-        GestionFiche gestionFiche = new GestionFiche(gestionUtilisateur);
+        GestionSession gestionSession = new GestionSession();
+        GestionFiche gestionFiche = new GestionFiche();
 
-        ServeurAPI serveur = new ServeurAPI(gestionUtilisateur, gestionFiche);
+        ServeurAPI serveur = new ServeurAPI(gestionUtilisateur, gestionFiche, gestionSession);
         serveur.demarrer();
         System.out.println("Appuyez sur Entree pour arreter le serveur...");
         System.in.read();
