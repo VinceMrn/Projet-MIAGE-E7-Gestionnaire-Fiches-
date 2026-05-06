@@ -10,7 +10,27 @@ import java.io.*;
 
 
 public class GestionSecurite {
-    
+
+    private static final String DOSSIER_DATA = "data/";
+
+    // TODO: Chiffrer le fichier de fiches d'un utilisateur avec sa clé dérivée du mot de passe
+    public void chiffrerFichierUtilisateur(Utilisateur utilisateur) throws Exception {
+        String fichierSource  = DOSSIER_DATA + "fiches_" + utilisateur.getIdUtilisateur() + ".dat";
+        String fichierChiffre = DOSSIER_DATA + "fiches_" + utilisateur.getIdUtilisateur() + "_chiffre.dat";
+
+        SecretKeySpec cle = CleUtilisateur.genererCleDepuisHash(utilisateur.getMotdepasseHash());
+        CrypterDecrypterAES.chiffrerFichier(fichierSource, fichierChiffre, cle);
+    }
+
+    // TODO: Déchiffrer le fichier de fiches d'un utilisateur avec sa clé dérivée du mot de passe
+    public void dechiffrerFichierUtilisateur(Utilisateur utilisateur) throws Exception {
+        String fichierChiffre   = DOSSIER_DATA + "fiches_" + utilisateur.getIdUtilisateur() + "_chiffre.dat";
+        String fichierDechiffre = DOSSIER_DATA + "fiches_" + utilisateur.getIdUtilisateur() + ".dat";
+
+        SecretKeySpec cle = CleUtilisateur.genererCleDepuisHash(utilisateur.getMotdepasseHash());
+        CrypterDecrypterAES.dechiffrerFichier(fichierChiffre, fichierDechiffre, cle);
+    }
+
 }
 
 class CleUtilisateur extends Utilisateur {
