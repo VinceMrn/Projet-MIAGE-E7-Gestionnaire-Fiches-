@@ -6,5 +6,5 @@ public interface Route {
     boolean correspond(String chemin);
 
     /** Traite la requete et retourne la reponse [code, json] */
-    String[] traiter(String methode, String chemin, String body) throws Exception;
+    String[] traiter(String methode, String chemin, String body, String sessionId) throws Exception;
 }

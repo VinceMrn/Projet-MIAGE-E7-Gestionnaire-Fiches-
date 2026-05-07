@@ -2,25 +2,25 @@ package service;
 
 import model.Utilisateur;
 
-import java.io.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class GestionUtilisateur {
 
-    private static final String FICHIER_UTILISATEURS = "data/utilisateurs.txt";
     private List<Utilisateur> utilisateurs;
-    private Utilisateur utilisateurConnecte;
+    private GestionStockage stockage;
 
     public GestionUtilisateur() {
-        this.utilisateurs = chargerUtilisateurs();
-        this.utilisateurConnecte = null;
+        this.stockage = new GestionStockage();
+        this.utilisateurs = stockage.chargerUtilisateurs();
     }
 
     public Utilisateur creerCompte(String nomUtilisateur, String motdepasse) {
         for (Utilisateur u : utilisateurs) {
             if (u.getNomUtilisateur().equals(nomUtilisateur)) {
-                return null;
+                // pour ne pas retourner null en cas de nom déjà pris, on peut aussi lancer une exception
+                throw new IllegalArgumentException("Nom d'utilisateur déjà pris");
             }
         }
 
@@ -28,39 +28,36 @@ public class GestionUtilisateur {
 
         Utilisateur nouveau = new Utilisateur(id, nomUtilisateur, motdepasse);
         utilisateurs.add(nouveau);
-        sauvegarderUtilisateurs();
+        stockage.sauvegarderUtilisateurs(utilisateurs);
         return nouveau;
     }
 
     public Utilisateur seConnecter(String nomUtilisateur, String motdepasse) {
         for (Utilisateur u : utilisateurs) {
             if (u.getNomUtilisateur().equals(nomUtilisateur) && u.verifierMotDePasse(motdepasse)) {
-                utilisateurConnecte = u;
+               // u = u;
                 return u;
             }
         }
-        return null;
-    }
-
-    public void seDeconnecter() {
-        utilisateurConnecte = null;
+        //pour ne pas retourner null en cas d'identifiants invalides, on peut aussi lancer une exception
+        throw new IllegalArgumentException("Identifiants invalides");
     }
 
     /**
      * Modifie l'identifiant de l'utilisateur connecte.
      * Echoue si non connecte ou si le nom est deja pris par un autre utilisateur.
      */
-    public boolean modifierIdentifiant(String nouveauNom) {
-        if (utilisateurConnecte == null) return false;
+    public boolean modifierIdentifiant(Utilisateur u, String nouveauNom) {
+        if (u == null) return false;
         if (nouveauNom == null || nouveauNom.isEmpty()) return false;
         // verifie unicite (sauf pour soi-meme)
         for (Utilisateur autre : utilisateurs) {
-            if (autre != utilisateurConnecte && autre.getNomUtilisateur().equals(nouveauNom)) {
+            if (autre != u && autre.getNomUtilisateur().equals(nouveauNom)) {
                 return false;
             }
         }
-        utilisateurConnecte.modifierNomUtilisateur(nouveauNom);
-        sauvegarderUtilisateurs();
+        u.modifierNomUtilisateur(nouveauNom);
+        stockage.sauvegarderUtilisateurs(utilisateurs);
         return true;
     }
 
@@ -68,56 +65,18 @@ public class GestionUtilisateur {
      * Modifie le mot de passe de l'utilisateur connecte.
      * Echoue si non connecte ou si l'ancien mot de passe ne correspond pas.
      */
-    public boolean modifierMotDePasse(String ancienMdp, String nouveauMdp) {
-        if (utilisateurConnecte == null) return false;
+    public boolean modifierMotDePasse(Utilisateur u, String ancienMdp, String nouveauMdp) {
+        if (u == null) return false;
         if (nouveauMdp == null || nouveauMdp.isEmpty()) return false;
-        if (!utilisateurConnecte.verifierMotDePasse(ancienMdp)) return false;
-        utilisateurConnecte.modifierMotDePasse(nouveauMdp);
-        sauvegarderUtilisateurs();
+        if (!u.verifierMotDePasse(ancienMdp)) return false;
+        u.modifierMotDePasse(nouveauMdp);
+        stockage.sauvegarderUtilisateurs(utilisateurs);
         return true;
     }
 
-    public Utilisateur getUtilisateurConnecte() {
-        return utilisateurConnecte;
-    }
-
     public List<Utilisateur> getUtilisateurs() {
-        return utilisateurs;
+        // "photo immuable" retourne une liste non modifiable pour éviter les modifications externes en copiant la liste interne
+        return Collections.unmodifiableList(new ArrayList<>(utilisateurs));
     }
 
-    private void sauvegarderUtilisateurs() {
-        File fichier = new File(FICHIER_UTILISATEURS);
-        fichier.getParentFile().mkdirs();
-
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fichier))) {
-            for (Utilisateur u : utilisateurs) {
-                writer.write(u.getIdUtilisateur() + ";" + u.getNomUtilisateur() + ";" + u.getMotdepasse());
-                writer.newLine();
-            }
-        } catch (IOException e) {
-            System.out.println("Erreur sauvegarde : " + e.getMessage());
-        }
-    }
-
-    private List<Utilisateur> chargerUtilisateurs() {
-        File fichier = new File(FICHIER_UTILISATEURS);
-        List<Utilisateur> liste = new ArrayList<>();
-
-        if (!fichier.exists()) return liste;
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(fichier))) {
-            String ligne;
-            while ((ligne = reader.readLine()) != null) {
-                String[] parties = ligne.split(";");
-                if (parties.length == 3) {
-                    int id = Integer.parseInt(parties[0]);
-                    liste.add(new Utilisateur(id, parties[1], parties[2]));
-                }
-            }
-        } catch (IOException e) {
-            System.out.println("Erreur chargement : " + e.getMessage());
-        }
-
-        return liste;
-    }
 }

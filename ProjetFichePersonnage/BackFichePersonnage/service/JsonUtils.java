@@ -255,8 +255,14 @@ public class JsonUtils {
     /**
      * Construit une reponse JSON de succes avec id et nom.
      */
+    // Surcharge utilisee par RouteFiches (creation/import de fiche, pas de sessionId a renvoyer)
     public static String succesAvecIdNom(int id, String nom) {
         return "{\"succes\":true,\"id\":" + id + ",\"nom\":\"" + nom + "\"}";
+    }
+
+    // Surcharge utilisee par RouteAuth (login/signup, on renvoie le sessionId au client)
+    public static String succesAvecIdNom(int id, String nom, String sessionId) {
+        return "{\"succes\":true,\"id\":" + id + ",\"nom\":\"" + nom + "\",\"sessionId\":\"" + sessionId + "\"}";
     }
 
     /**

@@ -13,10 +13,10 @@ public class ServeurAPI {
     private boolean enMarche;
     private Route[] routes;
 
-    public ServeurAPI(GestionUtilisateur gestionUtilisateur, GestionFiche gestionFiche) {
-        this.routes = new Route[]{
-            new RouteAuth(gestionUtilisateur, gestionFiche),
-            new RouteFiches(gestionUtilisateur, gestionFiche)
+    public ServeurAPI(GestionUtilisateur gestionUtilisateur, GestionFiche gestionFiche, GestionSession gestionSession) {
+        this.routes = new Route[] {
+                new RouteAuth(gestionUtilisateur, gestionFiche, gestionSession),
+                new RouteFiches(gestionFiche, gestionSession)
         };
     }
 
@@ -31,7 +31,8 @@ public class ServeurAPI {
                     Socket client = serverSocket.accept();
                     traiterRequete(client);
                 } catch (IOException e) {
-                    if (enMarche) System.out.println("Erreur : " + e.getMessage());
+                    if (enMarche)
+                        System.out.println("Erreur : " + e.getMessage());
                 }
             }
         });
@@ -41,7 +42,10 @@ public class ServeurAPI {
 
     public void arreter() {
         enMarche = false;
-        try { serverSocket.close(); } catch (IOException e) { /* ignore */ }
+        try {
+            serverSocket.close();
+        } catch (IOException e) {
+            /* ignore */ }
         System.out.println("Serveur arrete.");
     }
 
@@ -50,12 +54,14 @@ public class ServeurAPI {
         String methode;
         String chemin;
         String body;
+        String sessionId; // ajout pour stocker le sessionId
     }
 
     // --- Lire et parser la requête HTTP depuis le socket ---
     private RequeteHTTP lireRequete(BufferedReader in) throws IOException {
         String premiereLigne = in.readLine();
-        if (premiereLigne == null) return null;
+        if (premiereLigne == null)
+            return null;
 
         String[] parts = premiereLigne.split(" ");
         RequeteHTTP req = new RequeteHTTP();
@@ -65,9 +71,13 @@ public class ServeurAPI {
         // Lire les headers pour trouver Content-Length
         int contentLength = 0;
         String ligne;
+        req.sessionId = ""; // valeur par défaut si pas de header
         while ((ligne = in.readLine()) != null && !ligne.isEmpty()) {
-            if (ligne.startsWith("Content-Length:")) {
+            String ligneLower = ligne.toLowerCase();
+            if (ligneLower.startsWith("content-length:")) {
                 contentLength = Integer.parseInt(ligne.substring(15).trim());
+            } else if (ligneLower.startsWith("x-session-id:")) {
+                req.sessionId = ligne.substring(13).trim();
             }
         }
 
@@ -86,28 +96,33 @@ public class ServeurAPI {
     // --- Trouver la route et produire [code, json] ---
     private String[] router(RequeteHTTP req) throws Exception {
         if ("OPTIONS".equals(req.methode)) {
-            return new String[]{"204", ""};
+            return new String[] { "204", "" };
         }
 
         for (Route route : routes) {
             if (route.correspond(req.chemin)) {
-                return route.traiter(req.methode, req.chemin, req.body);
+                return route.traiter(req.methode, req.chemin, req.body, req.sessionId);
             }
         }
 
-        return new String[]{"404", "{\"erreur\":\"Route inconnue\"}"};
+        return new String[] { "404", "{\"erreur\":\"Route inconnue\"}" };
     }
 
     // --- Méthode principale : lire, router, répondre ---
     private void traiterRequete(Socket client) {
         try (BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-             OutputStream out = client.getOutputStream()) {
+                OutputStream out = client.getOutputStream()) {
 
             RequeteHTTP req = lireRequete(in);
-            if (req == null) return;
+            if (req == null)
+                return;
 
-            String[] resultat = router(req);
-            repondre(out, Integer.parseInt(resultat[0]), resultat[1]);
+            try {
+                String[] resultat = router(req);
+                repondre(out, Integer.parseInt(resultat[0]), resultat[1]);
+            } catch (Exception e) {
+                repondre(out, 400, JsonUtils.erreur(e.getMessage()));
+            }
 
         } catch (Exception e) {
             System.out.println("Erreur requete : " + e.getMessage());
@@ -118,12 +133,12 @@ public class ServeurAPI {
     private void repondre(OutputStream out, int code, String json) throws IOException {
         byte[] contenu = json.getBytes("UTF-8");
         String entete = "HTTP/1.1 " + code + " OK\r\n"
-            + "Content-Type: application/json\r\n"
-            + "Access-Control-Allow-Origin: *\r\n"
-            + "Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS\r\n"
-            + "Access-Control-Allow-Headers: Content-Type\r\n"
-            + "Content-Length: " + contenu.length + "\r\n"
-            + "\r\n";
+                + "Content-Type: application/json\r\n"
+                + "Access-Control-Allow-Origin: *\r\n"
+                + "Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS\r\n"
+                + "Access-Control-Allow-Headers: Content-Type, X-Session-Id\r\n"
+                + "Content-Length: " + contenu.length + "\r\n"
+                + "\r\n";
         out.write(entete.getBytes("UTF-8"));
         out.write(contenu);
         out.flush();

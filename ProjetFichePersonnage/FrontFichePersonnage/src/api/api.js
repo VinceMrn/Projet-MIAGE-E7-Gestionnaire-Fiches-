@@ -1,8 +1,9 @@
 const API_URL = 'http://localhost:8080/api'
 
 async function requete(chemin, options = {}) {
+  const sessionId = localStorage.getItem('sessionId')
   const res = await fetch(`${API_URL}${chemin}`, {
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', 'X-Session-Id': sessionId },
     ...options
   })
   const data = await res.json()

@@ -9,16 +9,21 @@ export function AuthProvider({ children }) {
   const seConnecter = async (nom, motdepasse) => {
     const data = await api.login(nom, motdepasse)
     setUtilisateur({ id: data.id, nom: data.nom })
+    localStorage.setItem('sessionId', data.sessionId) // Stockage du sessionId dans le localStorage
     return data
   }
 
   const sInscrire = async (nom, motdepasse) => {
-    return await api.signup(nom, motdepasse)
+    const data = api.signup(nom, motdepasse)
+    setUtilisateur({ id: data.id, nom: data.nom })
+    localStorage.setItem('sessionId', data.sessionId) // Stockage du sessionId dans le localStorage
+    return data;
   }
 
   const seDeconnecter = async () => {
     await api.logout()
     setUtilisateur(null)
+    localStorage.removeItem('sessionId') // Suppression du sessionId du localStorage
   }
 
   const modifierIdentifiant = async (nouveauNom) => {
