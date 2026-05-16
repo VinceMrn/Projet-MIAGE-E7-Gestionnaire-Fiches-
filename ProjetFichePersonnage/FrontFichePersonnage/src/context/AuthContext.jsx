@@ -14,7 +14,7 @@ export function AuthProvider({ children }) {
   }
 
   const sInscrire = async (nom, motdepasse) => {
-    const data = api.signup(nom, motdepasse)
+    const data = await api.signup(nom, motdepasse)
     setUtilisateur({ id: data.id, nom: data.nom })
     localStorage.setItem('sessionId', data.sessionId) // Stockage du sessionId dans le localStorage
     return data;

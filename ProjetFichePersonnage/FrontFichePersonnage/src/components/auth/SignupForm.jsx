@@ -3,9 +3,11 @@ import { useAuth } from '../../context/AuthContext'
 import bgImage from '../../assets/Gemini_Generated_Image_kl696hkl696hkl69.png'
 
 export default function SignupForm({ onSwitchToLogin }) {
-  const { sInscrire } = useAuth()
+  const { sInscrire, definirQuestionSecrete } = useAuth()
   const [nom, setNom] = useState('')
   const [motdepasse, setMotdepasse] = useState('')
+  const [question, setQuestion] = useState('')
+  const [reponse, setReponse] = useState('')
   const [message, setMessage] = useState('')
   const [erreur, setErreur] = useState('')
 
@@ -13,10 +15,28 @@ export default function SignupForm({ onSwitchToLogin }) {
     e.preventDefault()
     setErreur('')
     setMessage('')
+    // Validations locales de la question secrete (memes regles que cote back)
+    if (question.length < 10) {
+      setErreur('La question doit faire au moins 10 caractères.')
+      return
+    }
+    if (question.includes(';')) {
+      setErreur('La question ne peut pas contenir de ";".')
+      return
+    }
+    if (!reponse.trim()) {
+      setErreur('La réponse à la question secrète est requise.')
+      return
+    }
     try {
       const data = await sInscrire(nom, motdepasse)
+      // Une fois le compte cree, l'user est connecte automatiquement
+      // → on peut enchainer avec la definition de sa question secrete
+      await definirQuestionSecrete(question.trim(), reponse.trim())
       setMessage(`Bienvenue ${data.nom} ! Votre nom est inscrit dans les registres.`)
       setMotdepasse('')
+      setQuestion('')
+      setReponse('')
     } catch (err) {
       setErreur(err.message)
     }
@@ -73,7 +93,7 @@ export default function SignupForm({ onSwitchToLogin }) {
             />
           </div>
 
-          <div className="mb-7">
+          <div className="mb-5">
             <label className="block text-gold/70 text-xs font-medieval uppercase tracking-widest mb-2">
               Mot de passe
             </label>
@@ -83,6 +103,34 @@ export default function SignupForm({ onSwitchToLogin }) {
               onChange={(e) => setMotdepasse(e.target.value)}
               className="w-full input-medieval rounded-lg py-3 px-4"
               placeholder="Votre secret..."
+              required
+            />
+          </div>
+
+          <div className="mb-5">
+            <label className="block text-gold/70 text-xs font-medieval uppercase tracking-widest mb-2">
+              Question secrète
+            </label>
+            <input
+              type="text"
+              value={question}
+              onChange={(e) => setQuestion(e.target.value)}
+              className="w-full input-medieval rounded-lg py-3 px-4"
+              placeholder="Ex : Nom de mon premier animal ?"
+              required
+            />
+          </div>
+
+          <div className="mb-7">
+            <label className="block text-gold/70 text-xs font-medieval uppercase tracking-widest mb-2">
+              Réponse secrète
+            </label>
+            <input
+              type="text"
+              value={reponse}
+              onChange={(e) => setReponse(e.target.value)}
+              className="w-full input-medieval rounded-lg py-3 px-4"
+              placeholder="Votre réponse..."
               required
             />
           </div>
