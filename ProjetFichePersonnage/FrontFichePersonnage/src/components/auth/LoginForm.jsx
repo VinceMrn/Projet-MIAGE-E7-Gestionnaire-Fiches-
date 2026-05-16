@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useAuth } from '../../context/AuthContext'
 import bgImage from '../../assets/Gemini_Generated_Image_kl696hkl696hkl69.png'
 
-export default function LoginForm({ onSwitchToSignup, onSuccess }) {
+export default function LoginForm({ onSwitchToSignup, onSuccess, onSwitchToOublie }) {
   const { seConnecter } = useAuth()
   const [nom, setNom] = useState('')
   const [motdepasse, setMotdepasse] = useState('')
@@ -82,6 +82,16 @@ export default function LoginForm({ onSwitchToSignup, onSuccess }) {
             Entrer dans le Royaume
           </button>
         </form>
+
+        <p className="font-body text-parchment-dark text-xs text-center mt-4">
+          <button
+            type="button"
+            onClick={onSwitchToOublie}
+            className="text-gold/70 hover:text-gold transition underline"
+          >
+            Mot de passe oublié ?
+          </button>
+        </p>
 
         <div className="divider-medieval my-6" />
 

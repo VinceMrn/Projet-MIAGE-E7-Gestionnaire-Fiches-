@@ -272,4 +272,8 @@ public class JsonUtils {
     public static String exportFicheVersJSON(String nom, String base64) {
         return "{\"nom\":\"" + nom + "\",\"data\":\"" + base64 + "\"}";
     }
+
+    public static String succesAvecQuestionSecrete(String question) {
+        return "{\"succes\":true,\"question\":\"" + question + "\"}";
+    }
 }

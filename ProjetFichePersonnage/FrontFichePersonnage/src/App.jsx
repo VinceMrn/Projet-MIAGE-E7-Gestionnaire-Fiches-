@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { AuthProvider, useAuth } from './context/AuthContext'
 import LoginForm from './components/auth/LoginForm'
 import SignupForm from './components/auth/SignupForm'
+import MotDePasseOublie from './components/auth/MotDePasseOublie'
 import ParametresCompte from './components/auth/ParametresCompte'
 import Layout from './components/Layout'
 import ListeFiches from './components/fiches/ListeFiches'
@@ -22,10 +23,18 @@ function AppContent() {
         </div>
       )
     }
+    if (page === 'motdepasseoublie') {
+      return (
+        <div>
+          <MotDePasseOublie onRetour={() => setPage('login')} />
+        </div>
+      )
+    }
     return (
       <div>
         <LoginForm
           onSwitchToSignup={() => setPage('signup')}
+          onSwitchToOublie={() => setPage('motdepasseoublie')}
           onSuccess={() => setPage('fiches')}
         />
       </div>

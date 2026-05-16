@@ -2,15 +2,18 @@ import { useState } from 'react'
 import { useAuth } from '../../context/AuthContext'
 
 export default function ParametresCompte({ onRetour }) {
-  const { utilisateur, modifierIdentifiant, modifierMotDePasse } = useAuth()
+  const { utilisateur, modifierIdentifiant, modifierMotDePasse, definirQuestionSecrete } = useAuth()
 
   const [nouveauNom, setNouveauNom] = useState(utilisateur?.nom || '')
   const [ancienMdp, setAncienMdp] = useState('')
   const [nouveauMdp, setNouveauMdp] = useState('')
   const [confirmMdp, setConfirmMdp] = useState('')
+  const [nouvelleQuestion, setNouvelleQuestion] = useState('')
+  const [nouvelleReponse, setNouvelleReponse] = useState('')
 
   const [msgIdent, setMsgIdent] = useState(null) // { type, texte }
   const [msgMdp, setMsgMdp] = useState(null)
+  const [msgQuestion, setMsgQuestion] = useState(null)
 
   const cinzel = "'Cinzel', serif"
   const crimson = "'Crimson Text', Georgia, serif"
@@ -47,6 +50,30 @@ export default function ParametresCompte({ onRetour }) {
       setAncienMdp(''); setNouveauMdp(''); setConfirmMdp('')
     } catch (err) {
       setMsgMdp({ type: 'erreur', texte: err.message })
+    }
+  }
+
+  const handleQuestionSecrete = async (e) => {
+    e.preventDefault()
+    setMsgQuestion(null)
+    if (!nouvelleQuestion.trim() || !nouvelleReponse.trim()) {
+      setMsgQuestion({ type: 'erreur', texte: 'Question et réponse requises.' })
+      return
+    }
+    if (nouvelleQuestion.length < 10) {
+      setMsgQuestion({ type: 'erreur', texte: 'La question doit faire au moins 10 caractères.' })
+      return
+    }
+    if (nouvelleQuestion.includes(';')) {
+      setMsgQuestion({ type: 'erreur', texte: 'La question ne peut pas contenir de ";".' })
+      return
+    }
+    try {
+      await definirQuestionSecrete(nouvelleQuestion.trim(), nouvelleReponse.trim())
+      setMsgQuestion({ type: 'succes', texte: 'Question secrète enregistrée.' })
+      setNouvelleQuestion(''); setNouvelleReponse('')
+    } catch (err) {
+      setMsgQuestion({ type: 'erreur', texte: err.message })
     }
   }
 
@@ -106,6 +133,18 @@ export default function ParametresCompte({ onRetour }) {
         <label style={styleLabel}>Confirmation</label>
         <input type="password" value={confirmMdp} onChange={e => setConfirmMdp(e.target.value)} style={styleInput} required />
         <button type="submit" style={styleBtnPrimary}>Mettre à jour le mot de passe</button>
+      </form>
+
+      {/* Question secrète */}
+      <form onSubmit={handleQuestionSecrete} style={styleSection}>
+        <h3 style={styleH}>Question secrète</h3>
+        <p style={styleSub}>Utilisée pour récupérer ton compte si tu oublies ton mot de passe.</p>
+        {renderMsg(msgQuestion)}
+        <label style={styleLabel}>Question</label>
+        <input type="text" value={nouvelleQuestion} onChange={e => setNouvelleQuestion(e.target.value)} style={styleInput} placeholder="Ex : Nom de mon premier animal ?" required />
+        <label style={styleLabel}>Réponse</label>
+        <input type="text" value={nouvelleReponse} onChange={e => setNouvelleReponse(e.target.value)} style={styleInput} required />
+        <button type="submit" style={styleBtnPrimary}>Enregistrer la question secrète</button>
       </form>
     </div>
   )

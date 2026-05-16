@@ -163,3 +163,27 @@ export function supprimerModulePersonnalise(idFiche, idModule) {
     method: 'DELETE',
   })
 }
+
+
+// Question secrete pour recuperation mot de passe
+
+export function definirQuestionSecrete(question, reponse) {
+  return requete('/utilisateur/questionsecrete', {
+    method: 'PUT',
+    body: JSON.stringify({ question, reponse })
+  })
+}
+
+export function getQuestionSecrete(nom) {
+  return requete('/utilisateur/getquestionsecrete', {
+    method: 'POST',
+    body: JSON.stringify({ nom })
+  })
+}
+
+export function reinitialiserMotDePasse(nom, reponse, nouveau) {
+  return requete('/utilisateur/reinitialisermotdepasse', {
+    method: 'POST',
+    body: JSON.stringify({ nom, reponse, nouveau })
+  })
+}

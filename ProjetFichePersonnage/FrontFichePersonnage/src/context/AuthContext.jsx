@@ -36,8 +36,27 @@ export function AuthProvider({ children }) {
     return await api.modifierMotDePasse(ancien, nouveau)
   }
 
+  // Question secrete : utilisee depuis ParametresCompte (user connecte)
+  const definirQuestionSecrete = async (question, reponse) => {
+    return await api.definirQuestionSecrete(question, reponse)
+  }
+
+  // Recuperation : utilisees depuis le flow "mot de passe oublie" (user NON connecte)
+  const getQuestionSecrete = async (nom) => {
+    return await api.getQuestionSecrete(nom)
+  }
+
+  const reinitialiserMotDePasse = async (nom, reponse, nouveau) => {
+    return await api.reinitialiserMotDePasse(nom, reponse, nouveau)
+  }
+
   return (
-    <AuthContext.Provider value={{ utilisateur, seConnecter, sInscrire, seDeconnecter, modifierIdentifiant, modifierMotDePasse }}>
+    <AuthContext.Provider value={{
+      utilisateur,
+      seConnecter, sInscrire, seDeconnecter,
+      modifierIdentifiant, modifierMotDePasse,
+      definirQuestionSecrete, getQuestionSecrete, reinitialiserMotDePasse
+    }}>
       {children}
     </AuthContext.Provider>
   )
