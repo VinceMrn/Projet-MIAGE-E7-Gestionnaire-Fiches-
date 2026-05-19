@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import * as api from '../../api/api'
+import ApercuFiche from './ApercuFiche'
 
 export default function ListeFiches({ onSelectFiche, onCreerFiche }) {
   const [fiches, setFiches] = useState([])
@@ -7,6 +8,7 @@ export default function ListeFiches({ onSelectFiche, onCreerFiche }) {
   const [erreur, setErreur] = useState('')
   const [recherche, setRecherche] = useState('')
   const [tri, setTri] = useState('modifie')
+  const [idApercu, setIdApercu] = useState(null)
   const inputImportRef = useRef(null)
 
   const chargerFiches = async () => {
@@ -23,6 +25,11 @@ export default function ListeFiches({ onSelectFiche, onCreerFiche }) {
   }
 
   useEffect(() => { chargerFiches() }, [])
+
+  const handleModeAffiche = (e, id) => {
+    e.stopPropagation()
+    setIdApercu(id)
+  }
 
   const handleSupprimer = async (e, id) => {
     e.stopPropagation()
@@ -103,6 +110,7 @@ export default function ListeFiches({ onSelectFiche, onCreerFiche }) {
     btnSecondary: { background: '#2e2410', border: '1px solid #4a3a1a', color: '#a09070', padding: '9px 16px', borderRadius: 6, fontFamily: cinzel, fontSize: 13, cursor: 'pointer', fontWeight: 600 },
     actionsTop: { display: 'flex', gap: 10 },
     expBtn: { background: 'transparent', border: 'none', color: '#6a8a40', fontSize: 12, cursor: 'pointer', fontFamily: crimson, marginRight: 8 },
+    afficheBtn: { background: 'transparent', border: 'none', color: '#c4a86a', fontSize: 12, cursor: 'pointer', fontFamily: crimson, marginRight: 8 },
     controls: { display: 'flex', gap: 10, margin: '16px 0 20px' },
     search: { flex: 1, background: '#110d05', border: '1px solid #4a3a1a', color: '#d4c4a0', padding: '9px 14px', borderRadius: 6, fontFamily: crimson, fontSize: 14, outline: 'none' },
     select: { background: '#110d05', border: '1px solid #4a3a1a', color: '#a09070', padding: '9px 12px', borderRadius: 6, fontFamily: crimson, fontSize: 13, outline: 'none', cursor: 'pointer' },
@@ -165,6 +173,9 @@ export default function ListeFiches({ onSelectFiche, onCreerFiche }) {
         </div>
       )}
 
+      {/* Modal apercu */}
+      {idApercu && <ApercuFiche idFiche={idApercu} onFermer={() => setIdApercu(null)} />}
+
       {/* Grille */}
       {!chargement && fichesFiltrees.length > 0 && (
         <div style={s.grid}>
@@ -182,6 +193,7 @@ export default function ListeFiches({ onSelectFiche, onCreerFiche }) {
                 <div style={s.cardMeta}>
                   <span>ID: {fiche.id}</span>
                   <span>
+                    <button style={s.afficheBtn} onClick={e => handleModeAffiche(e, fiche.id)} title="Ouvrir en lecture seule">👁 Affiche</button>
                     <button style={s.expBtn} onClick={e => handleExporter(e, fiche.id, fiche.nom)}>Exporter</button>
                     <button style={s.delBtn} onClick={e => handleSupprimer(e, fiche.id)}>Supprimer</button>
                   </span>

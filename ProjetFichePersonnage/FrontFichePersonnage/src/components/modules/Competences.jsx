@@ -2,11 +2,13 @@ import { useState } from 'react'
 import * as api from '../../api/api'
 import SelecteurExistants from './SelecteurExistants'
 
-export default function Competences({ competences, idFiche, onUpdate, suggestions = [] }) {
+export default function Competences({ competences, idFiche, onUpdate, suggestions = [], lectureSeule = false }) {
   const [nom, setNom] = useState('')
   const [erreur, setErreur] = useState('')
   const [ajout, setAjout] = useState(false)
   const [collapsed, setCollapsed] = useState(false)
+
+  const enAjout = ajout && !lectureSeule
 
   const handleAjouter = async (e) => {
     e.preventDefault()
@@ -42,7 +44,9 @@ export default function Competences({ competences, idFiche, onUpdate, suggestion
         </div>
         <div style={{ display: 'flex', gap: 10 }}>
           <button onClick={() => setCollapsed(!collapsed)} style={{ background: 'transparent', border: 'none', color: '#6a5a3a', cursor: 'pointer', fontSize: 14 }}>{collapsed ? '∨' : '∧'}</button>
-          <button style={{ background: 'transparent', border: 'none', color: '#6a5a3a', cursor: 'pointer', fontSize: 16 }}>⋮</button>
+          {!lectureSeule && (
+            <button style={{ background: 'transparent', border: 'none', color: '#6a5a3a', cursor: 'pointer', fontSize: 16 }}>⋮</button>
+          )}
         </div>
       </div>
 
@@ -63,14 +67,16 @@ export default function Competences({ competences, idFiche, onUpdate, suggestion
             </div>
           )}
 
-          <SelecteurExistants
-            items={suggestions}
-            dejaPresents={competences.liste.map(c => c.nom ?? c)}
-            onChoisir={ajouterDepuisExistant}
-            label="compétence"
-          />
+          {!lectureSeule && (
+            <SelecteurExistants
+              items={suggestions}
+              dejaPresents={competences.liste.map(c => c.nom ?? c)}
+              onChoisir={ajouterDepuisExistant}
+              label="compétence"
+            />
+          )}
 
-          {ajout ? (
+          {lectureSeule ? null : enAjout ? (
             <form onSubmit={handleAjouter} style={{ display: 'flex', gap: 8, marginTop: 12 }}>
               <input type="text" value={nom} onChange={e => setNom(e.target.value)} required placeholder="Nom de la compétence"
                 style={{ flex: 1, background: '#1e1509', border: '1px solid #4a3a1a', color: '#d4c4a0', padding: '7px 10px', borderRadius: 5, fontFamily: crimson, fontSize: 13, outline: 'none' }} />

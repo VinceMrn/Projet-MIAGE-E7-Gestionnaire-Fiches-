@@ -1,11 +1,13 @@
 import { useState } from 'react'
 import * as api from '../../api/api'
 
-export default function Portrait({ portrait, idFiche, onUpdate }) {
+export default function Portrait({ portrait, idFiche, onUpdate, lectureSeule = false }) {
   const [edition, setEdition] = useState(false)
   const [image, setImage] = useState(portrait.image || '')
   const [erreur, setErreur] = useState('')
   const [collapsed, setCollapsed] = useState(false)
+
+  const enEdition = edition && !lectureSeule
 
   const handleSave = async () => {
     setErreur('')
@@ -30,7 +32,9 @@ export default function Portrait({ portrait, idFiche, onUpdate }) {
         </div>
         <div style={{ display: 'flex', gap: 10 }}>
           <button onClick={() => setCollapsed(!collapsed)} style={{ background: 'transparent', border: 'none', color: '#6a5a3a', cursor: 'pointer', fontSize: 14 }}>{collapsed ? '∨' : '∧'}</button>
-          <button onClick={() => setEdition(!edition)} style={{ background: 'transparent', border: 'none', color: '#6a5a3a', cursor: 'pointer', fontSize: 16 }}>⋮</button>
+          {!lectureSeule && (
+            <button onClick={() => setEdition(!edition)} style={{ background: 'transparent', border: 'none', color: '#6a5a3a', cursor: 'pointer', fontSize: 16 }}>⋮</button>
+          )}
         </div>
       </div>
 
@@ -45,13 +49,19 @@ export default function Portrait({ portrait, idFiche, onUpdate }) {
           ) : (
             <div style={{ border: '1px dashed #5c4a2a', borderRadius: 8, padding: '40px 20px', textAlign: 'center', marginBottom: 12 }}>
               <div style={{ fontSize: 32, color: '#5c4a2a', marginBottom: 8 }}>👤</div>
-              <div style={{ fontSize: 12, color: '#6a5a3a', marginBottom: 4 }}>Drag & drop une image</div>
-              <div style={{ fontSize: 11, color: '#4a3a1a' }}>ou</div>
-              <button onClick={() => setEdition(true)} style={{ marginTop: 8, background: 'transparent', border: '1px solid #5c4a2a', color: '#a09070', padding: '5px 14px', borderRadius: 4, fontFamily: cinzel, fontSize: 11, cursor: 'pointer' }}>↑ Choisir une image</button>
+              {lectureSeule ? (
+                <div style={{ fontSize: 12, color: '#6a5a3a', fontStyle: 'italic' }}>Aucun portrait</div>
+              ) : (
+                <>
+                  <div style={{ fontSize: 12, color: '#6a5a3a', marginBottom: 4 }}>Drag & drop une image</div>
+                  <div style={{ fontSize: 11, color: '#4a3a1a' }}>ou</div>
+                  <button onClick={() => setEdition(true)} style={{ marginTop: 8, background: 'transparent', border: '1px solid #5c4a2a', color: '#a09070', padding: '5px 14px', borderRadius: 4, fontFamily: cinzel, fontSize: 11, cursor: 'pointer' }}>↑ Choisir une image</button>
+                </>
+              )}
             </div>
           )}
 
-          {edition && (
+          {enEdition && (
             <div style={{ marginTop: 8 }}>
               <input
                 type="text"

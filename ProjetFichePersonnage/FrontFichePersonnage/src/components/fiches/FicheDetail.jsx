@@ -9,14 +9,17 @@ import Equipements from '../modules/Equipements'
 const MIN_W = 200
 const MIN_H = 120
 
-export default function FicheDetail({ idFiche, onRetour }) {
+export default function FicheDetail({ idFiche, onRetour, modeInitial = 'edition', embarquee = false }) {
   const [fiche, setFiche] = useState(null)
   const [chargement, setChargement] = useState(true)
   const [erreur, setErreur] = useState('')
   const [suggestions, setSuggestions] = useState({ competences: [], equipements: [], statistiques: [] })
   const [positions, setPositions] = useState({})
-  const [editMode, setEditMode] = useState(false)
+  const [mode, setMode] = useState(modeInitial)
   const [statut, setStatut] = useState('')
+
+  const editMode = mode === 'reorganiser'
+  const lectureSeule = mode === 'affiche'
 
   const cinzel = "'Cinzel', serif"
   const crimson = "'Crimson Text', Georgia, serif"
@@ -196,7 +199,7 @@ export default function FicheDetail({ idFiche, onRetour }) {
 
 
   return (
-    <div style={{ fontFamily: crimson, color: '#d4c4a0', height: 'calc(100vh - 110px)', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ fontFamily: crimson, color: '#d4c4a0', height: embarquee ? '100%' : 'calc(100vh - 110px)', display: 'flex', flexDirection: 'column' }}>
 
       <style>{`
         @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
@@ -213,7 +216,10 @@ export default function FicheDetail({ idFiche, onRetour }) {
         borderBottom: '1px solid #3a2c18',
         animation: 'fadeUp 0.4s ease-out',
       }}>
-        <button onClick={onRetour} style={btnGhost(cinzel)}>← Retour aux fiches</button>
+        {!embarquee && (
+          <button onClick={onRetour} style={btnGhost(cinzel)}>← Retour aux fiches</button>
+        )}
+        {embarquee && <div />}
 
         <div style={{ flex: 1, textAlign: 'center' }}>
           <h1 style={{
@@ -227,9 +233,14 @@ export default function FicheDetail({ idFiche, onRetour }) {
         </div>
 
         <div style={{ display: 'flex', gap: 8 }}>
-          <button onClick={() => setEditMode(m => !m)} style={editMode ? btnPrimary(cinzel) : btnGhost(cinzel)}>
-            {editMode ? '✓ Terminer' : '✎ Reorganiser'}
-          </button>
+          {!lectureSeule && (
+            <button
+              onClick={() => setMode(m => m === 'reorganiser' ? 'edition' : 'reorganiser')}
+              style={editMode ? btnPrimary(cinzel) : btnGhost(cinzel)}
+            >
+              {editMode ? '✓ Terminer' : '✎ Reorganiser'}
+            </button>
+          )}
           {editMode && (
             <button onClick={sauvegarderTout} style={btnPrimary(cinzel)}>💾 Sauvegarder</button>
           )}
@@ -246,11 +257,11 @@ export default function FicheDetail({ idFiche, onRetour }) {
         borderRadius: 6,
       }}>
         <div style={{ position: 'relative', width: canvasL, height: canvasH }}>
-          {renduModule('portrait',     <Portrait     portrait={fiche.portrait}         idFiche={idFiche} onUpdate={chargerFiche} />)}
-          {renduModule('biographie',   <Biographie   biographie={fiche.biographie}     idFiche={idFiche} onUpdate={chargerFiche} />)}
-          {renduModule('statistiques', <Statistiques statistiques={fiche.statistiques} idFiche={idFiche} onUpdate={rafraichirTout} suggestions={suggestions.statistiques} />)}
-          {renduModule('competence',   <Competences  competences={fiche.competences}   idFiche={idFiche} onUpdate={rafraichirTout} suggestions={suggestions.competences} />)}
-          {renduModule('equipement',   <Equipements  equipements={fiche.equipements}   idFiche={idFiche} onUpdate={rafraichirTout} suggestions={suggestions.equipements} />)}
+          {renduModule('portrait',     <Portrait     portrait={fiche.portrait}         idFiche={idFiche} onUpdate={chargerFiche}   lectureSeule={lectureSeule} />)}
+          {renduModule('biographie',   <Biographie   biographie={fiche.biographie}     idFiche={idFiche} onUpdate={chargerFiche}   lectureSeule={lectureSeule} />)}
+          {renduModule('statistiques', <Statistiques statistiques={fiche.statistiques} idFiche={idFiche} onUpdate={rafraichirTout} suggestions={suggestions.statistiques} lectureSeule={lectureSeule} />)}
+          {renduModule('competence',   <Competences  competences={fiche.competences}   idFiche={idFiche} onUpdate={rafraichirTout} suggestions={suggestions.competences}  lectureSeule={lectureSeule} />)}
+          {renduModule('equipement',   <Equipements  equipements={fiche.equipements}   idFiche={idFiche} onUpdate={rafraichirTout} suggestions={suggestions.equipements}  lectureSeule={lectureSeule} />)}
         </div>
       </div>
     </div>
