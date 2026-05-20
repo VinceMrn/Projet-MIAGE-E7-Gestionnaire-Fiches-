@@ -7,6 +7,7 @@ import Layout from './components/Layout'
 import ListeFiches from './components/fiches/ListeFiches'
 import CreerFiche from './components/fiches/CreerFiche'
 import FicheDetail from './components/fiches/FicheDetail'
+import CombatPage from './components/Combat/CombatPage'
 
 function AppContent() {
   const { utilisateur } = useAuth()
@@ -49,6 +50,8 @@ function AppContent() {
             onRetour={() => setPage('fiches')}
           />
         )
+      case 'combat':
+        return <CombatPage onRetour={() => setPage('fiches')} />
       case 'parametres':
         return <ParametresCompte onRetour={() => setPage('fiches')} />
       default:

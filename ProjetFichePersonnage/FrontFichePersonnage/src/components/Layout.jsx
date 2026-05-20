@@ -31,6 +31,13 @@ export default function Layout({ children, page, onNavigate }) {
             Mes Fiches
           </span>
           <div style={{ width: 1, height: 18, background: '#3a2c18' }} />
+          <span
+            onClick={() => onNavigate('combat')}
+            style={{ fontFamily: cinzel, fontSize: 13, color: page === 'combat' ? '#e8d5a0' : '#a09070', borderBottom: page === 'combat' ? '1px solid #8a6a3a' : '1px solid transparent', paddingBottom: 1, cursor: 'pointer', letterSpacing: '0.04em' }}
+          >
+            Combat
+          </span>
+          <div style={{ width: 1, height: 18, background: '#3a2c18' }} />
           <button
             onClick={() => onNavigate('parametres')}
             title="Paramètres du compte"

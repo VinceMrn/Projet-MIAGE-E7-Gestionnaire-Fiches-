@@ -3,6 +3,7 @@ package service;
 import service.route.Route;
 import service.route.RouteAuth;
 import service.route.RouteFiches;
+import service.route.RouteCombat;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -16,7 +17,8 @@ public class ServeurAPI {
     public ServeurAPI(GestionUtilisateur gestionUtilisateur, GestionFiche gestionFiche, GestionSession gestionSession) {
         this.routes = new Route[] {
                 new RouteAuth(gestionUtilisateur, gestionFiche, gestionSession),
-                new RouteFiches(gestionFiche, gestionSession)
+                new RouteFiches(gestionFiche, gestionSession),
+                new RouteCombat(new GestionCombat())
         };
     }
 
