@@ -103,37 +103,6 @@ public class JsonUtils {
         }
         json.append("]}");
 
-        List<ModulePersonnalise> modulesPerso = fiche.getModulesPersonnalises();
-        json.append(",\"modulesPersonnalises\":[");
-        for (int i = 0; i < modulesPerso.size(); i++) {
-            ModulePersonnalise mp = modulesPerso.get(i);
-            json.append("{");
-            json.append("\"id\":\"").append(mp.getId()).append("\"");
-            json.append(",\"nom\":\"").append(mp.getNom()).append("\"");
-            json.append(",\"type\":\"").append(mp.getType()).append("\"");
-            if (mp.getContenuTexte() != null) {
-                json.append(",\"contenuTexte\":\"").append(mp.getContenuTexte()).append("\"");
-            }
-            json.append(",\"contenuListe\":[");
-            List<String> cl = mp.getContenuListe();
-            for (int j = 0; j < cl.size(); j++) {
-                json.append("\"").append(cl.get(j)).append("\"");
-                if (j < cl.size() - 1) json.append(",");
-            }
-            json.append("]");
-            json.append(",\"contenuStats\":[");
-            List<Statistique> cs = mp.getContenuStats();
-            for (int j = 0; j < cs.size(); j++) {
-                Statistique s = cs.get(j);
-                json.append("{\"nom\":\"").append(s.getNomStatistique()).append("\",\"valeur\":").append(s.getValeurStatistique()).append("}");
-                if (j < cs.size() - 1) json.append(",");
-            }
-            json.append("]");
-            json.append("}");
-            if (i < modulesPerso.size() - 1) json.append(",");
-        }
-        json.append("]");
-
         json.append(",\"canvas\":{\"largeur\":").append(FichePersonnage.CANVAS_LARGEUR)
             .append(",\"hauteur\":").append(FichePersonnage.CANVAS_HAUTEUR).append("}");
 

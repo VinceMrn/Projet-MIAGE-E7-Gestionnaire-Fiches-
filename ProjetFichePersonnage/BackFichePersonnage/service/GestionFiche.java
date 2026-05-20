@@ -160,39 +160,6 @@ public class GestionFiche {
         return new ArrayList<>(map.values());
     }
 
-    // AJOUTER MODULE
-    public boolean ajouterModulePersonnalise(Utilisateur u, SecretKeySpec cle, int idFiche, ModulePersonnalise module) {
-        FichePersonnage fiche = getFiche(u, idFiche);
-        if (fiche == null) return false;
-        fiche.getModulesPersonnalises().add(module);
-        sauvegarderFiches(u, cle);
-        return true;
-    }
-
-    // MODIFIER MODULE
-    public boolean modifierModulePersonnalise(Utilisateur u, SecretKeySpec cle, int idFiche, String idModule, ModulePersonnalise module) {
-        FichePersonnage fiche = getFiche(u, idFiche);
-        if (fiche == null) return false;
-        List<ModulePersonnalise> liste = fiche.getModulesPersonnalises();
-        for (int i = 0; i < liste.size(); i++) {
-            if (liste.get(i).getId().equals(idModule)) {
-                liste.set(i, module);
-                sauvegarderFiches(u, cle);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    // SUPPRIMER MODULE
-    public boolean supprimerModulePersonnalise(Utilisateur u, SecretKeySpec cle, int idFiche, String idModule) {
-        FichePersonnage fiche = getFiche(u, idFiche);
-        if (fiche == null) return false;
-        boolean removed = fiche.getModulesPersonnalises().removeIf(m -> m.getId().equals(idModule));
-        if (removed) sauvegarderFiches(u, cle);
-        return removed;
-    }
-
     // SUPPRIMER FICHE
     public boolean supprimerFiche(Utilisateur u, SecretKeySpec cle, int idFiche) {
         FichePersonnage fiche = getFiche(u, idFiche);

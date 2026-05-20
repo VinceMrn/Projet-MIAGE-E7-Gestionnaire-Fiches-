@@ -1,8 +1,6 @@
 package model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 public class FichePersonnage implements Serializable {
 
@@ -18,7 +16,6 @@ public class FichePersonnage implements Serializable {
     private Statistiques statistiques;
     private Competence competence;
     private Equipement equipement;
-    private List<ModulePersonnalise> modulesPersonnalises;
 
     // CREATION FICHE
     public FichePersonnage(int idFichePersonnage, String nomFichePersonnage) {
@@ -29,7 +26,6 @@ public class FichePersonnage implements Serializable {
         this.statistiques = new Statistiques(200, 0, 300, 200);
         this.competence = new Competence(0, 400, 300, 200);
         this.equipement = new Equipement(300, 400, 300, 200);
-        this.modulesPersonnalises = new ArrayList<>();
     }
 
     // MODIFIER PORTRAIT
@@ -83,10 +79,4 @@ public class FichePersonnage implements Serializable {
     }
 
     // GET MODULES
-    public List<ModulePersonnalise> getModulesPersonnalises() {
-        if (modulesPersonnalises == null) {
-            modulesPersonnalises = new ArrayList<>();
-        }
-        return modulesPersonnalises;
-    }
 }

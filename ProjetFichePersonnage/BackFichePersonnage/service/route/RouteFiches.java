@@ -1,7 +1,6 @@
 package service.route;
 
 import model.FichePersonnage;
-import model.ModulePersonnalise;
 import model.Statistique;
 import model.Utilisateur;
 import service.GestionFiche;
@@ -10,7 +9,6 @@ import service.JsonUtils;
 import javax.crypto.spec.SecretKeySpec;
 import java.util.Base64;
 import java.util.List;
-import java.util.UUID;
 
 public class RouteFiches implements Route {
 
@@ -162,50 +160,6 @@ public class RouteFiches implements Route {
                     String base64 = Base64.getEncoder().encodeToString(data);
                     return reponse(200, JsonUtils.exportFicheVersJSON(f.getNomFichePersonnage(), base64));
                 }
-                return reponse(405, JsonUtils.erreur("Methode non autorisee"));
-
-            case "modules-personnalises":
-                if ("POST".equals(methode)) {
-                    String mid = JsonUtils.extraireString(body, "id");
-                    String mnom = JsonUtils.extraireString(body, "nom");
-                    String mtype = JsonUtils.extraireString(body, "type");
-                    if (mnom == null || mnom.isEmpty() || mtype == null || mtype.isEmpty()) {
-                        return reponse(400, JsonUtils.erreur("nom et type requis"));
-                    }
-                    ModulePersonnalise mp = new ModulePersonnalise(mid != null ? mid : UUID.randomUUID().toString(), mnom, mtype);
-                    String texte = JsonUtils.extraireString(body, "contenuTexte");
-                    if (texte != null) mp.setContenuTexte(texte);
-                    List<String> liste = JsonUtils.extraireArrayStrings(body, "contenuListe");
-                    if (liste != null) mp.setContenuListe(liste);
-                    List<Statistique> stats = JsonUtils.extraireArrayStatistiques(body, "contenuStats");
-                    if (stats != null) mp.setContenuStats(stats);
-                    gestionFiche.ajouterModulePersonnalise(u, cle, idFiche, mp);
-                    return reponse(201, JsonUtils.succes());
-                }
-
-                if (segments.length >= 6 && "PUT".equals(methode)) {
-                    String idModule = segments[5];
-                    String mid = JsonUtils.extraireString(body, "id");
-                    String mnom = JsonUtils.extraireString(body, "nom");
-                    String mtype = JsonUtils.extraireString(body, "type");
-                    if (mnom == null || mnom.isEmpty()) mnom = "Module";
-                    ModulePersonnalise mp = new ModulePersonnalise(mid != null ? mid : idModule, mnom, mtype != null ? mtype : "texte");
-                    String texte = JsonUtils.extraireString(body, "contenuTexte");
-                    if (texte != null) mp.setContenuTexte(texte);
-                    List<String> liste = JsonUtils.extraireArrayStrings(body, "contenuListe");
-                    if (liste != null) mp.setContenuListe(liste);
-                    List<Statistique> stats = JsonUtils.extraireArrayStatistiques(body, "contenuStats");
-                    if (stats != null) mp.setContenuStats(stats);
-                    gestionFiche.modifierModulePersonnalise(u, cle, idFiche, idModule, mp);
-                    return reponse(200, JsonUtils.succes());
-                }
-
-                if (segments.length >= 6 && "DELETE".equals(methode)) {
-                    String idModule = segments[5];
-                    gestionFiche.supprimerModulePersonnalise(u, cle, idFiche, idModule);
-                    return reponse(200, JsonUtils.succes());
-                }
-
                 return reponse(405, JsonUtils.erreur("Methode non autorisee"));
 
             default:
