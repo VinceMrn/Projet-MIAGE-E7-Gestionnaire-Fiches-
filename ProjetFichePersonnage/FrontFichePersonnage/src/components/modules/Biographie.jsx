@@ -1,11 +1,13 @@
 import { useState } from 'react'
 import * as api from '../../api/api'
 
-export default function Biographie({ biographie, idFiche, onUpdate }) {
+export default function Biographie({ biographie, idFiche, onUpdate, lectureSeule = false }) {
   const [edition, setEdition] = useState(false)
   const [texte, setTexte] = useState(biographie.texte || '')
   const [erreur, setErreur] = useState('')
   const [collapsed, setCollapsed] = useState(false)
+
+  const enEdition = edition && !lectureSeule
 
   const handleSave = async () => {
     setErreur('')
@@ -29,7 +31,9 @@ export default function Biographie({ biographie, idFiche, onUpdate }) {
         </div>
         <div style={{ display: 'flex', gap: 10 }}>
           <button onClick={() => setCollapsed(!collapsed)} style={{ background: 'transparent', border: 'none', color: '#6a5a3a', cursor: 'pointer', fontSize: 14 }}>{collapsed ? '∨' : '∧'}</button>
-          <button onClick={() => setEdition(!edition)} style={{ background: 'transparent', border: 'none', color: '#6a5a3a', cursor: 'pointer', fontSize: 16 }}>⋮</button>
+          {!lectureSeule && (
+            <button onClick={() => setEdition(!edition)} style={{ background: 'transparent', border: 'none', color: '#6a5a3a', cursor: 'pointer', fontSize: 16 }}>⋮</button>
+          )}
         </div>
       </div>
 
@@ -37,7 +41,7 @@ export default function Biographie({ biographie, idFiche, onUpdate }) {
         <div style={{ padding: '16px' }}>
           {erreur && <div style={{ background: '#4a1515', border: '1px solid #8a3030', color: '#f0a0a0', padding: '8px 12px', borderRadius: 5, fontSize: 12, marginBottom: 12 }}>{erreur}</div>}
 
-          {edition ? (
+          {enEdition ? (
             <div>
               <textarea
                 value={texte}
@@ -56,7 +60,9 @@ export default function Biographie({ biographie, idFiche, onUpdate }) {
               <p style={{ fontSize: 14, color: '#c4b490', lineHeight: 1.7, whiteSpace: 'pre-wrap', margin: '0 0 12px' }}>
                 {biographie.texte || <span style={{ color: '#5a4a2a', fontStyle: 'italic' }}>Aucune biographie</span>}
               </p>
-              <button onClick={() => setEdition(true)} style={{ background: 'transparent', border: '1px solid #4a3a1a', color: '#8a7a5a', padding: '5px 14px', borderRadius: 4, fontFamily: cinzel, fontSize: 11, cursor: 'pointer' }}>✎ Edit Biographie</button>
+              {!lectureSeule && (
+                <button onClick={() => setEdition(true)} style={{ background: 'transparent', border: '1px solid #4a3a1a', color: '#8a7a5a', padding: '5px 14px', borderRadius: 4, fontFamily: cinzel, fontSize: 11, cursor: 'pointer' }}>✎ Edit Biographie</button>
+              )}
             </div>
           )}
         </div>

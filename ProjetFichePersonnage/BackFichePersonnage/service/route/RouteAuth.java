@@ -9,7 +9,6 @@ import service.JsonUtils;
 import javax.crypto.spec.SecretKeySpec;
 import service.GestionChiffrement;
 
-//TODO : MODIFIER MODIFIER MOT DE PASSE POUR CHIFFREMENT
 
 public class RouteAuth implements Route {
 
@@ -28,7 +27,10 @@ public class RouteAuth implements Route {
                 || chemin.equals("/api/login")
                 || chemin.equals("/api/logout")
                 || chemin.equals("/api/utilisateur/identifiant")
-                || chemin.equals("/api/utilisateur/motdepasse");
+                || chemin.equals("/api/utilisateur/motdepasse")
+                || chemin.equals("/api/utilisateur/questionsecrete")
+                || chemin.equals("/api/utilisateur/getquestionsecrete")
+                || chemin.equals("/api/utilisateur/reinitialisermotdepasse");
     }
 
     public String[] traiter(String methode, String chemin, String body, String sessionId) throws Exception {
@@ -99,6 +101,49 @@ public class RouteAuth implements Route {
                 boolean ok = gestionUtilisateur.modifierMotDePasse(u, ancien, nouveau);
                 if (!ok)
                     return new String[] { "400", JsonUtils.erreur("Ancien mot de passe incorrect") };
+                return new String[] { "200", JsonUtils.succes() };
+            }
+            
+            //ajout de route pour la question secrete
+            case "/api/utilisateur/questionsecrete": {
+                if (!"PUT".equals(methode))
+                    return new String[] { "405", JsonUtils.erreur("Methode non autorisee") };
+                Utilisateur u = gestionSession.getUtilisateurDepuisSession(sessionId);
+                if (u == null)
+                    return new String[] { "401", JsonUtils.erreur("Non connecte") };
+                String question = JsonUtils.extraireString(body, "question");
+                String reponse = JsonUtils.extraireString(body, "reponse");
+                if (question == null || question.isEmpty() || reponse == null || reponse.isEmpty())
+                    return new String[] { "400", JsonUtils.erreur("Question et reponse secrete requises") };
+                gestionUtilisateur.definirQuestionSecrete(u, question, reponse);
+                return new String[] { "200", JsonUtils.succesAvecQuestionSecrete(question) };
+            }
+
+            //recuperation de la question secrete pour aider a la recuperation des fiches en cas d'oubli du mot de passe (route a definir dans RouteAuth)
+            case "/api/utilisateur/getquestionsecrete": {
+                if (!"POST".equals(methode))
+                    return new String[] { "405", JsonUtils.erreur("Methode non autorisee") };
+                String nom = JsonUtils.extraireString(body, "nom");
+                if (nom == null || nom.isEmpty())
+                    return new String[] { "400", JsonUtils.erreur("Nom requis") };
+                String question = gestionUtilisateur.getQuestionSecrete(nom);
+                if (question == null)
+                    return new String[] { "404", JsonUtils.erreur("Utilisateur non trouve ou pas de question secrete") };
+                return new String[] { "200", JsonUtils.succesAvecQuestionSecrete(question) };
+            }
+
+            //recuperation du mot de passe via la question secrete (route a definir dans RouteAuth)
+             case "/api/utilisateur/reinitialisermotdepasse": {
+                if (!"POST".equals(methode))
+                    return new String[] { "405", JsonUtils.erreur("Methode non autorisee") };
+                String nom = JsonUtils.extraireString(body, "nom");
+                String reponse = JsonUtils.extraireString(body, "reponse");
+                String nouveauMdp = JsonUtils.extraireString(body, "nouveau");
+                if (nom == null || nom.isEmpty() || reponse == null || reponse.isEmpty() || nouveauMdp == null || nouveauMdp.isEmpty())
+                    return new String[] { "400", JsonUtils.erreur("Nom, reponse et nouveau mot de passe requis") };
+                boolean ok = gestionUtilisateur.reinitialiserMotDePasseAvecQuestionSecrete(nom, reponse, nouveauMdp);
+                if (!ok)
+                    return new String[] { "400", JsonUtils.erreur("Nom d'utilisateur incorrect ou reponse secrete incorrecte") };
                 return new String[] { "200", JsonUtils.succes() };
             }
 

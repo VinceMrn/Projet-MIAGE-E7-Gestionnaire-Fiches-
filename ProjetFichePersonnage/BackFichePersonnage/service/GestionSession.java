@@ -42,4 +42,9 @@ public class GestionSession {
     public boolean sessionExiste(String sessionid) {
         return sessionid != null && sessions.containsKey(sessionid);
     }
+
+    //pour pouvoir modifier le mot de passe, et aider a la recuperation des fiches
+    public void mettreAJourCle(String sessionid, SecretKeySpec nouvelleCle){
+        cles.put(sessionid, nouvelleCle); // remplace l'ancienne clé par la nouvelle pour la session donnée
+    }
 }

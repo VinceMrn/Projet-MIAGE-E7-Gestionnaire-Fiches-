@@ -79,4 +79,42 @@ public class GestionUtilisateur {
         return Collections.unmodifiableList(new ArrayList<>(utilisateurs));
     }
 
+    // methodes pour la question secrete
+    // pour la definition de la question secrète on veut verifier que l'utilisateur n'est pas vide, que la question ne soit pas vide, et qu'elle fasse minimum 10 caracteres pour eviter les questions trop simples et on interdit les ';' pour eviter les problemes de parsing dans le fichier de stockage
+    public boolean definirQuestionSecrete(Utilisateur u, String question, String reponse) {
+        if (u == null) return false;
+        if (question == null || question.isEmpty() || question.length() < 10 || question.contains(";")) return false;
+        if (reponse == null || reponse.isEmpty()) return false;
+        u.definirQuestionSecrete(question, reponse);
+        stockage.sauvegarderUtilisateurs(utilisateurs);
+        return true;
+    }
+
+    //getquestion secrete pour aider a la recuperation des fiches en cas d'oubli du mot de passe (route a definir dans RouteAuth)
+    public String getQuestionSecrete(String nomUtilisateur) {
+        Utilisateur u = getUtilisateurParNom(nomUtilisateur);
+        if (u == null) return null;
+        return u.getQuestionSecrete();
+    }
+
+    private Utilisateur getUtilisateurParNom(String nomUtilisateur) {
+        //on pourrait match le nom dans la liste des utilisateurs pour trouver l'utilisateur correspondant
+        for (Utilisateur u : utilisateurs) {
+            if (u.getNomUtilisateur().equals(nomUtilisateur)) {
+                return u;
+            }
+        }
+        return null;
+    }
+    
+    //reinitialiser mot de passe en utilisant la question secrete, pour aider a la recuperation des fiches en cas d'oubli du mot de passe (route a definir dans RouteAuth)
+    public boolean reinitialiserMotDePasseAvecQuestionSecrete(String nomUtilisateur, String reponse, String nouveauMdp) {
+        Utilisateur u = getUtilisateurParNom(nomUtilisateur);
+        if (u == null) return false;
+        if (nouveauMdp == null || nouveauMdp.isEmpty()) return false;
+        if (!u.verifierReponseSecrete(reponse)) return false;
+        u.modifierMotDePasse(nouveauMdp);
+        stockage.sauvegarderUtilisateurs(utilisateurs);
+        return true;
+    }
 }
