@@ -10,29 +10,29 @@ public class Statistique implements Serializable {
     private String nomStatistique;
     private int valeurStatistique;
 
+    // CREATION STATISTIQUE
     public Statistique(int idStatistique, String nomStatistique, int valeurStatistique) {
         this.idStatistique = idStatistique;
         this.nomStatistique = nomStatistique;
         this.valeurStatistique = valeurStatistique;
     }
 
+    // MODIFIER NOM
     public void modifierNomStatistique(String nomStatistique) {
         this.nomStatistique = nomStatistique;
     }
 
+    // MODIFIER VALEUR
     public void modifierValeurStatistique(int valeurStatistique) {
         this.valeurStatistique = valeurStatistique;
     }
 
-    public int getIdStatistique() {
-        return idStatistique;
-    }
+    // GET ID
+    public int getIdStatistique() { return idStatistique; }
 
-    public String getNomStatistique() {
-        return nomStatistique;
-    }
+    // GET NOM
+    public String getNomStatistique() { return nomStatistique; }
 
-    public int getValeurStatistique() {
-        return valeurStatistique;
-    }
+    // GET VALEUR
+    public int getValeurStatistique() { return valeurStatistique; }
 }

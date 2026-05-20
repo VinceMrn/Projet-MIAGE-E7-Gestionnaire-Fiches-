@@ -5,10 +5,8 @@ import service.GestionFiche;
 import service.GestionUtilisateur;
 import service.GestionSession;
 import service.JsonUtils;
-// pour le chiffrement
 import javax.crypto.spec.SecretKeySpec;
 import service.GestionChiffrement;
-
 
 public class RouteAuth implements Route {
 
@@ -16,12 +14,14 @@ public class RouteAuth implements Route {
     private GestionFiche gestionFiche;
     private GestionSession gestionSession;
 
+    // CREATION ROUTE
     public RouteAuth(GestionUtilisateur gestionUtilisateur, GestionFiche gestionFiche, GestionSession gestionSession) {
         this.gestionUtilisateur = gestionUtilisateur;
         this.gestionFiche = gestionFiche;
         this.gestionSession = gestionSession;
     }
 
+    // CORRESPOND CHEMIN
     public boolean correspond(String chemin) {
         return chemin.equals("/api/signup")
                 || chemin.equals("/api/login")
@@ -33,6 +33,7 @@ public class RouteAuth implements Route {
                 || chemin.equals("/api/utilisateur/reinitialisermotdepasse");
     }
 
+    // TRAITER REQUETE
     public String[] traiter(String methode, String chemin, String body, String sessionId) throws Exception {
         switch (chemin) {
             case "/api/signup": {
@@ -40,31 +41,20 @@ public class RouteAuth implements Route {
                 String mdp = JsonUtils.extraireString(body, "motdepasse");
                 Utilisateur u = gestionUtilisateur.creerCompte(nom, mdp);
                 SecretKeySpec cle = GestionChiffrement.genererCleDepuisHash(u);
-                // plus de "if u != null" car creerCompte lance une exception en cas de nom deja
-                // pris ou d'erreur d'inscription
                 return new String[] { "201", JsonUtils.succesAvecIdNom(u.getIdUtilisateur(), u.getNomUtilisateur(),
                         gestionSession.creerSession(u, cle)) };
-
-                // return new String[]{"400", JsonUtils.erreur("Nom d'utilisateur deja pris")};
-                // se return ne sera jamais atteint car creerCompte lance une exception en cas de nom deja pris
             }
 
             case "/api/login": {
                 String nom = JsonUtils.extraireString(body, "nom");
                 String mdp = JsonUtils.extraireString(body, "motdepasse");
-                gestionSession.supprimerSession(sessionId); // supprime session precedente si existante
+                gestionSession.supprimerSession(sessionId);
                 Utilisateur u = gestionUtilisateur.seConnecter(nom, mdp);
                 SecretKeySpec cle = GestionChiffrement.genererCleDepuisHash(u);
                 String newSessionId = gestionSession.creerSession(u, cle);
-
                 gestionFiche.chargerFiches(u, cle);
                 return new String[] { "200",
                         JsonUtils.succesAvecIdNom(u.getIdUtilisateur(), u.getNomUtilisateur(), newSessionId) };
-
-                // return new String[]{"401", JsonUtils.erreur("Nom ou mot de passe
-                // incorrect")};
-                // se return ne sera jamais atteint car seConnecter lance une exception en cas
-                // d'identifiants invalides
             }
 
             case "/api/logout": {
@@ -103,8 +93,7 @@ public class RouteAuth implements Route {
                     return new String[] { "400", JsonUtils.erreur("Ancien mot de passe incorrect") };
                 return new String[] { "200", JsonUtils.succes() };
             }
-            
-            //ajout de route pour la question secrete
+
             case "/api/utilisateur/questionsecrete": {
                 if (!"PUT".equals(methode))
                     return new String[] { "405", JsonUtils.erreur("Methode non autorisee") };
@@ -119,7 +108,6 @@ public class RouteAuth implements Route {
                 return new String[] { "200", JsonUtils.succesAvecQuestionSecrete(question) };
             }
 
-            //recuperation de la question secrete pour aider a la recuperation des fiches en cas d'oubli du mot de passe (route a definir dans RouteAuth)
             case "/api/utilisateur/getquestionsecrete": {
                 if (!"POST".equals(methode))
                     return new String[] { "405", JsonUtils.erreur("Methode non autorisee") };
@@ -132,8 +120,7 @@ public class RouteAuth implements Route {
                 return new String[] { "200", JsonUtils.succesAvecQuestionSecrete(question) };
             }
 
-            //recuperation du mot de passe via la question secrete (route a definir dans RouteAuth)
-             case "/api/utilisateur/reinitialisermotdepasse": {
+            case "/api/utilisateur/reinitialisermotdepasse": {
                 if (!"POST".equals(methode))
                     return new String[] { "405", JsonUtils.erreur("Methode non autorisee") };
                 String nom = JsonUtils.extraireString(body, "nom");

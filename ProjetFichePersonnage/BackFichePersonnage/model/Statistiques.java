@@ -7,30 +7,19 @@ public class Statistiques extends Module {
 
     private List<Statistique> statistiques;
 
+    // CREATION STATISTIQUES
     public Statistiques(int positionX, int positionY, int largeur, int hauteur) {
         super(positionX, positionY, largeur, hauteur);
         this.statistiques = new ArrayList<>();
     }
 
+    // AJOUTER STATISTIQUE
     public void ajouterStatistique(String nomStatistique, int valeurStatistique) {
         int id = statistiques.size() + 1;
         statistiques.add(new Statistique(id, nomStatistique, valeurStatistique));
     }
 
-    public void modifierStatistique(int idStatistique, String nomStatistique, int valeurStatistique) {
-        for (Statistique stat : statistiques) {
-            if (stat.getIdStatistique() == idStatistique) {
-                stat.modifierNomStatistique(nomStatistique);
-                stat.modifierValeurStatistique(valeurStatistique);
-                return;
-            }
-        }
-    }
-
-    public void supprimerStatistique(int idStatistique) {
-        statistiques.removeIf(stat -> stat.getIdStatistique() == idStatistique);
-    }
-
+    // GET STATISTIQUES
     public List<Statistique> getStatistiques() {
         return statistiques;
     }

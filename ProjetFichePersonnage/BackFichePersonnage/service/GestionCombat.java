@@ -19,7 +19,7 @@ public class GestionCombat {
         return random.nextInt(faces) + 1;
     }
 
-    // Génère un ennemi selon le niveau (1 à 5) avec des stats significativement plus hautes
+    // Génère un ennemi 
     public Ennemi genererEnnemi(int niveau) {
         if (niveau < 1) niveau = 1;
         if (niveau > 5) niveau = 5;
@@ -36,34 +36,21 @@ public class GestionCombat {
         return new Ennemi(nom, hp, attaque, defense);
     }
 
-    // Calcule un tour complet avec stat d'attaque ET de défense du joueur.
-    // Retourne un tableau de 8 valeurs :
-    // [0] dégâts infligés à l'ennemi (après critique éventuel)
-    // [1] dégâts reçus par le joueur (après critique ennemi éventuel)
-    // [2] dé du joueur (D20)
-    // [3] dé de l'ennemi (D20)
-    // [4] total attaque joueur (dé + statAttaque)
-    // [5] total attaque ennemi (dé + attaqueEnnemi)
-    // [6] type joueur : 2=critique, -1=echec critique, 1=normal
-    // [7] type ennemi : 2=critique, 1=normal
+    // Calcule un tour complet
     public int[] calculerTour(int valeurStatAttaque, int valeurStatDefense, int bonusDefense,
                                int defenseEnnemi, int attaqueEnnemi) {
 
-        // Défense du joueur : base 10 + moitié de la stat de défense + bonus actif (Bouclier)
         int defenseJoueur = 10 + (valeurStatDefense / 2) + bonusDefense;
 
-        // ─ Attaque du joueur ─
         int deJoueur    = lancerDe(20);
         int totalJoueur = deJoueur + valeurStatAttaque;
         int typeJoueur;
         int degatsJoueur;
 
         if (deJoueur == 20) {
-            // Critique : dégâts doublés (minimum 1)
             degatsJoueur = Math.max(1, (totalJoueur - defenseEnnemi)) * 2;
             typeJoueur = 2;
         } else if (deJoueur == 1) {
-            // Échec critique : aucun dégât
             degatsJoueur = 0;
             typeJoueur = -1;
         } else {
@@ -71,14 +58,13 @@ public class GestionCombat {
             typeJoueur = 1;
         }
 
-        // ─ Riposte de l'ennemi ─
+        //Riposte 
         int deEnnemi    = lancerDe(20);
         int totalEnnemi = deEnnemi + attaqueEnnemi;
         int typeEnnemi;
         int degatsEnnemi;
 
         if (deEnnemi == 20) {
-            // Ennemi critique aussi
             degatsEnnemi = Math.max(1, (totalEnnemi - defenseJoueur)) * 2;
             typeEnnemi = 2;
         } else {

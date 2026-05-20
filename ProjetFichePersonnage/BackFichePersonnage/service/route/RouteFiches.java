@@ -1,60 +1,51 @@
 package service.route;
 
 import model.FichePersonnage;
+import model.ModulePersonnalise;
+import model.Statistique;
 import model.Utilisateur;
 import service.GestionFiche;
 import service.GestionSession;
 import service.JsonUtils;
 import javax.crypto.spec.SecretKeySpec;
+import java.util.Base64;
+import java.util.List;
+import java.util.UUID;
 
-/**
- * Routes des fiches de personnage :
- * GET/POST /api/fiches
- * GET/DELETE /api/fiches/{id}
- * PUT /api/fiches/{id}/portrait, /biographie
- * POST /api/fiches/{id}/statistiques, /competences, /equipements
- * PUT /api/fiches/{id}/module/position, /module/taille
- *
- * La session est validee au debut de chaque requete via le sessionId.
- * La cle AES de l'utilisateur est recuperee depuis la session pour les operations
- * qui ecrivent ou lisent le fichier chiffre.
- */
 public class RouteFiches implements Route {
 
     private GestionFiche gestionFiche;
     private GestionSession gestionSession;
 
+    // CREATION ROUTE
     public RouteFiches(GestionFiche gestionFiche, GestionSession gestionSession) {
         this.gestionFiche = gestionFiche;
         this.gestionSession = gestionSession;
     }
 
+    // CORRESPOND CHEMIN
     public boolean correspond(String chemin) {
         return chemin.equals("/api/fiches") || chemin.startsWith("/api/fiches/");
     }
 
+    // TRAITER REQUETE
     public String[] traiter(String methode, String chemin, String body, String sessionId) throws Exception {
-        // Verification de session : utilisateur + cle AES
         Utilisateur u = gestionSession.getUtilisateurDepuisSession(sessionId);
         SecretKeySpec cle = gestionSession.getCleDepuisSession(sessionId);
         if (u == null || cle == null) {
             return reponse(401, JsonUtils.erreur("Non connecte"));
         }
 
-        // /api/fiches
         if (chemin.equals("/api/fiches")) {
             return traiterListeOuCreation(methode, body, u, cle);
         }
 
-        // /api/fiches/{id}...
         String[] segments = chemin.split("/");
 
-        // /api/fiches/elements/{competences|equipements|statistiques}
         if (segments.length >= 5 && "elements".equals(segments[3])) {
             return traiterElements(methode, segments[4], u);
         }
 
-        // /api/fiches/import (POST) - importer une fiche depuis un .fiche base64
         if (segments.length == 4 && "import".equals(segments[3])) {
             return traiterImport(methode, body, u, cle);
         }
@@ -66,12 +57,10 @@ public class RouteFiches implements Route {
             return reponse(400, JsonUtils.erreur("ID invalide"));
         }
 
-        // /api/fiches/{id}
         if (segments.length == 4) {
             return traiterFiche(methode, idFiche, u, cle);
         }
 
-        // /api/fiches/{id}/{ressource}
         if (segments.length >= 5) {
             return traiterRessource(methode, body, idFiche, segments, u, cle);
         }
@@ -79,6 +68,7 @@ public class RouteFiches implements Route {
         return reponse(404, JsonUtils.erreur("Route inconnue"));
     }
 
+    // LISTE CREATION
     private String[] traiterListeOuCreation(String methode, String body, Utilisateur u, SecretKeySpec cle) {
         if ("GET".equals(methode)) {
             return reponse(200, JsonUtils.listeFichesVersJSON(gestionFiche.listerFiches(u)));
@@ -94,6 +84,7 @@ public class RouteFiches implements Route {
         return reponse(405, JsonUtils.erreur("Methode non autorisee"));
     }
 
+    // TRAITER FICHE
     private String[] traiterFiche(String methode, int idFiche, Utilisateur u, SecretKeySpec cle) {
         if ("GET".equals(methode)) {
             FichePersonnage fiche = gestionFiche.getFiche(u, idFiche);
@@ -107,6 +98,7 @@ public class RouteFiches implements Route {
         return reponse(405, JsonUtils.erreur("Methode non autorisee"));
     }
 
+    // TRAITER RESSOURCE
     private String[] traiterRessource(String methode, String body, int idFiche, String[] segments, Utilisateur u, SecretKeySpec cle) throws Exception {
         String ressource = segments[4];
 
@@ -166,25 +158,13 @@ public class RouteFiches implements Route {
                 if ("GET".equals(methode)) {
                     byte[] data = gestionFiche.exporterFiche(u, idFiche);
                     if (data == null) return reponse(404, JsonUtils.erreur("Fiche non trouvee"));
-                    model.FichePersonnage f = gestionFiche.getFiche(u, idFiche);
-                    String base64 = java.util.Base64.getEncoder().encodeToString(data);
+                    FichePersonnage f = gestionFiche.getFiche(u, idFiche);
+                    String base64 = Base64.getEncoder().encodeToString(data);
                     return reponse(200, JsonUtils.exportFicheVersJSON(f.getNomFichePersonnage(), base64));
                 }
                 return reponse(405, JsonUtils.erreur("Methode non autorisee"));
 
-            case "rename":
-                if ("PUT".equals(methode)) {
-                    String nom = JsonUtils.extraireString(body, "nom");
-                    if (nom == null || nom.isEmpty()) {
-                        return reponse(400, JsonUtils.erreur("Nom requis"));
-                    }
-                    boolean ok = gestionFiche.modifierNomFiche(u, cle, idFiche, nom);
-                    return ok ? reponse(200, JsonUtils.succes()) : reponse(404, JsonUtils.erreur("Fiche non trouvee"));
-                }
-                return reponse(405, JsonUtils.erreur("Methode non autorisee"));
-
             case "modules-personnalises":
-                // POST /api/fiches/{id}/modules-personnalises
                 if ("POST".equals(methode)) {
                     String mid = JsonUtils.extraireString(body, "id");
                     String mnom = JsonUtils.extraireString(body, "nom");
@@ -192,36 +172,34 @@ public class RouteFiches implements Route {
                     if (mnom == null || mnom.isEmpty() || mtype == null || mtype.isEmpty()) {
                         return reponse(400, JsonUtils.erreur("nom et type requis"));
                     }
-                    model.ModulePersonnalise mp = new model.ModulePersonnalise(mid != null ? mid : java.util.UUID.randomUUID().toString(), mnom, mtype);
+                    ModulePersonnalise mp = new ModulePersonnalise(mid != null ? mid : UUID.randomUUID().toString(), mnom, mtype);
                     String texte = JsonUtils.extraireString(body, "contenuTexte");
                     if (texte != null) mp.setContenuTexte(texte);
-                    java.util.List<String> liste = JsonUtils.extraireArrayStrings(body, "contenuListe");
+                    List<String> liste = JsonUtils.extraireArrayStrings(body, "contenuListe");
                     if (liste != null) mp.setContenuListe(liste);
-                    java.util.List<model.Statistique> stats = JsonUtils.extraireArrayStatistiques(body, "contenuStats");
+                    List<Statistique> stats = JsonUtils.extraireArrayStatistiques(body, "contenuStats");
                     if (stats != null) mp.setContenuStats(stats);
                     gestionFiche.ajouterModulePersonnalise(u, cle, idFiche, mp);
                     return reponse(201, JsonUtils.succes());
                 }
 
-                // PUT /api/fiches/{id}/modules-personnalises/{idModule}
                 if (segments.length >= 6 && "PUT".equals(methode)) {
                     String idModule = segments[5];
                     String mid = JsonUtils.extraireString(body, "id");
                     String mnom = JsonUtils.extraireString(body, "nom");
                     String mtype = JsonUtils.extraireString(body, "type");
                     if (mnom == null || mnom.isEmpty()) mnom = "Module";
-                    model.ModulePersonnalise mp = new model.ModulePersonnalise(mid != null ? mid : idModule, mnom, mtype != null ? mtype : "texte");
+                    ModulePersonnalise mp = new ModulePersonnalise(mid != null ? mid : idModule, mnom, mtype != null ? mtype : "texte");
                     String texte = JsonUtils.extraireString(body, "contenuTexte");
                     if (texte != null) mp.setContenuTexte(texte);
-                    java.util.List<String> liste = JsonUtils.extraireArrayStrings(body, "contenuListe");
+                    List<String> liste = JsonUtils.extraireArrayStrings(body, "contenuListe");
                     if (liste != null) mp.setContenuListe(liste);
-                    java.util.List<model.Statistique> stats = JsonUtils.extraireArrayStatistiques(body, "contenuStats");
+                    List<Statistique> stats = JsonUtils.extraireArrayStatistiques(body, "contenuStats");
                     if (stats != null) mp.setContenuStats(stats);
                     gestionFiche.modifierModulePersonnalise(u, cle, idFiche, idModule, mp);
                     return reponse(200, JsonUtils.succes());
                 }
 
-                // DELETE /api/fiches/{id}/modules-personnalises/{idModule}
                 if (segments.length >= 6 && "DELETE".equals(methode)) {
                     String idModule = segments[5];
                     gestionFiche.supprimerModulePersonnalise(u, cle, idFiche, idModule);
@@ -235,6 +213,7 @@ public class RouteFiches implements Route {
         }
     }
 
+    // TRAITER MODULE
     private String[] traiterModule(String methode, String body, int idFiche, String[] segments, Utilisateur u, SecretKeySpec cle) {
         if (segments.length < 6 || !"PUT".equals(methode)) {
             return reponse(405, JsonUtils.erreur("Methode non autorisee"));
@@ -266,27 +245,28 @@ public class RouteFiches implements Route {
         return reponse(404, JsonUtils.erreur("Route inconnue"));
     }
 
+    // TRAITER ELEMENTS
     private String[] traiterElements(String methode, String type, Utilisateur u) {
         if (!"GET".equals(methode)) {
             return reponse(405, JsonUtils.erreur("Methode non autorisee"));
         }
         StringBuilder json = new StringBuilder("[");
         if ("competences".equals(type)) {
-            java.util.List<String> liste = gestionFiche.listerCompetencesUtilisateur(u);
+            List<String> liste = gestionFiche.listerCompetencesUtilisateur(u);
             for (int i = 0; i < liste.size(); i++) {
                 json.append("\"").append(liste.get(i)).append("\"");
                 if (i < liste.size() - 1) json.append(",");
             }
         } else if ("equipements".equals(type)) {
-            java.util.List<String> liste = gestionFiche.listerEquipementsUtilisateur(u);
+            List<String> liste = gestionFiche.listerEquipementsUtilisateur(u);
             for (int i = 0; i < liste.size(); i++) {
                 json.append("\"").append(liste.get(i)).append("\"");
                 if (i < liste.size() - 1) json.append(",");
             }
         } else if ("statistiques".equals(type)) {
-            java.util.List<model.Statistique> liste = gestionFiche.listerStatistiquesUtilisateur(u);
+            List<Statistique> liste = gestionFiche.listerStatistiquesUtilisateur(u);
             for (int i = 0; i < liste.size(); i++) {
-                model.Statistique s = liste.get(i);
+                Statistique s = liste.get(i);
                 json.append("{\"nom\":\"").append(s.getNomStatistique())
                     .append("\",\"valeur\":").append(s.getValeurStatistique()).append("}");
                 if (i < liste.size() - 1) json.append(",");
@@ -298,6 +278,7 @@ public class RouteFiches implements Route {
         return reponse(200, json.toString());
     }
 
+    // TRAITER IMPORT
     private String[] traiterImport(String methode, String body, Utilisateur u, SecretKeySpec cle) throws Exception {
         if (!"POST".equals(methode)) {
             return reponse(405, JsonUtils.erreur("Methode non autorisee"));
@@ -308,7 +289,7 @@ public class RouteFiches implements Route {
         }
         byte[] data;
         try {
-            data = java.util.Base64.getDecoder().decode(base64);
+            data = Base64.getDecoder().decode(base64);
         } catch (IllegalArgumentException e) {
             return reponse(400, JsonUtils.erreur("Base64 invalide"));
         }
@@ -317,6 +298,7 @@ public class RouteFiches implements Route {
         return reponse(201, JsonUtils.succesAvecIdNom(fiche.getIdFichePersonnage(), fiche.getNomFichePersonnage()));
     }
 
+    // BUILD REPONSE
     private String[] reponse(int code, String json) {
         return new String[]{ String.valueOf(code), json };
     }

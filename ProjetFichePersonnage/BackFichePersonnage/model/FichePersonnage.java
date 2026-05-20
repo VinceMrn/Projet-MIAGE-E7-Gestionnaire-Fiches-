@@ -20,6 +20,7 @@ public class FichePersonnage implements Serializable {
     private Equipement equipement;
     private List<ModulePersonnalise> modulesPersonnalises;
 
+    // CREATION FICHE
     public FichePersonnage(int idFichePersonnage, String nomFichePersonnage) {
         this.idFichePersonnage = idFichePersonnage;
         this.nomFichePersonnage = nomFichePersonnage;
@@ -31,68 +32,60 @@ public class FichePersonnage implements Serializable {
         this.modulesPersonnalises = new ArrayList<>();
     }
 
+    // MODIFIER PORTRAIT
     public void modifierPortrait(String imagePortrait) {
         this.portrait.modifierPortrait(imagePortrait);
     }
 
+    // MODIFIER BIOGRAPHIE
     public void modifierBiographie(String texteBiographie) {
         this.biographie.modifierBiographie(texteBiographie);
     }
 
-    public void modifierStatistiques(Statistiques statistiques) {
-        this.statistiques = statistiques;
-    }
-
-    public void modifierCompetence(Competence competence) {
-        this.competence = competence;
-    }
-
-    public void modifierEquipement(Equipement equipement) {
-        this.equipement = equipement;
-    }
-
-    /**
-     * Permet de renommer la fiche.
-     */
-    public void modifierNomFiche(String nouveauNom) {
-        this.nomFichePersonnage = nouveauNom;
-    }
-
+    // GET ID
     public int getIdFichePersonnage() {
         return idFichePersonnage;
     }
 
+    // SET ID
     public void setIdFichePersonnage(int idFichePersonnage) {
         this.idFichePersonnage = idFichePersonnage;
     }
 
+    // GET NOM
     public String getNomFichePersonnage() {
         return nomFichePersonnage;
     }
 
+    // GET PORTRAIT
     public Portrait getPortrait() {
         return portrait;
     }
 
+    // GET BIOGRAPHIE
     public Biographie getBiographie() {
         return biographie;
     }
 
+    // GET STATISTIQUES
     public Statistiques getStatistiques() {
         return statistiques;
     }
 
+    // GET COMPETENCE
     public Competence getCompetence() {
         return competence;
     }
 
+    // GET EQUIPEMENT
     public Equipement getEquipement() {
         return equipement;
     }
 
+    // GET MODULES
     public List<ModulePersonnalise> getModulesPersonnalises() {
         if (modulesPersonnalises == null) {
-            modulesPersonnalises = new java.util.ArrayList<>();
+            modulesPersonnalises = new ArrayList<>();
         }
         return modulesPersonnalises;
     }

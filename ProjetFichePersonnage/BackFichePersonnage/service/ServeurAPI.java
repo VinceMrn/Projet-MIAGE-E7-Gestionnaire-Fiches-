@@ -14,6 +14,7 @@ public class ServeurAPI {
     private boolean enMarche;
     private Route[] routes;
 
+    // CREATION SERVEUR
     public ServeurAPI(GestionUtilisateur gestionUtilisateur, GestionFiche gestionFiche, GestionSession gestionSession) {
         this.routes = new Route[] {
                 new RouteAuth(gestionUtilisateur, gestionFiche, gestionSession),
@@ -22,6 +23,7 @@ public class ServeurAPI {
         };
     }
 
+    // DEMARRER SERVEUR
     public void demarrer() throws IOException {
         serverSocket = new ServerSocket(8080);
         enMarche = true;
@@ -33,8 +35,7 @@ public class ServeurAPI {
                     Socket client = serverSocket.accept();
                     traiterRequete(client);
                 } catch (IOException e) {
-                    if (enMarche)
-                        System.out.println("Erreur : " + e.getMessage());
+                    if (enMarche) System.out.println("Erreur : " + e.getMessage());
                 }
             }
         });
@@ -42,38 +43,36 @@ public class ServeurAPI {
         thread.start();
     }
 
+    // ARRETER SERVEUR
     public void arreter() {
         enMarche = false;
         try {
             serverSocket.close();
         } catch (IOException e) {
-            /* ignore */ }
+        }
         System.out.println("Serveur arrete.");
     }
 
-    // --- Classe interne pour regrouper les infos d'une requête ---
     private static class RequeteHTTP {
         String methode;
         String chemin;
         String body;
-        String sessionId; // ajout pour stocker le sessionId
+        String sessionId;
     }
 
-    // --- Lire et parser la requête HTTP depuis le socket ---
+    // LIRE REQUETE
     private RequeteHTTP lireRequete(BufferedReader in) throws IOException {
         String premiereLigne = in.readLine();
-        if (premiereLigne == null)
-            return null;
+        if (premiereLigne == null) return null;
 
         String[] parts = premiereLigne.split(" ");
         RequeteHTTP req = new RequeteHTTP();
         req.methode = parts[0];
         req.chemin = parts[1];
 
-        // Lire les headers pour trouver Content-Length
         int contentLength = 0;
         String ligne;
-        req.sessionId = ""; // valeur par défaut si pas de header
+        req.sessionId = "";
         while ((ligne = in.readLine()) != null && !ligne.isEmpty()) {
             String ligneLower = ligne.toLowerCase();
             if (ligneLower.startsWith("content-length:")) {
@@ -83,7 +82,6 @@ public class ServeurAPI {
             }
         }
 
-        // Lire le body si présent
         if (contentLength > 0) {
             char[] buffer = new char[contentLength];
             in.read(buffer, 0, contentLength);
@@ -95,43 +93,35 @@ public class ServeurAPI {
         return req;
     }
 
-    // --- Trouver la route et produire [code, json] ---
+    // ROUTER REQUETE
     private String[] router(RequeteHTTP req) throws Exception {
-        if ("OPTIONS".equals(req.methode)) {
-            return new String[] { "204", "" };
-        }
-
+        if ("OPTIONS".equals(req.methode)) return new String[] { "204", "" };
         for (Route route : routes) {
             if (route.correspond(req.chemin)) {
                 return route.traiter(req.methode, req.chemin, req.body, req.sessionId);
             }
         }
-
         return new String[] { "404", "{\"erreur\":\"Route inconnue\"}" };
     }
 
-    // --- Méthode principale : lire, router, répondre ---
+    // TRAITER REQUETE
     private void traiterRequete(Socket client) {
         try (BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
                 OutputStream out = client.getOutputStream()) {
-
             RequeteHTTP req = lireRequete(in);
-            if (req == null)
-                return;
-
+            if (req == null) return;
             try {
                 String[] resultat = router(req);
                 repondre(out, Integer.parseInt(resultat[0]), resultat[1]);
             } catch (Exception e) {
                 repondre(out, 400, JsonUtils.erreur(e.getMessage()));
             }
-
         } catch (Exception e) {
             System.out.println("Erreur requete : " + e.getMessage());
         }
     }
 
-    // --- Envoie une réponse HTTP brute ---
+    // ENVOYER REPONSE
     private void repondre(OutputStream out, int code, String json) throws IOException {
         byte[] contenu = json.getBytes("UTF-8");
         String entete = "HTTP/1.1 " + code + " OK\r\n"

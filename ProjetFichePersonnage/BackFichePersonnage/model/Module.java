@@ -11,6 +11,7 @@ public abstract class Module implements Serializable {
     private int largeur;
     private int hauteur;
 
+    // CREATION MODULE
     public Module(int positionX, int positionY, int largeur, int hauteur) {
         this.positionX = positionX;
         this.positionY = positionY;
@@ -18,29 +19,27 @@ public abstract class Module implements Serializable {
         this.hauteur = hauteur;
     }
 
+    // MODIFIER POSITION
     public void modifierPosition(int positionX, int positionY) {
         this.positionX = positionX;
         this.positionY = positionY;
     }
 
+    // MODIFIER TAILLE
     public void modifierTaille(int largeur, int hauteur) {
         this.largeur = largeur;
         this.hauteur = hauteur;
     }
 
-    public int getPositionX() {
-        return positionX;
-    }
+    // GET POSITIONX
+    public int getPositionX() { return positionX; }
 
-    public int getPositionY() {
-        return positionY;
-    }
+    // GET POSITIONY
+    public int getPositionY() { return positionY; }
 
-    public int getLargeur() {
-        return largeur;
-    }
+    // GET LARGEUR
+    public int getLargeur() { return largeur; }
 
-    public int getHauteur() {
-        return hauteur;
-    }
+    // GET HAUTEUR
+    public int getHauteur() { return hauteur; }
 }

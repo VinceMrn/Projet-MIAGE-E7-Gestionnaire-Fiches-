@@ -4,16 +4,9 @@ import model.*;
 import java.util.List;
 import java.util.ArrayList;
 
-/**
- * Utilitaires pour le parsing et la serialisation JSON.
- * Pas de dependance externe (parsing manuel).
- */
 public class JsonUtils {
 
-    /**
-     * Extraction d'une valeur String depuis un JSON.
-     * Cherche "cle":"valeur" et retourne valeur.
-     */
+    // EXTRAIRE STRING
     public static String extraireString(String json, String cle) {
         String recherche = "\"" + cle + "\"";
         int index = json.indexOf(recherche);
@@ -30,10 +23,7 @@ public class JsonUtils {
         return null;
     }
 
-    /**
-     * Extraction d'une valeur Integer depuis un JSON.
-     * Cherche "cle":123 et retourne 123.
-     */
+    // EXTRAIRE INT
     public static Integer extraireInt(String json, String cle) {
         String recherche = "\"" + cle + "\"";
         int index = json.indexOf(recherche);
@@ -51,15 +41,12 @@ public class JsonUtils {
         return Integer.parseInt(sb.toString());
     }
 
-    /**
-     * Convertit une FichePersonnage complete en JSON.
-     */
+    // FICHE JSON
     public static String ficheVersJSON(FichePersonnage fiche) {
         StringBuilder json = new StringBuilder();
         json.append("{\"id\":").append(fiche.getIdFichePersonnage());
         json.append(",\"nom\":\"").append(fiche.getNomFichePersonnage()).append("\"");
 
-        // Portrait
         Portrait p = fiche.getPortrait();
         json.append(",\"portrait\":{\"image\":\"").append(p.getImagePortrait()).append("\"")
             .append(",\"posX\":").append(p.getPositionX())
@@ -67,7 +54,6 @@ public class JsonUtils {
             .append(",\"largeur\":").append(p.getLargeur())
             .append(",\"hauteur\":").append(p.getHauteur()).append("}");
 
-        // Biographie
         Biographie b = fiche.getBiographie();
         json.append(",\"biographie\":{\"texte\":\"").append(b.getTexteBiographie()).append("\"")
             .append(",\"posX\":").append(b.getPositionX())
@@ -75,7 +61,6 @@ public class JsonUtils {
             .append(",\"largeur\":").append(b.getLargeur())
             .append(",\"hauteur\":").append(b.getHauteur()).append("}");
 
-        // Statistiques
         Statistiques stats = fiche.getStatistiques();
         json.append(",\"statistiques\":{\"posX\":").append(stats.getPositionX())
             .append(",\"posY\":").append(stats.getPositionY())
@@ -92,7 +77,6 @@ public class JsonUtils {
         }
         json.append("]}");
 
-        // Competences
         Competence comp = fiche.getCompetence();
         json.append(",\"competences\":{\"posX\":").append(comp.getPositionX())
             .append(",\"posY\":").append(comp.getPositionY())
@@ -106,7 +90,6 @@ public class JsonUtils {
         }
         json.append("]}");
 
-        // Equipements
         Equipement equip = fiche.getEquipement();
         json.append(",\"equipements\":{\"posX\":").append(equip.getPositionX())
             .append(",\"posY\":").append(equip.getPositionY())
@@ -120,55 +103,45 @@ public class JsonUtils {
         }
         json.append("]}");
 
-            // Modules personnalisés
-            java.util.List<ModulePersonnalise> modulesPerso = fiche.getModulesPersonnalises();
-            json.append(",\"modulesPersonnalises\":[");
-            for (int i = 0; i < modulesPerso.size(); i++) {
-                ModulePersonnalise mp = modulesPerso.get(i);
-                json.append("{");
-                json.append("\"id\":\"").append(mp.getId()).append("\"");
-                json.append(",\"nom\":\"").append(mp.getNom()).append("\"");
-                json.append(",\"type\":\"").append(mp.getType()).append("\"");
-
-                // contenuTexte
-                if (mp.getContenuTexte() != null) {
-                    json.append(",\"contenuTexte\":\"").append(mp.getContenuTexte()).append("\"");
-                }
-
-                // contenuListe
-                json.append(",\"contenuListe\":[");
-                java.util.List<String> cl = mp.getContenuListe();
-                for (int j = 0; j < cl.size(); j++) {
-                    json.append("\"").append(cl.get(j)).append("\"");
-                    if (j < cl.size() - 1) json.append(",");
-                }
-                json.append("]");
-
-                // contenuStats
-                json.append(",\"contenuStats\":[");
-                java.util.List<Statistique> cs = mp.getContenuStats();
-                for (int j = 0; j < cs.size(); j++) {
-                    Statistique s = cs.get(j);
-                    json.append("{\"nom\":\"").append(s.getNomStatistique()).append("\",\"valeur\":").append(s.getValeurStatistique()).append("}");
-                    if (j < cs.size() - 1) json.append(",");
-                }
-                json.append("]");
-
-                json.append("}");
-                if (i < modulesPerso.size() - 1) json.append(",");
+        List<ModulePersonnalise> modulesPerso = fiche.getModulesPersonnalises();
+        json.append(",\"modulesPersonnalises\":[");
+        for (int i = 0; i < modulesPerso.size(); i++) {
+            ModulePersonnalise mp = modulesPerso.get(i);
+            json.append("{");
+            json.append("\"id\":\"").append(mp.getId()).append("\"");
+            json.append(",\"nom\":\"").append(mp.getNom()).append("\"");
+            json.append(",\"type\":\"").append(mp.getType()).append("\"");
+            if (mp.getContenuTexte() != null) {
+                json.append(",\"contenuTexte\":\"").append(mp.getContenuTexte()).append("\"");
+            }
+            json.append(",\"contenuListe\":[");
+            List<String> cl = mp.getContenuListe();
+            for (int j = 0; j < cl.size(); j++) {
+                json.append("\"").append(cl.get(j)).append("\"");
+                if (j < cl.size() - 1) json.append(",");
             }
             json.append("]");
+            json.append(",\"contenuStats\":[");
+            List<Statistique> cs = mp.getContenuStats();
+            for (int j = 0; j < cs.size(); j++) {
+                Statistique s = cs.get(j);
+                json.append("{\"nom\":\"").append(s.getNomStatistique()).append("\",\"valeur\":").append(s.getValeurStatistique()).append("}");
+                if (j < cs.size() - 1) json.append(",");
+            }
+            json.append("]");
+            json.append("}");
+            if (i < modulesPerso.size() - 1) json.append(",");
+        }
+        json.append("]");
 
-        // Canvas (zone max)
         json.append(",\"canvas\":{\"largeur\":").append(FichePersonnage.CANVAS_LARGEUR)
             .append(",\"hauteur\":").append(FichePersonnage.CANVAS_HAUTEUR).append("}");
 
-        // Ferme l'objet fiche
         json.append("}");
         return json.toString();
     }
 
-    // Extraire un tableau de strings simple: "cle": ["a","b"]
+    // EXTRAIRE ARRAYSTRING
     public static List<String> extraireArrayStrings(String json, String cle) {
         List<String> res = new ArrayList<>();
         String recherche = "\"" + cle + "\"";
@@ -193,7 +166,7 @@ public class JsonUtils {
         return res;
     }
 
-    // Extraire un tableau d'objets statistiques: [{"nom":"...","valeur":N},...]
+    // EXTRAIRE ARRAYSTATS
     public static List<Statistique> extraireArrayStatistiques(String json, String cle) {
         List<Statistique> res = new ArrayList<>();
         String recherche = "\"" + cle + "\"";
@@ -220,9 +193,7 @@ public class JsonUtils {
         return res;
     }
 
-    /**
-     * Convertit une liste de fiches en JSON leger (id + nom + image portrait).
-     */
+    // LISTE JSON
     public static String listeFichesVersJSON(List<FichePersonnage> fiches) {
         StringBuilder json = new StringBuilder("[");
         for (int i = 0; i < fiches.size(); i++) {
@@ -238,41 +209,32 @@ public class JsonUtils {
         return json.toString();
     }
 
-    /**
-     * Construit une reponse JSON de succes.
-     */
+    // REPONSE SUCCES
     public static String succes() {
         return "{\"succes\":true}";
     }
 
-    /**
-     * Construit une reponse JSON d'erreur.
-     */
+    // REPONSE ERREUR
     public static String erreur(String message) {
         return "{\"erreur\":\"" + message + "\"}";
     }
 
-    /**
-     * Construit une reponse JSON de succes avec id et nom.
-     */
-    // Surcharge utilisee par RouteFiches (creation/import de fiche, pas de sessionId a renvoyer)
+    // SUCCES IDNOM
     public static String succesAvecIdNom(int id, String nom) {
         return "{\"succes\":true,\"id\":" + id + ",\"nom\":\"" + nom + "\"}";
     }
 
-    // Surcharge utilisee par RouteAuth (login/signup, on renvoie le sessionId au client)
+    // SUCCES SESSION
     public static String succesAvecIdNom(int id, String nom, String sessionId) {
         return "{\"succes\":true,\"id\":" + id + ",\"nom\":\"" + nom + "\",\"sessionId\":\"" + sessionId + "\"}";
     }
 
-    /**
-     * Construit une reponse JSON pour l'export d'une fiche :
-     * { "nom": "...", "data": "<base64>" }
-     */
+    // EXPORT JSON
     public static String exportFicheVersJSON(String nom, String base64) {
         return "{\"nom\":\"" + nom + "\",\"data\":\"" + base64 + "\"}";
     }
 
+    // SUCCES QUESTION
     public static String succesAvecQuestionSecrete(String question) {
         return "{\"succes\":true,\"question\":\"" + question + "\"}";
     }

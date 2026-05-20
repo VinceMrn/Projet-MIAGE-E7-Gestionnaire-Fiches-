@@ -2,9 +2,9 @@ package service.route;
 
 public interface Route {
 
-    /** Retourne true si cette route gere le chemin donne */
+    // CORRESPOND CHEMIN
     boolean correspond(String chemin);
 
-    /** Traite la requete et retourne la reponse [code, json] */
+    // TRAITER REQUETE
     String[] traiter(String methode, String chemin, String body, String sessionId) throws Exception;
 }
