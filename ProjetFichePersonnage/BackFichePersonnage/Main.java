@@ -1,4 +1,5 @@
 
+
 import service.GestionUtilisateur;
 import service.GestionFiche;
 import service.GestionSession;
@@ -19,7 +20,9 @@ public class Main {
     }
 }
 
-// ===========
+
+
+
 
 // import model.Ennemi;
 // import model.FichePersonnage;
@@ -43,12 +46,19 @@ public class Main {
 //     private static final GestionSession gestionSession = new GestionSession();
 //     private static final GestionFiche gestionFiche = new GestionFiche();
 //     private static final GestionCombat gestionCombat = new GestionCombat();
+
+//     private static final int HP_JOUEUR_DEFAUT = 100;
+
 //     private static Utilisateur utilisateurConnecte;
 //     private static String sessionId;
 //     private static SecretKeySpec cleSession;
 //     private static Integer ficheSelectionneeId;
 
 //     public static void main(String[] args) {
+//         System.out.println("===============================================");
+//         System.out.println("   DEMO GESTIONNAIRE DE FICHES PERSONNAGES");
+//         System.out.println("===============================================");
+
 //         boolean running = true;
 //         while (running) {
 //             try {
@@ -70,9 +80,11 @@ public class Main {
 //                         case "3": creerFiche(); break;
 //                         case "4": afficherFicheSelectionnee(); break;
 //                         case "5": menuModificationFiche(); break;
-//                         case "6": lancerCombatDemo(); break;
-//                         case "7": menuCompte(); break;
-//                         case "8": seDeconnecter(); break;
+//                         case "6": supprimerFicheSelectionnee(); break;
+//                         case "7": listerDonneesGlobales(); break;
+//                         case "8": lancerCombatDemo(); break;
+//                         case "9": menuCompte(); break;
+//                         case "10": seDeconnecter(); break;
 //                         case "0": running = false; break;
 //                         default: System.out.println("Choix invalide.");
 //                     }
@@ -81,33 +93,45 @@ public class Main {
 //                 System.out.println("Erreur : " + exception.getMessage());
 //             }
 //         }
+
+//         if (utilisateurConnecte != null) {
+//             seDeconnecter();
+//         }
+//         System.out.println("A bientot !");
 //     }
 
 //     private static void afficherMenu() {
-//         System.out.println("\n=== DEMO GESTIONNAIRE ===");
+//         System.out.println();
 //         if (utilisateurConnecte == null) {
-//             System.out.println("Etat : deconnecte");
+//             System.out.println("--- MENU PRINCIPAL (deconnecte) ---");
 //             System.out.println("1. Creer un compte");
 //             System.out.println("2. Se connecter");
 //             System.out.println("3. Reinitialiser un mot de passe");
 //             System.out.println("0. Quitter");
 //         } else {
-//             System.out.println("Connecte : " + utilisateurConnecte.getNomUtilisateur() + " (id " + utilisateurConnecte.getIdUtilisateur() + ")");
-//             System.out.println("Session : " + (sessionId == null ? "aucune" : sessionId));
-//             System.out.println("Fiche selectionnee : " + (ficheSelectionneeId == null ? "aucune" : ficheSelectionneeId));
-//             System.out.println("Canvas : " + FichePersonnage.CANVAS_LARGEUR + " x " + FichePersonnage.CANVAS_HAUTEUR);
-//             System.out.println("1. Lister mes fiches");
-//             System.out.println("2. Selectionner une fiche");
-//             System.out.println("3. Creer une fiche");
-//             System.out.println("4. Voir la fiche selectionnee");
-//             System.out.println("5. Modifier la fiche selectionnee");
-//             System.out.println("6. Lancer une demo de combat");
-//             System.out.println("7. Gerer le compte");
-//             System.out.println("8. Se deconnecter");
-//             System.out.println("0. Quitter");
+//             System.out.println("--- MENU PRINCIPAL ---");
+//             System.out.println("Connecte : " + utilisateurConnecte.getNomUtilisateur()
+//                     + " (id " + utilisateurConnecte.getIdUtilisateur() + ")");
+//             System.out.println("Session  : " + sessionId);
+//             System.out.println("Fiche    : " + (ficheSelectionneeId == null ? "aucune" : ficheSelectionneeId));
+//             System.out.println("Canvas   : " + FichePersonnage.CANVAS_LARGEUR + " x " + FichePersonnage.CANVAS_HAUTEUR);
+//             System.out.println("---------------------------");
+//             System.out.println("1.  Lister mes fiches");
+//             System.out.println("2.  Selectionner une fiche");
+//             System.out.println("3.  Creer une fiche");
+//             System.out.println("4.  Voir la fiche selectionnee");
+//             System.out.println("5.  Modifier la fiche selectionnee");
+//             System.out.println("6.  Supprimer la fiche selectionnee");
+//             System.out.println("7.  Lister mes donnees (toutes fiches)");
+//             System.out.println("8.  Lancer une demo de combat");
+//             System.out.println("9.  Gerer le compte");
+//             System.out.println("10. Se deconnecter");
+//             System.out.println("0.  Quitter");
 //         }
 //         System.out.print("> ");
 //     }
+
+//     // ==================== AUTHENTIFICATION ====================
 
 //     private static void creerCompte() throws Exception {
 //         System.out.print("Nom utilisateur : ");
@@ -119,15 +143,10 @@ public class Main {
 //         System.out.println("Compte cree pour " + nouvelUtilisateur.getNomUtilisateur() + ".");
 
 //         if (demanderOuiNon("Definir une question secrete maintenant ?")) {
-//             System.out.print("Question secrete : ");
-//             String question = scanner.nextLine().trim();
-//             System.out.print("Reponse secrete : ");
-//             String reponse = scanner.nextLine().trim();
-//             gestionUtilisateur.definirQuestionSecrete(nouvelUtilisateur, question, reponse);
-//             System.out.println("Question secrete enregistree.");
+//             definirQuestionSecrete(nouvelUtilisateur);
 //         }
 
-//         connecterUtilisateur(nouvelUtilisateur, motDePasse);
+//         connecterUtilisateur(nouvelUtilisateur);
 //     }
 
 //     private static void seConnecter() throws Exception {
@@ -137,10 +156,10 @@ public class Main {
 //         String motDePasse = scanner.nextLine().trim();
 
 //         Utilisateur utilisateur = gestionUtilisateur.seConnecter(nomUtilisateur, motDePasse);
-//         connecterUtilisateur(utilisateur, motDePasse);
+//         connecterUtilisateur(utilisateur);
 //     }
 
-//     private static void connecterUtilisateur(Utilisateur utilisateur, String motDePasse) throws Exception {
+//     private static void connecterUtilisateur(Utilisateur utilisateur) throws Exception {
 //         utilisateurConnecte = utilisateur;
 //         cleSession = GestionChiffrement.genererCleDepuisHash(utilisateur);
 //         sessionId = gestionSession.creerSession(utilisateurConnecte, cleSession);
@@ -152,7 +171,8 @@ public class Main {
 //             ficheSelectionneeId = null;
 //         }
 
-//         System.out.println("Connecte avec la session " + sessionId + ".");
+//         System.out.println("Connecte (session " + sessionId + ").");
+//         System.out.println("Fiches chargees : " + utilisateurConnecte.getFiches().size());
 //     }
 
 //     private static void seDeconnecter() {
@@ -171,7 +191,7 @@ public class Main {
 //         String nomUtilisateur = scanner.nextLine().trim();
 //         String question = gestionUtilisateur.getQuestionSecrete(nomUtilisateur);
 //         if (question == null) {
-//             System.out.println("Aucune question secrete trouvee.");
+//             System.out.println("Aucune question secrete trouvee pour cet utilisateur.");
 //             return;
 //         }
 
@@ -184,9 +204,11 @@ public class Main {
 //         if (gestionUtilisateur.reinitialiserMotDePasseAvecQuestionSecrete(nomUtilisateur, reponse, nouveauMotDePasse)) {
 //             System.out.println("Mot de passe reinitialise.");
 //         } else {
-//             System.out.println("Impossible de reinitialiser le mot de passe.");
+//             System.out.println("Impossible de reinitialiser le mot de passe (reponse incorrecte ?).");
 //         }
 //     }
+
+//     // ==================== FICHES ====================
 
 //     private static void afficherFiches() {
 //         List<FichePersonnage> fiches = gestionFiche.listerFiches(utilisateurConnecte);
@@ -195,9 +217,10 @@ public class Main {
 //             return;
 //         }
 
-//         System.out.println("\n--- MES FICHES ---");
+//         System.out.println("--- MES FICHES (" + fiches.size() + ") ---");
 //         for (FichePersonnage fiche : fiches) {
-//             System.out.println("- [" + fiche.getIdFichePersonnage() + "] " + fiche.getNomFichePersonnage());
+//             String marqueur = (ficheSelectionneeId != null && fiche.getIdFichePersonnage() == ficheSelectionneeId) ? " *" : "";
+//             System.out.println("- [" + fiche.getIdFichePersonnage() + "] " + fiche.getNomFichePersonnage() + marqueur);
 //         }
 //     }
 
@@ -207,7 +230,8 @@ public class Main {
 //             return;
 //         }
 
-//         int idFiche = lireEntier("Id de la fiche", utilisateurConnecte.getFiches().get(0).getIdFichePersonnage());
+//         int defaut = utilisateurConnecte.getFiches().get(0).getIdFichePersonnage();
+//         int idFiche = lireEntier("Id de la fiche", defaut);
 //         if (gestionFiche.getFiche(utilisateurConnecte, idFiche) == null) {
 //             System.out.println("Fiche introuvable.");
 //             return;
@@ -220,9 +244,31 @@ public class Main {
 //     private static void creerFiche() {
 //         System.out.print("Nom de la fiche : ");
 //         String nomFiche = scanner.nextLine().trim();
+//         if (nomFiche.isEmpty()) {
+//             System.out.println("Nom vide, creation annulee.");
+//             return;
+//         }
 //         FichePersonnage fiche = gestionFiche.creerFiche(utilisateurConnecte, cleSession, nomFiche);
 //         ficheSelectionneeId = fiche.getIdFichePersonnage();
 //         System.out.println("Fiche creee avec l'id " + ficheSelectionneeId + ".");
+//     }
+
+//     private static void supprimerFicheSelectionnee() {
+//         FichePersonnage fiche = ficheCourante();
+//         if (fiche == null) {
+//             return;
+//         }
+//         if (!demanderOuiNon("Supprimer definitivement la fiche " + fiche.getNomFichePersonnage() + " ?")) {
+//             System.out.println("Suppression annulee.");
+//             return;
+//         }
+//         if (gestionFiche.supprimerFiche(utilisateurConnecte, cleSession, fiche.getIdFichePersonnage())) {
+//             System.out.println("Fiche supprimee.");
+//             List<FichePersonnage> restantes = utilisateurConnecte.getFiches();
+//             ficheSelectionneeId = restantes.isEmpty() ? null : restantes.get(0).getIdFichePersonnage();
+//         } else {
+//             System.out.println("Suppression impossible.");
+//         }
 //     }
 
 //     private static void afficherFicheSelectionnee() {
@@ -231,21 +277,20 @@ public class Main {
 //             return;
 //         }
 
-//         System.out.println("\n--- FICHE SELECTIONNEE ---");
-//         System.out.println("Nom : " + fiche.getNomFichePersonnage());
-//         afficherModule("Portrait", fiche.getPortrait());
-//         System.out.println("   image = " + fiche.getPortrait().getImagePortrait());
-//         afficherModule("Biographie", fiche.getBiographie());
-//         System.out.println("   texte = " + fiche.getBiographie().getTexteBiographie());
+//         System.out.println("--- FICHE [" + fiche.getIdFichePersonnage() + "] " + fiche.getNomFichePersonnage() + " ---");
+//         afficherModule("Portrait    ", fiche.getPortrait());
+//         System.out.println("   image = " + valeurOuVide(fiche.getPortrait().getImagePortrait()));
+//         afficherModule("Biographie  ", fiche.getBiographie());
+//         System.out.println("   texte = " + valeurOuVide(fiche.getBiographie().getTexteBiographie()));
 //         afficherModule("Statistiques", fiche.getStatistiques());
 //         afficherStatistiques(fiche.getStatistiques().getStatistiques());
-//         afficherModule("Competence", fiche.getCompetence());
-//         System.out.println("   competences = " + fiche.getCompetence().getCompetences());
-//         afficherModule("Equipement", fiche.getEquipement());
-//         System.out.println("   equipements = " + fiche.getEquipement().getEquipements());
-
-//         // Custom modules display removed
+//         afficherModule("Competence  ", fiche.getCompetence());
+//         afficherListe(fiche.getCompetence().getCompetences());
+//         afficherModule("Equipement  ", fiche.getEquipement());
+//         afficherListe(fiche.getEquipement().getEquipements());
 //     }
+
+//     // ==================== MODIFICATION FICHE ====================
 
 //     private static void menuModificationFiche() {
 //         FichePersonnage fiche = ficheCourante();
@@ -253,149 +298,160 @@ public class Main {
 //             return;
 //         }
 
-//         System.out.println("1. Modifier le portrait");
-//         System.out.println("2. Modifier la biographie");
-//         System.out.println("3. Ajouter une statistique");
-//         System.out.println("4. Ajouter une competence");
-//         System.out.println("5. Ajouter un equipement");
-//         System.out.println("6. Deplacer un module");
-//         System.out.println("7. Redimensionner un module");
-//         System.out.print("> ");
+//         boolean continuer = true;
+//         while (continuer) {
+//             System.out.println();
+//             System.out.println("--- MODIFIER FICHE [" + fiche.getIdFichePersonnage() + "] " + fiche.getNomFichePersonnage() + " ---");
+//             System.out.println("1. Modifier le portrait (image)");
+//             System.out.println("2. Modifier la biographie (texte)");
+//             System.out.println("3. Ajouter une statistique");
+//             System.out.println("4. Ajouter une competence");
+//             System.out.println("5. Ajouter un equipement");
+//             System.out.println("6. Deplacer un module");
+//             System.out.println("7. Redimensionner un module");
+//             System.out.println("0. Retour");
+//             System.out.print("> ");
 
-//         switch (scanner.nextLine().trim()) {
-//             case "1":
-//                 System.out.print("Image portrait : ");
-//                 if (gestionFiche.modifierPortrait(utilisateurConnecte, cleSession, fiche.getIdFichePersonnage(), scanner.nextLine().trim())) {
-//                     System.out.println("Portrait mis a jour.");
-//                 } else {
-//                     System.out.println("Modification impossible.");
-//                 }
-//                 break;
-//             case "2":
-//                 System.out.print("Texte biographie : ");
-//                 if (gestionFiche.modifierBiographie(utilisateurConnecte, cleSession, fiche.getIdFichePersonnage(), scanner.nextLine().trim())) {
-//                     System.out.println("Biographie mise a jour.");
-//                 } else {
-//                     System.out.println("Modification impossible.");
-//                 }
-//                 break;
-//             case "3":
-//                 System.out.print("Nom statistique : ");
-//                 String nomStatistique = scanner.nextLine().trim();
-//                 int valeurStatistique = lireEntier("Valeur", 0);
-//                 if (gestionFiche.ajouterStatistique(utilisateurConnecte, cleSession, fiche.getIdFichePersonnage(), nomStatistique, valeurStatistique)) {
-//                     System.out.println("Statistique ajoutee.");
-//                 } else {
-//                     System.out.println("Ajout impossible.");
-//                 }
-//                 break;
-//             case "4":
-//                 System.out.print("Nom competence : ");
-//                 if (gestionFiche.ajouterCompetence(utilisateurConnecte, cleSession, fiche.getIdFichePersonnage(), scanner.nextLine().trim())) {
-//                     System.out.println("Competence ajoutee.");
-//                 } else {
-//                     System.out.println("Ajout impossible.");
-//                 }
-//                 break;
-//             case "5":
-//                 System.out.print("Nom equipement : ");
-//                 if (gestionFiche.ajouterEquipement(utilisateurConnecte, cleSession, fiche.getIdFichePersonnage(), scanner.nextLine().trim())) {
-//                     System.out.println("Equipement ajoute.");
-//                 } else {
-//                     System.out.println("Ajout impossible.");
-//                 }
-//                 break;
-//             case "6":
-//                 deplacerModule();
-//                 break;
-//             case "7":
-//                 redimensionnerModule();
-//                 break;
-//             default:
-//                 System.out.println("Choix invalide.");
+//             String choix = scanner.nextLine().trim();
+//             int idFiche = fiche.getIdFichePersonnage();
+//             switch (choix) {
+//                 case "1":
+//                     System.out.print("Image portrait : ");
+//                     afficherResultat(gestionFiche.modifierPortrait(utilisateurConnecte, cleSession, idFiche, scanner.nextLine().trim()),
+//                             "Portrait mis a jour.", "Modification impossible.");
+//                     break;
+//                 case "2":
+//                     System.out.print("Texte biographie : ");
+//                     afficherResultat(gestionFiche.modifierBiographie(utilisateurConnecte, cleSession, idFiche, scanner.nextLine().trim()),
+//                             "Biographie mise a jour.", "Modification impossible.");
+//                     break;
+//                 case "3":
+//                     System.out.print("Nom statistique : ");
+//                     String nomStatistique = scanner.nextLine().trim();
+//                     int valeurStatistique = lireEntier("Valeur", 10);
+//                     afficherResultat(gestionFiche.ajouterStatistique(utilisateurConnecte, cleSession, idFiche, nomStatistique, valeurStatistique),
+//                             "Statistique ajoutee.", "Ajout impossible.");
+//                     break;
+//                 case "4":
+//                     System.out.print("Nom competence : ");
+//                     afficherResultat(gestionFiche.ajouterCompetence(utilisateurConnecte, cleSession, idFiche, scanner.nextLine().trim()),
+//                             "Competence ajoutee.", "Ajout impossible.");
+//                     break;
+//                 case "5":
+//                     System.out.print("Nom equipement : ");
+//                     afficherResultat(gestionFiche.ajouterEquipement(utilisateurConnecte, cleSession, idFiche, scanner.nextLine().trim()),
+//                             "Equipement ajoute.", "Ajout impossible.");
+//                     break;
+//                 case "6":
+//                     deplacerModule(idFiche);
+//                     break;
+//                 case "7":
+//                     redimensionnerModule(idFiche);
+//                     break;
+//                 case "0":
+//                     continuer = false;
+//                     break;
+//                 default:
+//                     System.out.println("Choix invalide.");
+//             }
 //         }
 //     }
 
-//     private static void deplacerModule() {
-//         FichePersonnage fiche = ficheCourante();
-//         if (fiche == null) {
-//             return;
-//         }
-
+//     private static void deplacerModule(int idFiche) {
 //         String nomModule = choisirNomModule();
 //         if (nomModule == null) {
 //             return;
 //         }
-
 //         int x = lireEntier("Nouvelle position X", 0);
 //         int y = lireEntier("Nouvelle position Y", 0);
-//         boolean ok = gestionFiche.modifierPositionModule(utilisateurConnecte, cleSession, fiche.getIdFichePersonnage(), nomModule, x, y);
-//         System.out.println(ok ? "Position mise a jour." : "Position refusee par les contraintes du canvas.");
+//         boolean ok = gestionFiche.modifierPositionModule(utilisateurConnecte, cleSession, idFiche, nomModule, x, y);
+//         System.out.println(ok ? "Position mise a jour." : "Position refusee (hors canvas ou chevauchement).");
 //     }
 
-//     private static void redimensionnerModule() {
-//         FichePersonnage fiche = ficheCourante();
-//         if (fiche == null) {
-//             return;
-//         }
-
+//     private static void redimensionnerModule(int idFiche) {
 //         String nomModule = choisirNomModule();
 //         if (nomModule == null) {
 //             return;
 //         }
-
 //         int largeur = lireEntier("Nouvelle largeur", 300);
 //         int hauteur = lireEntier("Nouvelle hauteur", 200);
-//         boolean ok = gestionFiche.modifierTailleModule(utilisateurConnecte, cleSession, fiche.getIdFichePersonnage(), nomModule, largeur, hauteur);
-//         System.out.println(ok ? "Taille mise a jour." : "Taille refusee par les contraintes du canvas.");
+//         boolean ok = gestionFiche.modifierTailleModule(utilisateurConnecte, cleSession, idFiche, nomModule, largeur, hauteur);
+//         System.out.println(ok ? "Taille mise a jour." : "Taille refusee (hors canvas ou chevauchement).");
 //     }
+
+//     // ==================== DONNEES GLOBALES ====================
+
+//     private static void listerDonneesGlobales() {
+//         List<Statistique> statistiques = gestionFiche.listerStatistiquesUtilisateur(utilisateurConnecte);
+//         List<String> competences = gestionFiche.listerCompetencesUtilisateur(utilisateurConnecte);
+//         List<String> equipements = gestionFiche.listerEquipementsUtilisateur(utilisateurConnecte);
+
+//         System.out.println("--- DONNEES AGREGEES (toutes fiches) ---");
+//         System.out.println("Statistiques uniques (" + statistiques.size() + ") :");
+//         afficherStatistiques(statistiques);
+//         System.out.println("Competences uniques (" + competences.size() + ") :");
+//         afficherListe(competences);
+//         System.out.println("Equipements uniques (" + equipements.size() + ") :");
+//         afficherListe(equipements);
+//     }
+
+//     // ==================== COMPTE ====================
 
 //     private static void menuCompte() throws Exception {
-//         System.out.println("1. Modifier le nom d'utilisateur");
-//         System.out.println("2. Modifier le mot de passe");
-//         System.out.println("3. Definir ou modifier la question secrete");
-//         System.out.print("> ");
+//         boolean continuer = true;
+//         while (continuer) {
+//             System.out.println();
+//             System.out.println("--- GESTION DU COMPTE ---");
+//             System.out.println("1. Modifier le nom d'utilisateur");
+//             System.out.println("2. Modifier le mot de passe");
+//             System.out.println("3. Definir / modifier la question secrete");
+//             System.out.println("0. Retour");
+//             System.out.print("> ");
 
-//         switch (scanner.nextLine().trim()) {
-//             case "1":
-//                 System.out.print("Nouveau nom : ");
-//                 if (gestionUtilisateur.modifierIdentifiant(utilisateurConnecte, scanner.nextLine().trim())) {
-//                     System.out.println("Nom modifie.");
-//                 } else {
-//                     System.out.println("Modification impossible.");
-//                 }
-//                 break;
-//             case "2":
-//                 System.out.print("Ancien mot de passe : ");
-//                 String ancienMotDePasse = scanner.nextLine().trim();
-//                 System.out.print("Nouveau mot de passe : ");
-//                 String nouveauMotDePasse = scanner.nextLine().trim();
-//                 if (gestionUtilisateur.modifierMotDePasse(utilisateurConnecte, ancienMotDePasse, nouveauMotDePasse)) {
-//                     cleSession = GestionChiffrement.genererCleDepuisHash(utilisateurConnecte);
-//                     if (sessionId != null) {
-//                         gestionSession.supprimerSession(sessionId);
+//             switch (scanner.nextLine().trim()) {
+//                 case "1":
+//                     System.out.print("Nouveau nom : ");
+//                     afficherResultat(gestionUtilisateur.modifierIdentifiant(utilisateurConnecte, scanner.nextLine().trim()),
+//                             "Nom modifie.", "Modification impossible (nom deja pris ?).");
+//                     break;
+//                 case "2":
+//                     System.out.print("Ancien mot de passe : ");
+//                     String ancien = scanner.nextLine().trim();
+//                     System.out.print("Nouveau mot de passe : ");
+//                     String nouveau = scanner.nextLine().trim();
+//                     if (gestionUtilisateur.modifierMotDePasse(utilisateurConnecte, ancien, nouveau)) {
+//                         cleSession = GestionChiffrement.genererCleDepuisHash(utilisateurConnecte);
+//                         if (sessionId != null) {
+//                             gestionSession.supprimerSession(sessionId);
+//                         }
+//                         sessionId = gestionSession.creerSession(utilisateurConnecte, cleSession);
+//                         System.out.println("Mot de passe modifie (nouvelle cle de session generee).");
+//                     } else {
+//                         System.out.println("Modification impossible (ancien mot de passe incorrect ?).");
 //                     }
-//                     sessionId = gestionSession.creerSession(utilisateurConnecte, cleSession);
-//                     System.out.println("Mot de passe modifie.");
-//                 } else {
-//                     System.out.println("Modification impossible.");
-//                 }
-//                 break;
-//             case "3":
-//                 System.out.print("Question secrete : ");
-//                 String question = scanner.nextLine().trim();
-//                 System.out.print("Reponse secrete : ");
-//                 String reponse = scanner.nextLine().trim();
-//                 if (gestionUtilisateur.definirQuestionSecrete(utilisateurConnecte, question, reponse)) {
-//                     System.out.println("Question secrete enregistree.");
-//                 } else {
-//                     System.out.println("Modification impossible.");
-//                 }
-//                 break;
-//             default:
-//                 System.out.println("Choix invalide.");
+//                     break;
+//                 case "3":
+//                     definirQuestionSecrete(utilisateurConnecte);
+//                     break;
+//                 case "0":
+//                     continuer = false;
+//                     break;
+//                 default:
+//                     System.out.println("Choix invalide.");
+//             }
 //         }
 //     }
+
+//     private static void definirQuestionSecrete(Utilisateur utilisateur) {
+//         System.out.print("Question secrete (min 10 caracteres) : ");
+//         String question = scanner.nextLine().trim();
+//         System.out.print("Reponse secrete : ");
+//         String reponse = scanner.nextLine().trim();
+//         afficherResultat(gestionUtilisateur.definirQuestionSecrete(utilisateur, question, reponse),
+//                 "Question secrete enregistree.", "Enregistrement impossible (question trop courte ou contient ';' ?).");
+//     }
+
+//     // ==================== COMBAT ====================
 
 //     private static void lancerCombatDemo() {
 //         FichePersonnage fiche = ficheCourante();
@@ -403,7 +459,11 @@ public class Main {
 //             return;
 //         }
 
-//         System.out.println("\n--- DEMO COMBAT ---");
+//         System.out.println();
+//         System.out.println("==============================");
+//         System.out.println("        DEMO COMBAT");
+//         System.out.println("==============================");
+
 //         int niveau = lireEntier("Niveau ennemi (1-5)", 1);
 //         Ennemi ennemi = gestionCombat.genererEnnemi(niveau);
 
@@ -411,18 +471,68 @@ public class Main {
 //         int defense = lireStatistique(fiche, "Defense", 8);
 //         int bonusDefense = fiche.getEquipement().getEquipements().size();
 
-//         int[] resultat = gestionCombat.calculerTour(attaque, defense, bonusDefense, ennemi.getDefense(), ennemi.getAttaque());
+//         int hpJoueur = HP_JOUEUR_DEFAUT;
+//         int hpEnnemi = ennemi.getHp();
 
-//         System.out.println("Ennemi genere : " + ennemi.getNom()
+//         System.out.println("Joueur : " + fiche.getNomFichePersonnage()
+//                 + " | HP=" + hpJoueur
+//                 + " | ATK=" + attaque
+//                 + " | DEF=" + defense
+//                 + " | bonus equipements=" + bonusDefense);
+//         System.out.println("Ennemi : " + ennemi.getNom()
 //                 + " | HP=" + ennemi.getHp()
 //                 + " | ATK=" + ennemi.getAttaque()
 //                 + " | DEF=" + ennemi.getDefense());
-//         System.out.println("Joueur : attaque=" + attaque + " defense=" + defense + " bonus=" + bonusDefense);
-//         System.out.println("Degats joueur -> ennemi : " + resultat[0]);
-//         System.out.println("Degats ennemi -> joueur : " + resultat[1]);
-//         System.out.println("De joueur / ennemi : " + resultat[2] + " / " + resultat[3]);
-//         System.out.println("Total joueur / ennemi : " + resultat[4] + " / " + resultat[5]);
-//         System.out.println("Type joueur / ennemi : " + typeJet(resultat[6]) + " / " + typeJet(resultat[7]));
+//         System.out.println();
+
+//         boolean autoMode = demanderOuiNon("Lancer le combat en automatique (sinon tour par tour) ?");
+
+//         int numeroTour = 1;
+//         while (hpJoueur > 0 && hpEnnemi > 0) {
+//             System.out.println("--- Tour " + numeroTour + " ---");
+//             int[] resultat = gestionCombat.calculerTour(attaque, defense, bonusDefense,
+//                     ennemi.getDefense(), ennemi.getAttaque());
+
+//             int degatsJoueur = resultat[0];
+//             int degatsEnnemi = resultat[1];
+//             int deJoueur = resultat[2];
+//             int deEnnemi = resultat[3];
+//             int totalJoueur = resultat[4];
+//             int totalEnnemi = resultat[5];
+//             int typeJoueur = resultat[6];
+//             int typeEnnemi = resultat[7];
+
+//             System.out.println("Joueur jette D20=" + deJoueur + " (+" + attaque + " = " + totalJoueur + ") -> "
+//                     + typeJet(typeJoueur) + " | degats infliges : " + degatsJoueur);
+//             hpEnnemi = Math.max(0, hpEnnemi - degatsJoueur);
+//             System.out.println("HP ennemi : " + hpEnnemi + " / " + ennemi.getHp());
+
+//             if (hpEnnemi <= 0) {
+//                 System.out.println();
+//                 System.out.println(">>> VICTOIRE ! " + ennemi.getNom() + " est vaincu en " + numeroTour + " tour(s).");
+//                 return;
+//             }
+
+//             System.out.println("Ennemi jette D20=" + deEnnemi + " (+" + ennemi.getAttaque() + " = " + totalEnnemi + ") -> "
+//                     + typeJet(typeEnnemi) + " | degats subis  : " + degatsEnnemi);
+//             hpJoueur = Math.max(0, hpJoueur - degatsEnnemi);
+//             System.out.println("HP joueur : " + hpJoueur + " / " + HP_JOUEUR_DEFAUT);
+
+//             if (hpJoueur <= 0) {
+//                 System.out.println();
+//                 System.out.println(">>> DEFAITE ! Vous etes terrasse par " + ennemi.getNom() + " apres " + numeroTour + " tour(s).");
+//                 return;
+//             }
+
+//             numeroTour++;
+//             if (!autoMode) {
+//                 System.out.print("[Entree] pour le tour suivant, ou 'q' pour arreter : ");
+//                 if (scanner.nextLine().trim().equalsIgnoreCase("q")) {
+//                     System.out.println("Combat interrompu.");
+//                     return;
+//                 }
+//             }
+//         }
 //     }
 
 //     private static String typeJet(int type) {
@@ -434,20 +544,21 @@ public class Main {
 //         }
 //     }
 
+//     // ==================== HELPERS ====================
+
 //     private static FichePersonnage ficheCourante() {
 //         if (utilisateurConnecte == null) {
 //             System.out.println("Aucun compte connecte.");
 //             return null;
 //         }
-
 //         if (ficheSelectionneeId == null) {
-//             System.out.println("Aucune fiche selectionnee.");
+//             System.out.println("Aucune fiche selectionnee. Creez ou selectionnez une fiche.");
 //             return null;
 //         }
-
 //         FichePersonnage fiche = gestionFiche.getFiche(utilisateurConnecte, ficheSelectionneeId);
 //         if (fiche == null) {
 //             System.out.println("Fiche introuvable.");
+//             ficheSelectionneeId = null;
 //         }
 //         return fiche;
 //     }
@@ -459,7 +570,6 @@ public class Main {
 //         System.out.println("4. Competence");
 //         System.out.println("5. Equipement");
 //         System.out.print("> ");
-
 //         switch (scanner.nextLine().trim()) {
 //             case "1": return "portrait";
 //             case "2": return "biographie";
@@ -481,13 +591,30 @@ public class Main {
 
 //     private static void afficherStatistiques(List<Statistique> statistiques) {
 //         if (statistiques.isEmpty()) {
-//             System.out.println("   aucune statistique.");
+//             System.out.println("   (aucune)");
 //             return;
 //         }
-
 //         for (Statistique statistique : statistiques) {
 //             System.out.println("   - " + statistique.getNomStatistique() + " = " + statistique.getValeurStatistique());
 //         }
+//     }
+
+//     private static void afficherListe(List<String> elements) {
+//         if (elements.isEmpty()) {
+//             System.out.println("   (aucun)");
+//             return;
+//         }
+//         for (String element : elements) {
+//             System.out.println("   - " + element);
+//         }
+//     }
+
+//     private static void afficherResultat(boolean succes, String messageOk, String messageKo) {
+//         System.out.println(succes ? messageOk : messageKo);
+//     }
+
+//     private static String valeurOuVide(String valeur) {
+//         return (valeur == null || valeur.isEmpty()) ? "(vide)" : valeur;
 //     }
 
 //     private static int lireEntier(String libelle, int valeurDefaut) {
@@ -497,11 +624,10 @@ public class Main {
 //             if (entree.isEmpty()) {
 //                 return valeurDefaut;
 //             }
-
 //             try {
 //                 return Integer.parseInt(entree);
 //             } catch (NumberFormatException exception) {
-//                 System.out.println("Veuillez entrer un nombre valide.");
+//                 System.out.println("Nombre invalide.");
 //             }
 //         }
 //     }
@@ -517,8 +643,6 @@ public class Main {
 
 //     private static boolean demanderOuiNon(String question) {
 //         System.out.print(question + " (o/n) : ");
-//         String reponse = scanner.nextLine().trim().toLowerCase();
-//         return reponse.startsWith("o");
+//         return scanner.nextLine().trim().toLowerCase().startsWith("o");
 //     }
 // }
-
